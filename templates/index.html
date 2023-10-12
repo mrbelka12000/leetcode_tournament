@@ -49,6 +49,7 @@
     <table class="table">
         <thead>
         <tr>
+            <th>Name</th>
             <th>Nickname</th>
             <th>Count of Easy</th>
             <th>Count of Medium</th>
@@ -59,6 +60,7 @@
         <tbody>
         {{range .Users}}
         <tr>
+            <td>{{.Name}}</td>
             <td>{{.Nickname}}</td>
             <td>{{.SolvedProblems.Easy}}</td>
             <td>{{.SolvedProblems.Medium}}</td>

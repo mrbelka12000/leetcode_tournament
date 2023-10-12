@@ -88,8 +88,7 @@ func (u *usr) List(ctx context.Context) ([]*models.Usr, int64, error) {
 
 func (u *usr) GetByField(ctx context.Context, field, value string) (*models.Usr, error) {
 	query := fmt.Sprintf("SELECT id, name, nickname from users where %v = ?", field)
-	fmt.Println(query)
-	fmt.Println(value)
+
 	var user models.Usr
 	err := u.db.QueryRowContext(ctx, query, value).Scan(
 		&user.ID, &user.Name, &user.Nickname)

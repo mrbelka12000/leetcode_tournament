@@ -71,8 +71,6 @@ func (l *LeetCode) Stats(ctx context.Context, nickname string) (resp LCGetProble
 		return resp, fmt.Errorf("unmarshal allQuestionsCount: %w", err)
 	}
 
-	fmt.Println(string(body))
-	fmt.Println(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum)
 	if len(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum) > 3 {
 		resp.All = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[0].Count
 		resp.Easy = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[1].Count
