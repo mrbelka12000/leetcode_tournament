@@ -2,9 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Statistics</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Add custom styles here */
+        body {
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
+    <h1>User Statistics</h1>
 
+    <div class="row justify-content-between">
+
+        <div class="col">
+            <!-- Button to toggle form visibility -->
+            <button class="btn" onclick="toggleFormReg()">Registration</button>
+            <br>
+            <form class="form" action="/usr" method="POST" id="userFormCreate" style="display: none;">
+                <div class="field">
+                    <input class="log" required type="text" placeholder="name" name="name">
+                    <input class="usn" required type="text" placeholder="nickname" name="nickname">
+                    <button class="btn" type="submit">Sign Up</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col">
+            <!-- Button to toggle form visibility -->
+            <button class="btn" onclick="toggleFormUpdate()">Update Profile</button>
+            <form class="form" action="/usr_update" method="POST" id="userFormUpdate" style="display: none;">
+                <div class="field">
+                    <input class="log" required type="text" placeholder="name" name="name">
+                    <input class="usn" required type="text" placeholder="nickname" name="nickname">
+                    <input class="usn" required type="text" placeholder="key" name="secret">
+                    <button class="btn" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Nickname</th>
+            <th>Count of Easy</th>
+            <th>Count of Medium</th>
+            <th>Count of Hard</th>
+            <th>Count of All</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .Users}}
+        <tr>
+            <td>{{.Nickname}}</td>
+            <td>{{.SolvedProblems.Easy}}</td>
+            <td>{{.SolvedProblems.Medium}}</td>
+            <td>{{.SolvedProblems.Hard}}</td>
+            <td>{{.SolvedProblems.All}}</td>
+        </tr>
+        {{end}}
+        </tbody>
+    </table>
+</div>
+
+<!-- Bootstrap JS (optional, for Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+    function toggleFormReg() {
+        var form = document.getElementById('userFormCreate');
+        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    }
+
+    function toggleFormUpdate() {
+        var form = document.getElementById('userFormUpdate');
+        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    }
+
+</script>
 </body>
 </html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        /* Add custom styles here */
+        body {
+            padding: 20px;
+        }
+        .user-profile {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="user-profile">
+        <div class="row">
+            <div class="col-md-2">
+                <span class="label">ID:</span>
+            </div>
+            <div class="col-md-10">
+                {{.ID}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <span class="label">Name:</span>
+            </div>
+            <div class="col-md-10">
+                {{.Name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <span class="label">Nickname:</span>
+            </div>
+            <div class="col-md-10">
+                {{.Nickname}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (optional, for Bootstrap features) -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
