@@ -54,16 +54,13 @@ func (u *usr) validateCU(ctx context.Context, obj *models.Usr) error {
 
 	forCreate := obj.Secret == ""
 
-	var (
-		origUsr *models.Usr
-		err     error
-	)
 	if !forCreate {
-		origUsr, err = u.usrRepo.GetByField(ctx, "secret", obj.Secret)
+		_, err := u.usrRepo.GetByField(ctx, "secret", obj.Secret)
 		if err != nil {
 			return err
 		}
 	}
+
 	if obj.Nickname == "" {
 		return errors.New("empty nickname")
 	}
@@ -73,12 +70,8 @@ func (u *usr) validateCU(ctx context.Context, obj *models.Usr) error {
 	}
 
 	if !forCreate {
-		usr, err := u.usrRepo.GetByField(ctx, "nickname", obj.Nickname)
-		if err != nil {
-			return err
-		}
-
-		if origUsr.ID != usr.ID {
+		_, err := u.usrRepo.GetByField(ctx, "nickname", obj.Nickname)
+		if err == nil {
 			return errors.New("nickname already exists")
 		}
 	}
