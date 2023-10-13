@@ -1,6 +1,6 @@
 package models
 
-import "leetcode_tournament/internal/adapters/leetcode"
+import "github.com/mrbelka12000/leetcode_tournament/internal/adapters/leetcode"
 
 type Usr struct {
 	ID             int64                            `json:"id"`
@@ -8,4 +8,5 @@ type Usr struct {
 	Nickname       string                           `json:"nickname"`
 	Secret         string                           `json:"-"`
 	SolvedProblems leetcode.LCGetProblemsSolvedResp `json:"solved_problems"`
+	Footprint      *Footprint                       `json:"footprint"`
 }

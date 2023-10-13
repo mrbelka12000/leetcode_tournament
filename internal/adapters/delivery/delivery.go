@@ -1,7 +1,7 @@
 package delivery
 
 import (
-	"leetcode_tournament/internal/domain/core"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/core"
 )
 
 const (

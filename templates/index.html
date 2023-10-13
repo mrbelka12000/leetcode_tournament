@@ -62,11 +62,33 @@
         <tr>
             <td>{{.Name}}</td>
             <td>{{.Nickname}}</td>
-            <td>{{.SolvedProblems.Easy}}</td>
-            <td>{{.SolvedProblems.Medium}}</td>
-            <td>{{.SolvedProblems.Hard}}</td>
-            <td>{{.SolvedProblems.All}}</td>
-        </tr>
+            <td>
+                {{if .Footprint}}
+                {{.SolvedProblems.Easy}}/<span style="color: red;">{{.Footprint.Easy}}</span>
+                {{else}}
+                {{.SolvedProblems.Easy}}
+                {{end}}
+            </td>
+            <td>
+                {{if .Footprint}}
+                {{.SolvedProblems.Medium}}/<span style="color: red;">{{.Footprint.Medium}}</span>
+                {{else}}
+                {{.SolvedProblems.Medium}}
+                {{end}}
+            </td>
+            <td>
+                {{if .Footprint}}
+                {{.SolvedProblems.Hard}}/<span style="color: red;">{{.Footprint.Hard}}</span>
+                {{else}}
+                {{.SolvedProblems.Hard}}
+                {{end}}
+            </td>            <td>
+                {{if .Footprint}}
+                {{.SolvedProblems.Total}}/<span style="color: red;">{{.Footprint.Total}}</span>
+                {{else}}
+                {{.SolvedProblems.Total}}
+                {{end}}
+            </td>        </tr>
         {{end}}
         </tbody>
     </table>

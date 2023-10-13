@@ -5,27 +5,27 @@ import (
 	"errors"
 	"fmt"
 
-	"leetcode_tournament/internal/domain/interfaces"
-	"leetcode_tournament/internal/domain/models"
-	"leetcode_tournament/pkg/generator"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/pkg/generator"
 )
 
 type usr struct {
-	usrRepo       interfaces.User
+	usrRepo       interfaces.Usr
 	leetCodeStats interfaces.LeetCodeStats
 }
 
-func newUsr(usrRepo interfaces.User, leetCodeStats interfaces.LeetCodeStats) *usr {
+func newUsr(usrRepo interfaces.Usr, leetCodeStats interfaces.LeetCodeStats) *usr {
 	return &usr{
 		usrRepo:       usrRepo,
 		leetCodeStats: leetCodeStats,
 	}
 }
 
-func (u *usr) Create(ctx context.Context, obj *models.Usr) (string, error) {
+func (u *usr) Create(ctx context.Context, obj *models.Usr) (string, int64, error) {
 	err := u.validateCU(ctx, obj)
 	if err != nil {
-		return "", fmt.Errorf("validate CU: %w", err)
+		return "", 0, fmt.Errorf("validate CU: %w", err)
 	}
 
 	obj.Secret = generator.RandString(8)
