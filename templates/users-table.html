@@ -1,0 +1,25 @@
+<h2>User Statistics</h2>
+<table class="table table-responsive table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Nickname</th>
+      <th>Count of Easy</th>
+      <th>Count of Medium</th>
+      <th>Count of Hard</th>
+      <th>Count of All</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Users}}
+    <tr>
+      <td>{{.Name}}</td>
+      <td>{{.Nickname}}</td>
+      <td>{{.SolvedProblems.Easy}}</td>
+      <td>{{.SolvedProblems.Medium}}</td>
+      <td>{{.SolvedProblems.Hard}}</td>
+      <td>{{.SolvedProblems.All}}</td>
+    </tr>
+    {{end}}
+  </tbody>
+</table>
