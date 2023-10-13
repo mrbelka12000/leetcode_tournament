@@ -1,93 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User Statistics</title>
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+
     <style>
-        /* Add custom styles here */
-        body {
-            padding: 20px;
-        }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        height: 100%;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      }
+
+      .header {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding-top: 24px;
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        row-gap: 12px;
+      }
     </style>
-</head>
-<body>
-<div class="container">
-    <h1>User Statistics</h1>
+  </head>
+  <body>
+    <header class="header container container-fluid">
+      <button
+        type="button"
+        class="btn btn-link"
+        data-bs-toggle="modal"
+        data-bs-target="#registrationModal"
+      >
+        Register
+      </button>
+      <button
+        type="button"
+        class="btn btn-link"
+        data-bs-toggle="modal"
+        data-bs-target="#updateUserModal"
+      >
+        Update User
+      </button>
+    </header>
 
-    <div class="row justify-content-between">
-
-        <div class="col">
-            <!-- Button to toggle form visibility -->
-            <button class="btn" onclick="toggleFormReg()">Registration</button>
-            <br>
-            <form class="form" action="/usr" method="POST" id="userFormCreate" style="display: none;">
-                <div class="field">
-                    <input class="log" required type="text" placeholder="name" name="name">
-                    <input class="usn" required type="text" placeholder="nickname" name="nickname">
-                    <button class="btn" type="submit">Sign Up</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="col">
-            <!-- Button to toggle form visibility -->
-            <button class="btn" onclick="toggleFormUpdate()">Update Profile</button>
-            <form class="form" action="/usr_update" method="POST" id="userFormUpdate" style="display: none;">
-                <div class="field">
-                    <input class="log" required type="text" placeholder="name" name="name">
-                    <input class="usn" required type="text" placeholder="nickname" name="nickname">
-                    <input class="usn" required type="text" placeholder="key" name="secret">
-                    <button class="btn" type="submit">Update</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <table class="table">
+    <div
+      class="container container-fluid"
+      hx-get="/users"
+      hx-trigger="load"
+      hx-swap="innerHTML"
+      hx-indicator="#spinner"
+    >
+      <h2>User Statistics</h2>
+      <table class="table table-responsive table-hover">
         <thead>
-        <tr>
+          <tr>
             <th>Name</th>
             <th>Nickname</th>
             <th>Count of Easy</th>
             <th>Count of Medium</th>
             <th>Count of Hard</th>
             <th>Count of All</th>
-        </tr>
+          </tr>
         </thead>
-        <tbody>
-        {{range .Users}}
-        <tr>
-            <td>{{.Name}}</td>
-            <td>{{.Nickname}}</td>
-            <td>{{.SolvedProblems.Easy}}</td>
-            <td>{{.SolvedProblems.Medium}}</td>
-            <td>{{.SolvedProblems.Hard}}</td>
-            <td>{{.SolvedProblems.All}}</td>
-        </tr>
-        {{end}}
-        </tbody>
-    </table>
-</div>
+        <tbody></tbody>
+      </table>
 
-<!-- Bootstrap JS (optional, for Bootstrap features) -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+      <div id="spinner" class="d-flex align-items-center htmx-indicator">
+        <strong role="status">Loading...</strong>
+        <div class="spinner-border ms-auto" aria-hidden="true"></div>
+      </div>
+    </div>
 
-<script>
-    function toggleFormReg() {
-        var form = document.getElementById('userFormCreate');
-        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
-    }
+    <div
+      class="modal fade"
+      tabindex="-1"
+      id="updateUserModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update User</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="form" hx-post="/usr_update" id="userFormUpdate">
+              <input
+                class="log"
+                required
+                type="text"
+                placeholder="name"
+                name="name"
+              />
+              <input
+                class="usn"
+                required
+                type="text"
+                placeholder="nickname"
+                name="nickname"
+              />
+              <input
+                class="usn"
+                required
+                type="text"
+                placeholder="key"
+                name="secret"
+              />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              form="userFormUpdate"
+              type="submit"
+              id="updateUserButton"
+            >
+              Update
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    function toggleFormUpdate() {
-        var form = document.getElementById('userFormUpdate');
-        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
-    }
+    <div
+      class="modal fade"
+      tabindex="-1"
+      id="registrationModal"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Registration</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form class="form" hx-post="/usr" method="POST" id="userFormCreate">
+              <input
+                class="log"
+                required
+                type="text"
+                placeholder="name"
+                name="name"
+              />
+              <input
+                class="usn"
+                required
+                type="text"
+                placeholder="nickname"
+                name="nickname"
+              />
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              form="userFormCreate"
+              type="submit"
+              id="registerButton"
+            >
+              Sign Up
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-</script>
-</body>
+    <script>
+      function hideButton(id) {
+        const buttonToHide = document.getElementById(id);
+        if (!buttonToHide) {
+          console.warn(`${id} is missing`);
+        }
+        buttonToHide.classList.add("visually-hidden");
+      }
+    </script>
+  </body>
 </html>

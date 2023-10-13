@@ -58,5 +58,35 @@ func (d *DeliveryHTTP) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, "/", http.StatusMovedPermanently)
+	t, err := template.ParseFiles(templateDir + "update.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = t.Execute(w, user.Secret)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+func (d *DeliveryHTTP) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+	t, err := template.ParseFiles(templateDir + "users-table.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	index, err := d.cr.MainPage(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = t.Execute(w, index)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
