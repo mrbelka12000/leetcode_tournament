@@ -20,7 +20,7 @@ FROM alpine
 
 WORKDIR /
 
-COPY --from=buildenv  /app/main /main
+COPY --from=buildenv  /app/. /main
 
 EXPOSE 3000
 
