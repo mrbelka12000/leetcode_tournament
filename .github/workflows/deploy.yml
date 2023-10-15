@@ -14,11 +14,11 @@ jobs:
     env:
      SERVER_SSH_KEY: ${{ secrets.server_ssh_key }}
      SERVER_URI: dev@185.146.3.75
-     OWNER: graincomg
 
     steps:
      - name: Deploy
        run: |
          echo "$SERVER_SSH_KEY" > server_ssh_key
          chmod 0700 server_ssh_key
-         ssh -p 22 -o StrictHostKeyChecking=no -i server_ssh_key $SERVER_URI "docker service update --force --image ghcr.io/$OWNER/${{ needs.define.outputs.image }}:latest ${{ needs.define.outputs.service }}"
+         cat server_ssh_key
+         ssh -p 22 -o StrictHostKeyChecking=no -i server_ssh_key $SERVER_URI "ls"
