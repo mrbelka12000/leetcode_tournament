@@ -7,17 +7,18 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy:
+ deploy:
     name: Deploy on server
     runs-on: ubuntu-latest
-
+    
     env:
-     PRIV_KEY: ${{ secrets.priv_key }}
-     SERVER_URI: ubuntu@185.146.3.75
+     SERVER_SSH_KEY: ${{ secrets.server_ssh_key }}
+     SERVER_URI: dev@185.146.3.75
+     OWNER: graincomg
 
     steps:
      - name: Deploy
        run: |
-         echo "$PRIV_KEY" > server_ssh_key
-         chmod 600 server_ssh_key
-         ssh -p 22 -o StrictHostKeyChecking=no -i server_ssh_key $SERVER_URI "cd leetcode_tournament && git pull && docker compose up --build -d"
+         echo "$SERVER_SSH_KEY" > server_ssh_key
+         chmod 0700 server_ssh_key
+         ssh -p 22 -o StrictHostKeyChecking=no -i server_ssh_key $SERVER_URI "docker service update --force --image ghcr.io/$OWNER/${{ needs.define.outputs.image }}:latest ${{ needs.define.outputs.service }}"
