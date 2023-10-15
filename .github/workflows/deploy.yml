@@ -19,5 +19,5 @@ jobs:
      - name: Deploy
        run: |
          echo "$PRIV_KEY" > server_ssh_key
-         chmod 0700 server_ssh_key
+         chmod 600 server_ssh_key
          ssh -p 22 -o StrictHostKeyChecking=no -i server_ssh_key $SERVER_URI "cd leetcode_tournament && git pull && docker compose up --build -d"
