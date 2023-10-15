@@ -9,8 +9,6 @@ WORKDIR /app
 
 ADD . .
 
-ADD .env .
-
 ENV GO111MODULE=on
 
 RUN  go build -o main cmd/main.go
@@ -20,7 +18,7 @@ FROM alpine
 
 WORKDIR /
 
-COPY --from=buildenv  /app/. /main
+COPY --from=buildenv  /app/ /
 
 EXPOSE 3000
 
