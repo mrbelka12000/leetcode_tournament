@@ -19,7 +19,9 @@ migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/
 ```azure
 .env
 ```
+
 ### Run project
 ```
-docker-compose up --build
+docker build -t leetcode .
+docker run -p 3000:3000 leetcode
 ```

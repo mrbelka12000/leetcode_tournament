@@ -8,9 +8,9 @@ import (
 )
 
 type Config struct {
-	HTTPPort       string `env:"http_port" required:"true"`
-	PGUrl          string `env:"pg_url" required:"true"`
-	LeetCodeApiURL string `env:"leetcode_api_url" required:"true"`
+	HTTPPort       string `env:"http_port,required"`
+	PGUrl          string `env:"pg_url,required"`
+	LeetCodeApiURL string `env:"leetcode_api_url,required"`
 }
 
 func Get() (Config, error) {
@@ -18,10 +18,7 @@ func Get() (Config, error) {
 }
 
 func parseConfig() (cfg Config, err error) {
-	err = godotenv.Load()
-	if err != nil {
-		return cfg, err
-	}
+	godotenv.Load()
 
 	err = envconfig.Process(context.Background(), &cfg)
 	if err != nil {

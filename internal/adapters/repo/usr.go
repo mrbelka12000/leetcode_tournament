@@ -5,8 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	_ "github.com/mattn/go-sqlite3"
-
 	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
 )
 

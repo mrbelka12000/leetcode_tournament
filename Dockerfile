@@ -1,20 +1,27 @@
-# Use an official Golang runtime as a parent image
-FROM golang:latest
+## Build
+FROM golang:1.20.10-alpine3.18 AS buildenv
 
-# Set the working directory to /app
-WORKDIR /app
+ADD go.mod go.sum /
 
-# Copy the current directory contents into the container at /app
-COPY . /app
-
-# Download and install any required dependencies
 RUN go mod download
 
-# Build the Go app
-RUN go build -o main cmd/main.go
+WORKDIR /app
 
-# Expose port 8080 for incoming traffic
-EXPOSE 8080
+ADD . .
 
-# Define the command to run the app when the container starts
-CMD ["/app/main"]
+ADD .env .
+
+ENV GO111MODULE=on
+
+RUN  go build -o main cmd/main.go
+
+## Deploy
+FROM alpine
+
+WORKDIR /
+
+COPY --from=buildenv  /app/main /main
+
+EXPOSE 3000
+
+CMD ["/main"]
