@@ -1,13 +1,13 @@
 package delivery
 
 import (
+	"html/template"
 	"net/http"
-	"text/template"
 
-	"leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
 )
 
-func (d *DeliveryHTTP) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (d *DeliveryHTTP) UsrCreate(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
@@ -20,7 +20,7 @@ func (d *DeliveryHTTP) CreateUser(w http.ResponseWriter, r *http.Request) {
 		Nickname: r.FormValue("nickname"),
 	}
 
-	_, err = d.cr.Usr.Create(r.Context(), user)
+	secret, _, err := d.cr.Usr.Create(r.Context(), user)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -32,14 +32,14 @@ func (d *DeliveryHTTP) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = t.Execute(w, user.Secret)
+	err = t.Execute(w, secret)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 }
 
-func (d *DeliveryHTTP) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (d *DeliveryHTTP) UsrUpdate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

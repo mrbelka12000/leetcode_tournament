@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	"leetcode_tournament/internal/adapters/leetcode"
+	"github.com/mrbelka12000/leetcode_tournament/internal/adapters/leetcode"
 )
 
 type LeetCodeStats interface {

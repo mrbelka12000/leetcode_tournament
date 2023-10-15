@@ -29,5 +29,5 @@ type LCGetProblemsSolvedResp struct {
 	Easy   int
 	Medium int
 	Hard   int
-	All    int
+	Total  int
 }

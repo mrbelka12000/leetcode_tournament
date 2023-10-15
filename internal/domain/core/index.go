@@ -4,19 +4,21 @@ import (
 	"context"
 	"fmt"
 
-	"leetcode_tournament/internal/adapters/repo"
-	"leetcode_tournament/internal/domain/interfaces"
-	"leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/adapters/repo"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
 )
 
 type Core struct {
 	Usr           *usr
+	FootPrint     *footprint
 	leetCodeStats interfaces.LeetCodeStats
 }
 
-func NewCore(repo *repo.Repo, leetCodeStats interfaces.LeetCodeStats) *Core {
+func New(repo *repo.Repo, leetCodeStats interfaces.LeetCodeStats) *Core {
 	return &Core{
 		Usr:           newUsr(repo.Usr, leetCodeStats),
+		FootPrint:     newFootprint(repo.Footprint),
 		leetCodeStats: leetCodeStats,
 	}
 }

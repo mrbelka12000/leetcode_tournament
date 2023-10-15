@@ -1,8 +1,8 @@
 package delivery
 
 import (
+	"html/template"
 	"net/http"
-	"text/template"
 )
 
 func (d *DeliveryHTTP) Index(w http.ResponseWriter, r *http.Request) {

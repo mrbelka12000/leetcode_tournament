@@ -72,7 +72,7 @@ func (l *LeetCode) Stats(ctx context.Context, nickname string) (resp LCGetProble
 	}
 
 	if len(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum) > 3 {
-		resp.All = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[0].Count
+		resp.Total = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[0].Count
 		resp.Easy = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[1].Count
 		resp.Medium = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[2].Count
 		resp.Hard = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[3].Count

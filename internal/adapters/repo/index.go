@@ -3,13 +3,17 @@ package repo
 import (
 	"database/sql"
 
-	"leetcode_tournament/internal/domain/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/interfaces"
 )
 
 type Repo struct {
-	Usr interfaces.User
+	Usr       interfaces.Usr
+	Footprint interfaces.Footprint
 }
 
-func NewRepo(db *sql.DB) *Repo {
-	return &Repo{Usr: newUsr(db)}
+func New(db *sql.DB) *Repo {
+	return &Repo{
+		Usr:       newUsr(db),
+		Footprint: newFootprint(db),
+	}
 }
