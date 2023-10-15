@@ -1,8 +1,8 @@
 package delivery
 
 import (
+	"html/template"
 	"net/http"
-	"text/template"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
 )
