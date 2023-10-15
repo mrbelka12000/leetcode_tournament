@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-     SERVER_SSH_KEY: ${{ secrets.server_ssh_key }}
+     SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
      SERVER_URI: ubuntu@185.146.3.75
 
     steps:
