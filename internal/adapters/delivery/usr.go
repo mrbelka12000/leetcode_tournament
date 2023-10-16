@@ -15,7 +15,7 @@ func (d *DeliveryHTTP) UsrCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &models.Usr{
+	user := &models.UsrOld{
 		Name:     r.FormValue("name"),
 		Nickname: r.FormValue("nickname"),
 	}
@@ -46,7 +46,7 @@ func (d *DeliveryHTTP) UsrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &models.Usr{
+	user := &models.UsrOld{
 		Name:     r.FormValue("name"),
 		Nickname: r.FormValue("nickname"),
 		Secret:   r.FormValue("secret"),

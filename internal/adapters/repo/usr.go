@@ -16,7 +16,7 @@ func newUsr(db *sql.DB) *usr {
 	return &usr{db: db}
 }
 
-func (u *usr) Create(ctx context.Context, obj *models.Usr) (string, int64, error) {
+func (u *usr) Create(ctx context.Context, obj *models.UsrOld) (string, int64, error) {
 	var id int64
 	err := u.db.QueryRowContext(ctx, `
 	INSERT INTO usr (name, nickname,secret) 
@@ -29,7 +29,7 @@ func (u *usr) Create(ctx context.Context, obj *models.Usr) (string, int64, error
 	return obj.Secret, id, nil
 }
 
-func (u *usr) Update(ctx context.Context, obj *models.Usr) error {
+func (u *usr) Update(ctx context.Context, obj *models.UsrOld) error {
 	_, err := u.db.ExecContext(ctx, `
 		UPDATE usr 
 		SET name=$1, nickname=$2 
@@ -42,8 +42,8 @@ func (u *usr) Update(ctx context.Context, obj *models.Usr) error {
 	return nil
 }
 
-func (u *usr) Get(ctx context.Context, id int64) (*models.Usr, error) {
-	var user models.Usr
+func (u *usr) Get(ctx context.Context, id int64) (*models.UsrOld, error) {
+	var user models.UsrOld
 	err := u.db.QueryRowContext(ctx, `
 		SELECT id, name, nickname 
 		FROM usr 
@@ -56,7 +56,7 @@ func (u *usr) Get(ctx context.Context, id int64) (*models.Usr, error) {
 	return &user, nil
 }
 
-func (u *usr) List(ctx context.Context) ([]*models.Usr, int64, error) {
+func (u *usr) List(ctx context.Context) ([]*models.UsrOld, int64, error) {
 	rows, err := u.db.QueryContext(ctx, `
 		SELECT id, name, nickname 
 		FROM usr`)
@@ -65,9 +65,9 @@ func (u *usr) List(ctx context.Context) ([]*models.Usr, int64, error) {
 	}
 	defer rows.Close()
 
-	var usrs []*models.Usr
+	var usrs []*models.UsrOld
 	for rows.Next() {
-		var user models.Usr
+		var user models.UsrOld
 		if err := rows.Scan(&user.ID, &user.Name, &user.Nickname); err != nil {
 			return nil, 0, err
 		}
@@ -85,10 +85,10 @@ func (u *usr) List(ctx context.Context) ([]*models.Usr, int64, error) {
 	return usrs, count, nil
 }
 
-func (u *usr) GetByField(ctx context.Context, field, value string) (*models.Usr, error) {
+func (u *usr) GetByField(ctx context.Context, field, value string) (*models.UsrOld, error) {
 	query := fmt.Sprintf("SELECT id, name, nickname from usr where %v = $1", field)
 
-	var user models.Usr
+	var user models.UsrOld
 	err := u.db.QueryRowContext(ctx, query, value).Scan(
 		&user.ID, &user.Name, &user.Nickname)
 	if err != nil {

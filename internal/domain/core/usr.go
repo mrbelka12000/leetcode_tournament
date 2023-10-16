@@ -22,7 +22,7 @@ func newUsr(usrRepo interfaces.Usr, leetCodeStats interfaces.LeetCodeStats) *usr
 	}
 }
 
-func (u *usr) Create(ctx context.Context, obj *models.Usr) (string, int64, error) {
+func (u *usr) Create(ctx context.Context, obj *models.UsrOld) (string, int64, error) {
 	err := u.validateCU(ctx, obj)
 	if err != nil {
 		return "", 0, fmt.Errorf("validate CU: %w", err)
@@ -33,7 +33,7 @@ func (u *usr) Create(ctx context.Context, obj *models.Usr) (string, int64, error
 	return u.usrRepo.Create(ctx, obj)
 }
 
-func (u *usr) Update(ctx context.Context, obj *models.Usr) error {
+func (u *usr) Update(ctx context.Context, obj *models.UsrOld) error {
 	err := u.validateCU(ctx, obj)
 	if err != nil {
 		return err
@@ -42,20 +42,20 @@ func (u *usr) Update(ctx context.Context, obj *models.Usr) error {
 	return u.usrRepo.Update(ctx, obj)
 }
 
-func (u *usr) Get(ctx context.Context, id int64) (*models.Usr, error) {
+func (u *usr) Get(ctx context.Context, id int64) (*models.UsrOld, error) {
 	return u.usrRepo.Get(ctx, id)
 }
 
-func (u *usr) List(ctx context.Context) ([]*models.Usr, int64, error) {
+func (u *usr) List(ctx context.Context) ([]*models.UsrOld, int64, error) {
 	return u.usrRepo.List(ctx)
 }
 
-func (u *usr) validateCU(ctx context.Context, obj *models.Usr) error {
+func (u *usr) validateCU(ctx context.Context, obj *models.UsrOld) error {
 
 	forCreate := obj.Secret == ""
 
 	var (
-		origUsr *models.Usr
+		origUsr *models.UsrOld
 		err     error
 	)
 	if !forCreate {
