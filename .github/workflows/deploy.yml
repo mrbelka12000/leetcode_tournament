@@ -28,5 +28,4 @@ jobs:
           ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
       - name: copy builds to server
         run: |
-          rsync -vrm  .output/* ${{ secrets.USER_IP }}:/var/www/example.com/
           ssh -v ${{ secrets.USER_IP }} "pm2 restart ecosystem.config.js"
