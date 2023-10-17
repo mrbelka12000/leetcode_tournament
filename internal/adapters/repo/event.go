@@ -160,7 +160,6 @@ func (e *event) List(ctx context.Context, pars *models.EventListPars) ([]*models
 		queryWhere += ` AND e.condition = $` + strconv.Itoa(len(filterValues))
 	}
 
-	fmt.Println(filterValues, queryWhere)
 	var tCount int64
 	if pars.Limit > 0 {
 		err := e.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)

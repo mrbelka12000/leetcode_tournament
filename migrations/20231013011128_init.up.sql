@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS usr_tournament
         constraint usr_tournament_fk_usr_id
             references usr
             on update cascade on delete cascade,
-    event_id    bigint                                 not null
+    tournament_id    bigint                                 not null
         constraint usr_tournament_fk_event_id
             references event
             on update cascade on delete cascade,
