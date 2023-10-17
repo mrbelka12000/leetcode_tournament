@@ -1,8 +1,8 @@
-package core
+package service
 
 import (
-	"github.com/mrbelka12000/leetcode_tournament/internal/adapters/repo"
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/repo"
 )
 
 type Core struct {

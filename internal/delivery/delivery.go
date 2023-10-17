@@ -3,7 +3,7 @@ package delivery
 import (
 	"github.com/gorilla/schema"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/usecase"
+	"github.com/mrbelka12000/leetcode_tournament/internal/usecase"
 )
 
 const (

@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 func (d *DeliveryHTTP) UsrCreate(w http.ResponseWriter, r *http.Request) {

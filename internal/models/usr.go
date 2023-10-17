@@ -1,8 +1,8 @@
 package models
 
 import (
-	"github.com/mrbelka12000/leetcode_tournament/internal/adapters/leetcode"
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/cns"
+	"github.com/mrbelka12000/leetcode_tournament/internal/client/leetcode"
+	"github.com/mrbelka12000/leetcode_tournament/internal/cns"
 )
 
 type UsrOld struct {
@@ -17,7 +17,7 @@ type UsrOld struct {
 type (
 	// Usr
 	Usr struct {
-		ID       int64         `json:"ID" schema:"ID"`
+		ID       int64         `json:"id" schema:"id"`
 		Name     string        `json:"name" schema:"name"`
 		Username string        `json:"username" schema:"username"`
 		Email    string        `json:"email" schema:"email"`

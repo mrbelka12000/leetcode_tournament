@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 func (uc *UseCase) UsrCreate(ctx context.Context, obj *models.UsrCU) (int64, error) {

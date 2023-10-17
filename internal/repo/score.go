@@ -10,7 +10,7 @@ import (
 	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 type score struct {

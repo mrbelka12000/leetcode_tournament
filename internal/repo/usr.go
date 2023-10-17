@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 type usr struct {

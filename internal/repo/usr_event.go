@@ -9,7 +9,7 @@ import (
 
 	"github.com/lib/pq"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	models2 "github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 type usrEvent struct {
@@ -20,7 +20,7 @@ func newUsrEvent(db *sql.DB) *usrEvent {
 	return &usrEvent{db: db}
 }
 
-func (u *usrEvent) Create(ctx context.Context, obj *models.UsrEventCU) (int64, error) {
+func (u *usrEvent) Create(ctx context.Context, obj *models2.UsrEventCU) (int64, error) {
 	var id int64
 
 	err := u.db.QueryRowContext(ctx, `
@@ -38,7 +38,7 @@ func (u *usrEvent) Create(ctx context.Context, obj *models.UsrEventCU) (int64, e
 	return id, nil
 }
 
-func (u *usrEvent) Update(ctx context.Context, obj *models.UsrEventCU, id int64) error {
+func (u *usrEvent) Update(ctx context.Context, obj *models2.UsrEventCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE usr_event u`
 	querySet := ` SET id = id`
@@ -69,7 +69,7 @@ func (u *usrEvent) Update(ctx context.Context, obj *models.UsrEventCU, id int64)
 	return nil
 }
 
-func (u *usrEvent) Get(ctx context.Context, pars *models.UsrEventGetPars) (*models.UsrEvent, error) {
+func (u *usrEvent) Get(ctx context.Context, pars *models2.UsrEventGetPars) (*models2.UsrEvent, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -87,7 +87,7 @@ func (u *usrEvent) Get(ctx context.Context, pars *models.UsrEventGetPars) (*mode
 		queryWhere += ` AND u.usr_id = $` + strconv.Itoa(len(filterValues))
 	}
 
-	ue := &models.UsrEvent{}
+	ue := &models2.UsrEvent{}
 	row := u.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&ue.ID,
@@ -111,7 +111,7 @@ func (u *usrEvent) Get(ctx context.Context, pars *models.UsrEventGetPars) (*mode
 	return ue, nil
 }
 
-func (u *usrEvent) List(ctx context.Context, pars *models.UsrEventListPars) ([]*models.UsrEvent, int64, error) {
+func (u *usrEvent) List(ctx context.Context, pars *models2.UsrEventListPars) ([]*models2.UsrEvent, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -168,9 +168,9 @@ func (u *usrEvent) List(ctx context.Context, pars *models.UsrEventListPars) ([]*
 	}
 	defer rows.Close()
 
-	var usrEvents []*models.UsrEvent
+	var usrEvents []*models2.UsrEvent
 	for rows.Next() {
-		ev := &models.UsrEvent{}
+		ev := &models2.UsrEvent{}
 		err := rows.Scan(
 			&ev.ID,
 			&ev.UsrID,
@@ -188,7 +188,7 @@ func (u *usrEvent) List(ctx context.Context, pars *models.UsrEventListPars) ([]*
 	return usrEvents, tCount, nil
 }
 
-func (u *usrEvent) GetUsrEvents(ctx context.Context, pars *models.UsrGetEventsPars) ([]*models.Event, int64, error) {
+func (u *usrEvent) GetUsrEvents(ctx context.Context, pars *models2.UsrGetEventsPars) ([]*models2.Event, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -255,9 +255,9 @@ func (u *usrEvent) GetUsrEvents(ctx context.Context, pars *models.UsrGetEventsPa
 	}
 	defer rows.Close()
 
-	var events []*models.Event
+	var events []*models2.Event
 	for rows.Next() {
-		ev := &models.Event{}
+		ev := &models2.Event{}
 		err := rows.Scan(
 			&ev.Active,
 			&ev.Winner,

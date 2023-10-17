@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/cns"
+	"github.com/mrbelka12000/leetcode_tournament/internal/cns"
 )
 
 type (

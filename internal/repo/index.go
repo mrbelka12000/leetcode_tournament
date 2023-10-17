@@ -3,7 +3,7 @@ package repo
 import (
 	"database/sql"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/interfaces"
 )
 
 type Repo struct {

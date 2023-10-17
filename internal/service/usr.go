@@ -1,19 +1,19 @@
-package core
+package service
 
 import (
 	"context"
 	"fmt"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/interfaces"
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	interfaces2 "github.com/mrbelka12000/leetcode_tournament/internal/interfaces"
+	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 type usr struct {
-	usrRepo       interfaces.UsrRepo
-	leetCodeStats interfaces.LeetCodeStats
+	usrRepo       interfaces2.UsrRepo
+	leetCodeStats interfaces2.LeetCodeStats
 }
 
-func newUsr(usrRepo interfaces.UsrRepo, leetCodeStats interfaces.LeetCodeStats) *usr {
+func newUsr(usrRepo interfaces2.UsrRepo, leetCodeStats interfaces2.LeetCodeStats) *usr {
 	return &usr{
 		usrRepo:       usrRepo,
 		leetCodeStats: leetCodeStats,

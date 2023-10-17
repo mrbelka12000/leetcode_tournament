@@ -3,7 +3,7 @@ package validator
 import (
 	"errors"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
 func RequirePageSize(pars models.PaginationParams) error {
