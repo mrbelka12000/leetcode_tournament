@@ -7,7 +7,7 @@ import (
 )
 
 func RequirePageSize(pars models.PaginationParams) error {
-	if pars.Limit == 0 {
+	if pars.Limit <= 0 {
 		return errors.New("incorrect page size")
 	}
 
