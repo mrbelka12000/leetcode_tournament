@@ -1,10 +1,5 @@
 package leetcode
 
-type LCGetProblemsSolvedReq struct {
-	Query     string                 `json:"query"`
-	Variables map[string]interface{} `json:"variables"`
-}
-
 const query = `
 	query userProblemsSolved($username: String!) {
 		allQuestionsCount {

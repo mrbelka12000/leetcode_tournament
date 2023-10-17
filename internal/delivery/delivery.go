@@ -15,7 +15,7 @@ type DeliveryHTTP struct {
 	decoder *schema.Decoder
 }
 
-func NewDeliveryHTTP(uc *usecase.UseCase) *DeliveryHTTP {
+func New(uc *usecase.UseCase) *DeliveryHTTP {
 	return &DeliveryHTTP{
 		uc:      uc,
 		decoder: schema.NewDecoder(),

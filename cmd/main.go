@@ -25,12 +25,12 @@ func main() {
 	}
 	defer db.Close()
 
-	leetcodeAdapter := leetcode.New(cfg.LeetCodeApiURL)
+	leetcodeClient := leetcode.New(cfg.LeetCodeApiURL)
 
 	repo := repo.New(db)
-	cr := service.New(repo, leetcodeAdapter)
+	cr := service.New(repo, leetcodeClient)
 	uc := usecase.New(cr)
-	deliv := delivery.NewDeliveryHTTP(uc)
+	deliv := delivery.New(uc)
 	r := deliv.InitRoutes()
 
 	log.Println("starting on port: ", cfg.HTTPPort)

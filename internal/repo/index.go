@@ -4,12 +4,15 @@ import (
 	"database/sql"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/interfaces"
+	eventservice "github.com/mrbelka12000/leetcode_tournament/internal/service/event"
+	scoreservice "github.com/mrbelka12000/leetcode_tournament/internal/service/score"
+	usrservice "github.com/mrbelka12000/leetcode_tournament/internal/service/usr"
 )
 
 type Repo struct {
-	Usr           interfaces.UsrRepo
-	Score         interfaces.Score
-	Event         interfaces.Event
+	Usr           usrservice.Repo
+	Score         scoreservice.Repo
+	Event         eventservice.Repo
 	Tournament    interfaces.Tournament
 	UsrEvent      interfaces.UsrEvent
 	UsrTournament interfaces.UsrTournament

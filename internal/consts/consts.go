@@ -1,4 +1,4 @@
-package cns
+package consts
 
 type UsrStatus uint
 
