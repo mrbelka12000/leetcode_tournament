@@ -13,7 +13,7 @@ jobs:
     
     env:
      SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
-     SERVER_URI: dev@185.146.3.75
+     SERVER_URI: ubuntu@185.146.3.75
 
     steps:
      - name: Deploy
