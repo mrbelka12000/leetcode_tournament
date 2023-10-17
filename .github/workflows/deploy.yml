@@ -28,4 +28,4 @@ jobs:
           ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
       - name: copy builds to server
         run: |
-          ssh -v ${{ secrets.USER_IP }} "cd leetcode_tournament/ && git pull && docker compose up --build -d && exit"
+          ssh ${{ secrets.USER_IP }} "cd leetcode_tournament/ && git pull && docker compose up --build -d && exit"
