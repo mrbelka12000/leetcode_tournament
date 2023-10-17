@@ -1,20 +1,11 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+  tags:
+    - v1.*
 jobs:
   production:
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://example.com
     steps:
       - name: Checkout 🛎
         uses: actions/checkout@master
@@ -26,6 +17,6 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa.pub
           ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
-      - name: copy builds to server
+      - name: Deploy on server
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.USER_IP }} "cd leetcode_tournament/ && git pull && docker compose up --build -d && exit"
