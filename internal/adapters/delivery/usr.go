@@ -2,6 +2,7 @@ package delivery
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/domain/models"
@@ -15,15 +16,13 @@ func (d *DeliveryHTTP) UsrCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &models.UsrOld{
-		Name:     r.FormValue("name"),
-		Nickname: r.FormValue("nickname"),
-	}
+	var usr models.Usr
 
-	secret, _, err := d.cr.Usr.Create(r.Context(), user)
+	err = d.decoder.Decode(&usr, r.Form)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
+		log.Println("Error in GET parameters : ", err)
+	} else {
+		log.Println("GET parameters : ", usr)
 	}
 
 	t, err := template.ParseFiles(templateDir + "register.html")
@@ -32,7 +31,7 @@ func (d *DeliveryHTTP) UsrCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = t.Execute(w, secret)
+	err = t.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -46,25 +45,13 @@ func (d *DeliveryHTTP) UsrUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := &models.UsrOld{
-		Name:     r.FormValue("name"),
-		Nickname: r.FormValue("nickname"),
-		Secret:   r.FormValue("secret"),
-	}
-
-	err = d.cr.Usr.Update(r.Context(), user)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
 	t, err := template.ParseFiles(templateDir + "update.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = t.Execute(w, user.Secret)
+	err = t.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -78,13 +65,7 @@ func (d *DeliveryHTTP) GetAllUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	index, err := d.cr.MainPage(r.Context())
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = t.Execute(w, index)
+	err = t.Execute(w, nil)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

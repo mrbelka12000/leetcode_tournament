@@ -7,18 +7,30 @@ import (
 )
 
 type (
-	Usr interface {
-		Create(ctx context.Context, obj *models.UsrOld) (string, int64, error)
-		Update(ctx context.Context, obj *models.UsrOld) error
-		Get(ctx context.Context, id int64) (*models.UsrOld, error)
-		List(ctx context.Context) ([]*models.UsrOld, int64, error)
-		GetByField(ctx context.Context, field, value string) (*models.UsrOld, error)
+	UsrRepo interface {
+		Create(ctx context.Context, obj *models.UsrCU) (int64, error)
+		Update(ctx context.Context, obj *models.UsrCU, id int64) error
+		Get(ctx context.Context, pars *models.UsrGetPars) (*models.Usr, error)
+		List(ctx context.Context, pars *models.UsrListPars) ([]*models.Usr, int64, error)
 	}
 
-	Footprint interface {
-		Create(ctx context.Context, obj *models.Footprint) (int64, error)
-		Update(ctx context.Context, obj *models.Footprint, id int64) error
-		Get(ctx context.Context, pars *models.FootprintGetPars) (*models.Footprint, error)
-		List(ctx context.Context, pars *models.FootprintListPars) ([]*models.Footprint, int64, error)
+	Score interface {
+		Create(ctx context.Context, obj *models.ScoreCU) (int64, error)
+		Update(ctx context.Context, obj *models.ScoreCU, id int64) error
+		Get(ctx context.Context, pars *models.ScoreGetPars) (*models.Score, error)
+		List(ctx context.Context, pars *models.ScoreListPars) ([]*models.Score, int64, error)
+	}
+
+	Event interface {
+		Create(ctx context.Context, obj *models.EventCU) (int64, error)
+		Update(ctx context.Context, obj *models.EventCU, id int64) error
+		Get(ctx context.Context, pars *models.EventGetPars) (*models.Event, error)
+		List(ctx context.Context, pars *models.EventListPars) ([]*models.Event, int64, error)
+	}
+	Tournament interface {
+		Create(ctx context.Context, obj *models.TournamentCU) (int64, error)
+		Update(ctx context.Context, obj *models.TournamentCU, id int64) error
+		Get(ctx context.Context, pars *models.TournamentGetPars) (*models.Tournament, error)
+		List(ctx context.Context, pars *models.TournamentListPars) ([]*models.Tournament, int64, error)
 	}
 )

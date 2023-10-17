@@ -18,39 +18,41 @@ func New(url string) *LeetCode {
 	return &LeetCode{url: url, client: http.DefaultClient}
 }
 
-func (l *LeetCode) Stats(ctx context.Context, nickname string) (resp LCGetProblemsSolvedResp, err error) {
-
-	var out = struct {
-		Data struct {
-			AllQuestionsCount []struct {
-				Difficulty string `json:"difficulty"`
-				Count      int    `json:"count"`
-			} `json:"allQuestionsCount"`
-			MatchedUser struct {
-				ProblemsSolvedBeatsStats []struct {
-					Difficulty string  `json:"difficulty"`
-					Percentage float64 `json:"percentage"`
-				} `json:"problemsSolvedBeatsStats"`
-				SubmitStatsGlobal struct {
-					AcSubmissionNum []struct {
-						Difficulty string `json:"difficulty"`
-						Count      int    `json:"count"`
-					} `json:"acSubmissionNum"`
-				} `json:"submitStatsGlobal"`
-			} `json:"matchedUser"`
-		} `json:"data"`
-	}{}
-
-	variables := map[string]interface{}{
-		"username": nickname,
-	}
-	solvedReq := LCGetProblemsSolvedReq{
-		Query:     query,
-		Variables: variables,
-	}
+func (l *LeetCode) Stats(ctx context.Context, username string) (resp LCGetProblemsSolvedResp, err error) {
+	var (
+		in = struct {
+			Query     string                 `json:"query"`
+			Variables map[string]interface{} `json:"variables"`
+		}{
+			Query: query,
+			Variables: map[string]interface{}{
+				"username": username,
+			},
+		}
+		out = struct {
+			Data struct {
+				AllQuestionsCount []struct {
+					Difficulty string `json:"difficulty"`
+					Count      int    `json:"count"`
+				} `json:"allQuestionsCount"`
+				MatchedUser struct {
+					ProblemsSolvedBeatsStats []struct {
+						Difficulty string  `json:"difficulty"`
+						Percentage float64 `json:"percentage"`
+					} `json:"problemsSolvedBeatsStats"`
+					SubmitStatsGlobal struct {
+						AcSubmissionNum []struct {
+							Difficulty string `json:"difficulty"`
+							Count      int    `json:"count"`
+						} `json:"acSubmissionNum"`
+					} `json:"submitStatsGlobal"`
+				} `json:"matchedUser"`
+			} `json:"data"`
+		}{}
+	)
 
 	// Marshal the request solvedReq to JSON
-	jsonData, err := json.Marshal(solvedReq)
+	jsonData, err := json.Marshal(in)
 	if err != nil {
 		return resp, fmt.Errorf("marshal solvedReq: %w", err)
 	}

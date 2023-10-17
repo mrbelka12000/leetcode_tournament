@@ -7,13 +7,17 @@ import (
 )
 
 type Repo struct {
-	Usr       interfaces.Usr
-	Footprint interfaces.Footprint
+	Usr        interfaces.UsrRepo
+	Score      interfaces.Score
+	Event      interfaces.Event
+	Tournament interfaces.Tournament
 }
 
 func New(db *sql.DB) *Repo {
 	return &Repo{
-		Usr:       newUsr(db),
-		Footprint: newFootprint(db),
+		Usr:        newUsr(db),
+		Score:      newScore(db),
+		Event:      newEvent(db),
+		Tournament: newTournament(db),
 	}
 }

@@ -1,7 +1,9 @@
 package delivery
 
 import (
-	"github.com/mrbelka12000/leetcode_tournament/internal/domain/core"
+	"github.com/gorilla/schema"
+
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/usecase"
 )
 
 const (
@@ -9,9 +11,13 @@ const (
 )
 
 type DeliveryHTTP struct {
-	cr *core.Core
+	uc      *usecase.UseCase
+	decoder *schema.Decoder
 }
 
-func NewDeliveryHTTP(cr *core.Core) *DeliveryHTTP {
-	return &DeliveryHTTP{cr: cr}
+func NewDeliveryHTTP(uc *usecase.UseCase) *DeliveryHTTP {
+	return &DeliveryHTTP{
+		uc:      uc,
+		decoder: schema.NewDecoder(),
+	}
 }

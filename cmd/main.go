@@ -10,6 +10,7 @@ import (
 	"github.com/mrbelka12000/leetcode_tournament/internal/adapters/leetcode"
 	"github.com/mrbelka12000/leetcode_tournament/internal/adapters/repo"
 	"github.com/mrbelka12000/leetcode_tournament/internal/domain/core"
+	"github.com/mrbelka12000/leetcode_tournament/internal/domain/usecase"
 	"github.com/mrbelka12000/leetcode_tournament/pkg/config"
 	"github.com/mrbelka12000/leetcode_tournament/pkg/database/postgres"
 )
@@ -32,7 +33,8 @@ func main() {
 
 	repo := repo.New(db)
 	cr := core.New(repo, leetcodeAdapter)
-	deliv := delivery.NewDeliveryHTTP(cr)
+	uc := usecase.New(cr)
+	deliv := delivery.NewDeliveryHTTP(uc)
 	r := deliv.InitRoutes()
 
 	log.Println("starting on port: ", cfg.HTTPPort)

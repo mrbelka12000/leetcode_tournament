@@ -12,3 +12,8 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/sethvargo/go-envconfig v0.9.0
 )
+
+require (
+	github.com/AlekSi/pointer v1.2.0 // indirect
+	github.com/gorilla/schema v1.2.0 // indirect
+)
