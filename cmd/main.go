@@ -39,5 +39,6 @@ func main() {
 	if err := http.ListenAndServe(":"+cfg.HTTPPort, r); err != nil {
 		log.Printf("run server error: %v \n", err)
 		return
+
 	}
 }
