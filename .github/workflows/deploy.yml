@@ -29,4 +29,4 @@ jobs:
       - name: copy builds to server
         run: |
           rsync -vrm  .output/* ${{ secrets.USER_IP }}:/var/www/example.com/
-          ssh ${{ secrets.USER_IP }} "pm2 restart ecosystem.config.js"
+          ssh -v ${{ secrets.USER_IP }} "pm2 restart ecosystem.config.js"
