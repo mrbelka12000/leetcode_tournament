@@ -20,7 +20,7 @@ func newUsrTournament(db *sql.DB) *usrTournament {
 	return &usrTournament{db: db}
 }
 
-func (u usrTournament) Create(ctx context.Context, obj *models.UsrTournamentCU) (int64, error) {
+func (u *usrTournament) Create(ctx context.Context, obj *models.UsrTournamentCU) (int64, error) {
 	var id int64
 
 	err := u.db.QueryRowContext(ctx, `
@@ -38,7 +38,7 @@ func (u usrTournament) Create(ctx context.Context, obj *models.UsrTournamentCU) 
 	return id, nil
 }
 
-func (u usrTournament) Update(ctx context.Context, obj *models.UsrTournamentCU, id int64) error {
+func (u *usrTournament) Update(ctx context.Context, obj *models.UsrTournamentCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE usr_tournament u`
 	querySet := ` SET id = id`
@@ -69,7 +69,7 @@ func (u usrTournament) Update(ctx context.Context, obj *models.UsrTournamentCU, 
 	return nil
 }
 
-func (u usrTournament) Get(ctx context.Context, pars *models.UsrTournamentGetPars) (*models.UsrTournament, error) {
+func (u *usrTournament) Get(ctx context.Context, pars *models.UsrTournamentGetPars) (*models.UsrTournament, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -111,7 +111,7 @@ func (u usrTournament) Get(ctx context.Context, pars *models.UsrTournamentGetPar
 	return ue, nil
 }
 
-func (u usrTournament) List(ctx context.Context, pars *models.UsrTournamentListPars) ([]*models.UsrTournament, int64, error) {
+func (u *usrTournament) List(ctx context.Context, pars *models.UsrTournamentListPars) ([]*models.UsrTournament, int64, error) {
 	var err error
 
 	var filterValues []interface{}

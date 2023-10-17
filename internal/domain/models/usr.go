@@ -17,25 +17,25 @@ type UsrOld struct {
 type (
 	// Usr
 	Usr struct {
-		ID       int64         `json:"ID,omitempty" schema:"ID,omitempty"`
-		Name     string        `json:"name,omitempty" schema:"name,omitempty"`
-		Username string        `json:"username,omitempty" schema:"username,omitempty"`
-		Email    string        `json:"email,omitempty" schema:"email,omitempty"`
-		Password string        `json:"password,omitempty" schema:"password,omitempty"`
-		Group    *string       `json:"group,omitempty" schema:"group,omitempty"`
-		StatusID cns.UsrStatus `json:"statusID,omitempty" schema:"statusID,omitempty"`
-		TypeID   cns.UsrType   `json:"typeID,omitempty" schema:"typeID,omitempty"`
+		ID       int64         `json:"ID" schema:"ID"`
+		Name     string        `json:"name" schema:"name"`
+		Username string        `json:"username" schema:"username"`
+		Email    string        `json:"email" schema:"email"`
+		Password string        `json:"password" schema:"password"`
+		Group    *string       `json:"group" schema:"group"`
+		StatusID cns.UsrStatus `json:"status_id" schema:"status_id"`
+		TypeID   cns.UsrType   `json:"type_id" schema:"type_id"`
 	}
 
 	// UsrCU
 	UsrCU struct {
-		Name     *string        `json:"name,omitempty" schema:"name,omitempty"`
-		Username *string        `json:"username,omitempty" schema:"username,omitempty"`
-		Email    *string        `json:"email,omitempty" schema:"email,omitempty"`
-		Password *string        `json:"password,omitempty" schema:"password,omitempty"`
-		Group    *string        `json:"group,omitempty" schema:"group,omitempty"`
-		StatusID *cns.UsrStatus `json:"statusID,omitempty" schema:"statusID,omitempty"`
-		TypeID   *cns.UsrType   `json:"typeID,omitempty" schema:"typeID,omitempty"`
+		Name     *string        `json:"name" schema:"name"`
+		Username *string        `json:"username" schema:"username"`
+		Email    *string        `json:"email" schema:"email"`
+		Password *string        `json:"password" schema:"password"`
+		Group    *string        `json:"group" schema:"group"`
+		StatusID *cns.UsrStatus `json:"status_id" schema:"status_id"`
+		TypeID   *cns.UsrType   `json:"type_id" schema:"type_id"`
 	}
 
 	// UsrListPars
@@ -44,21 +44,21 @@ type (
 
 		UsrGetPars
 
-		IDs       *[]int64
-		StatusIDs *[]cns.UsrStatus
-		TypeIDs   *[]cns.UsrType
+		IDs       *[]int64         `json:"ids" schema:"ids"`
+		StatusIDs *[]cns.UsrStatus `json:"status_ids" schema:"status_ids"`
+		TypeIDs   *[]cns.UsrType   `json:"type_ids" schema:"type_ids"`
 
-		OnlyCount bool
+		OnlyCount bool `json:"onlyCount" schema:"onlyCount"`
 	}
 
 	// UsrGetPars
 	UsrGetPars struct {
-		ID            *int64
-		Username      *string
-		Email         *string
-		StatusID      *cns.UsrStatus
-		TypeID        *cns.UsrType
-		Group         *string
-		UsernameEmail *string
+		ID            *int64         `json:"id" schema:"id"`
+		Username      *string        `json:"username" schema:"username"`
+		Email         *string        `json:"email" schema:"email"`
+		StatusID      *cns.UsrStatus `json:"status_id" schema:"status_id"`
+		TypeID        *cns.UsrType   `json:"type_id" schema:"type_id"`
+		Group         *string        `json:"group" schema:"group"`
+		UsernameEmail *string        `json:"username_email" schema:"username_email"`
 	}
 )

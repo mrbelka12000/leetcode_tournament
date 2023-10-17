@@ -13,14 +13,12 @@ type (
 		Get(ctx context.Context, pars *models.UsrGetPars) (*models.Usr, error)
 		List(ctx context.Context, pars *models.UsrListPars) ([]*models.Usr, int64, error)
 	}
-
 	Score interface {
 		Create(ctx context.Context, obj *models.ScoreCU) (int64, error)
 		Update(ctx context.Context, obj *models.ScoreCU, id int64) error
 		Get(ctx context.Context, pars *models.ScoreGetPars) (*models.Score, error)
 		List(ctx context.Context, pars *models.ScoreListPars) ([]*models.Score, int64, error)
 	}
-
 	Event interface {
 		Create(ctx context.Context, obj *models.EventCU) (int64, error)
 		Update(ctx context.Context, obj *models.EventCU, id int64) error
@@ -38,6 +36,7 @@ type (
 		Update(ctx context.Context, obj *models.UsrEventCU, id int64) error
 		Get(ctx context.Context, pars *models.UsrEventGetPars) (*models.UsrEvent, error)
 		List(ctx context.Context, pars *models.UsrEventListPars) ([]*models.UsrEvent, int64, error)
+		GetUsrEvents(ctx context.Context, pars *models.UsrGetEventsPars) ([]*models.Event, int64, error)
 	}
 	UsrTournament interface {
 		Create(ctx context.Context, obj *models.UsrTournamentCU) (int64, error)
