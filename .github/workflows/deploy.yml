@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+ deploy:
+    name: Deploy on server
+    runs-on: ubuntu-latest
+    
+    env:
+     SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+     SERVER_URI: dev@185.146.3.75
+
+    steps:
+     - name: Deploy
+       run: |
+         echo "$SERVER_SSH_KEY" > server_ssh_key
+         chmod 0700 server_ssh_key
+         cat server_ssh_key
+         ssh -p 22 -o StrictHostKeyChecking=no -i server_ssh_key $SERVER_URI "cd leetcode_tournament/ && git pull && docker compose up --build -d && exit"
