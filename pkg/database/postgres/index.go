@@ -12,9 +12,6 @@ import (
 func Connect(cfg config.Config) (*sql.DB, error) {
 	conn, err := sql.Open("postgres", cfg.PGUrl)
 	if err != nil {
-		panic(err)
-	}
-	if err != nil {
 		return nil, fmt.Errorf("sql open: %w", err)
 	}
 
