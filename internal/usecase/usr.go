@@ -7,7 +7,7 @@ import (
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
-func (uc *UseCase) UsrCreate(ctx context.Context, obj models.UsrCU) (int64, string, error) {
+func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, string, error) {
 	id, token, err := uc.cr.Usr.Build(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("usr build: %w", err)

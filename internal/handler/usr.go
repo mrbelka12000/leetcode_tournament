@@ -23,7 +23,7 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, token, err := h.uc.UsrCreate(r.Context(), usr)
+	_, token, err := h.uc.Registration(r.Context(), usr)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
