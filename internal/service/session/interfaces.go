@@ -8,8 +8,9 @@ import (
 
 type (
 	Repo interface {
-		Create(ctx context.Context, obj models.Session) error
+		Save(ctx context.Context, obj models.Session) error
 		Delete(ctx context.Context, token string) error
-		Get(ctx context.Context, token string) (models.Session, error)
+		Get(ctx context.Context, pars models.SessionGetPars) (models.Session, error)
+		Update(ctx context.Context, obj models.Session) error
 	}
 )

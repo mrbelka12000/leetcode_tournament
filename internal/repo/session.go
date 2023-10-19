@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
@@ -16,12 +17,12 @@ func newSession(db *sql.DB) *session {
 	return &session{db: db}
 }
 
-func (s *session) Create(ctx context.Context, obj models.Session) error {
+func (s *session) Save(ctx context.Context, obj models.Session) error {
 	_, err := s.db.ExecContext(ctx, `
 		INSERT INTO session
 			(usr_id, token, expire_at)
 		VALUES 
-			($1,$2,$3)
+			($1,$2,$3)		
 `, obj.UsrID, obj.Token, obj.ExpireAt)
 	if err != nil {
 		return fmt.Errorf("create session in db : %w", err)
@@ -30,15 +31,38 @@ func (s *session) Create(ctx context.Context, obj models.Session) error {
 	return nil
 }
 
-func (s *session) Get(ctx context.Context, token string) (models.Session, error) {
+func (s *session) Get(ctx context.Context, pars models.SessionGetPars) (models.Session, error) {
+	var filterValues []interface{}
+
+	querySelect := `
+	SELECT s.id, s.usr_id, s.token, s.expire_at
+`
+	queryFrom := ` FROM session s`
+	queryWhere := ` WHERE 1 = 1`
+
+	if pars.ID != nil {
+		filterValues = append(filterValues, *pars.ID)
+		queryWhere += ` AND s.id = $` + strconv.Itoa(len(filterValues))
+	}
+
+	if pars.Token != nil {
+		filterValues = append(filterValues, *pars.Token)
+		queryWhere += ` AND s.token = $` + strconv.Itoa(len(filterValues))
+	}
+	if pars.UsrID != nil {
+		filterValues = append(filterValues, *pars.UsrID)
+		queryWhere += ` AND s.usr_id = $` + strconv.Itoa(len(filterValues))
+	}
+
 	var obj models.Session
 
-	err := s.db.QueryRowContext(ctx, `
-	SELECT
-	    id, usr_id, token, expire_at
-	FROM session
-	WHERE token = $1
-`, token).Scan(&obj.ID, &obj.UsrID, &obj.Token, &obj.ExpireAt)
+	row := s.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
+	err := row.Scan(
+		&obj.ID,
+		&obj.UsrID,
+		&obj.Token,
+		&obj.ExpireAt,
+	)
 	if err != nil {
 		return models.Session{}, fmt.Errorf("get session from db: %w", err)
 	}
@@ -54,6 +78,19 @@ func (s *session) Delete(ctx context.Context, token string) error {
 `, token)
 	if err != nil {
 		return fmt.Errorf("delete session from db: %w", err)
+	}
+
+	return nil
+}
+
+func (s *session) Update(ctx context.Context, obj models.Session) error {
+	_, err := s.db.ExecContext(ctx, `
+		UPDATE session
+		SET token = $1
+		WHERE usr_id = $2
+`, obj.Token, obj.UsrID)
+	if err != nil {
+		return fmt.Errorf("update session in db: %w", err)
 	}
 
 	return nil

@@ -80,7 +80,7 @@ func (u *usr) Update(ctx context.Context, obj models.UsrCU, id int64) error {
 	return nil
 }
 
-func (u *usr) Get(ctx context.Context, pars *models.UsrGetPars) (*models.Usr, error) {
+func (u *usr) Get(ctx context.Context, pars models.UsrGetPars) (models.Usr, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -114,7 +114,7 @@ func (u *usr) Get(ctx context.Context, pars *models.UsrGetPars) (*models.Usr, er
 		queryWhere += ` AND u.type_id = $` + strconv.Itoa(len(filterValues))
 	}
 
-	usr := &models.Usr{}
+	usr := models.Usr{}
 	row := u.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&usr.ID,
@@ -128,20 +128,20 @@ func (u *usr) Get(ctx context.Context, pars *models.UsrGetPars) (*models.Usr, er
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+			return models.Usr{}, nil
 		}
-		return nil, fmt.Errorf("row scan: %w", err)
+		return models.Usr{}, fmt.Errorf("row scan: %w", err)
 	}
 
 	err = row.Err()
 	if err != nil {
-		return nil, fmt.Errorf("row err: %w", err)
+		return models.Usr{}, fmt.Errorf("row err: %w", err)
 	}
 
 	return usr, nil
 }
 
-func (u *usr) List(ctx context.Context, pars *models.UsrListPars) ([]*models.Usr, int64, error) {
+func (u *usr) List(ctx context.Context, pars models.UsrListPars) ([]models.Usr, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -195,9 +195,9 @@ func (u *usr) List(ctx context.Context, pars *models.UsrListPars) ([]*models.Usr
 	}
 	defer rows.Close()
 
-	var users []*models.Usr
+	var users []models.Usr
 	for rows.Next() {
-		usr := &models.Usr{}
+		usr := models.Usr{}
 		err := rows.Scan(
 			&usr.ID,
 			&usr.Name,

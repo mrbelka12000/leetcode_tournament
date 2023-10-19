@@ -55,3 +55,13 @@ const (
 
 	TournamentStatusFinished TournamentStatus = 100
 )
+
+// COOKIE
+
+type CookieKey string
+
+var CKey CookieKey = "token"
+
+const (
+	CookieName = "session"
+)
