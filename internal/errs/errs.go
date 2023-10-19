@@ -18,7 +18,7 @@ const (
 	ErrPasswordNotFound  = Error("password_not_found")
 	ErrInvalidPassword   = Error("invalid_password")
 	ErrPasswordDontMatch = Error("password_dont_match")
-	ErrUsrStatusNotFound = Error("status_not_found")
+	ErrUsrStatusNotFound = Error("usr_not_found")
 	ErrInvalidUsrStatus  = Error("invalid_status")
 	ErrUsrTypeNotFound   = Error("type_not_found")
 	ErrInvalidUsrType    = Error("invalid_type")

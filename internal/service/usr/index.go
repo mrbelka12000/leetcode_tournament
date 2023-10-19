@@ -104,12 +104,12 @@ func (u *Usr) validateCU(ctx context.Context, obj models.UsrCU, id int64) error 
 		usr, err := u.Get(ctx, &models.UsrGetPars{
 			Username: pointer.ToString(*obj.Username),
 		}, true)
-		if err != nil {
-			return err
+		if err == nil {
+			if usr.ID != id {
+				return errs.ErrUsernameExists
+			}
 		}
-		if usr.ID != id {
-			return errs.ErrUsernameExists
-		}
+
 	}
 
 	if forCreate && obj.Email == nil {
@@ -123,11 +123,10 @@ func (u *Usr) validateCU(ctx context.Context, obj models.UsrCU, id int64) error 
 		usr, err := u.Get(ctx, &models.UsrGetPars{
 			Email: pointer.ToString(*obj.Email),
 		}, true)
-		if err != nil {
-			return err
-		}
-		if usr.ID != id {
-			return errs.ErrEmailExists
+		if err == nil {
+			if usr.ID != id {
+				return errs.ErrEmailExists
+			}
 		}
 	}
 
