@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/client/leetcode"
-	"github.com/mrbelka12000/leetcode_tournament/internal/delivery"
+	"github.com/mrbelka12000/leetcode_tournament/internal/handler"
 	"github.com/mrbelka12000/leetcode_tournament/internal/repo"
 	"github.com/mrbelka12000/leetcode_tournament/internal/service"
 	"github.com/mrbelka12000/leetcode_tournament/internal/usecase"
@@ -30,7 +30,7 @@ func main() {
 	repo := repo.New(db)
 	cr := service.New(repo, leetcodeClient)
 	uc := usecase.New(cr)
-	deliv := delivery.New(uc)
+	deliv := handler.New(uc)
 	r := deliv.InitRoutes()
 
 	log.Println("starting on port: ", cfg.HTTPPort)
