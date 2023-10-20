@@ -7,6 +7,8 @@ func (e Error) Error() string {
 }
 
 const (
+	ErrPermissionDenied = Error("permission_denied")
+
 	ErrEmailNotFound     = Error("email_not_found")
 	ErrInvalidEmail      = Error("invalid_email")
 	ErrEmailExists       = Error("email_exists")
@@ -24,4 +26,15 @@ const (
 	ErrInvalidUsrType    = Error("invalid_type")
 
 	ErrUsrNotFound = Error("usr_not_found")
+
+	ErrStartTimeNotFound      = Error("start_time_not_found")
+	ErrInvalidStartTime       = Error("invalid_start_time")
+	ErrEndTimeNotFound        = Error("end_time_not_found")
+	ErrInvalidEndTime         = Error("invalid_end_time")
+	ErrGoalNotFound           = Error("goal_not_found")
+	ErrInvalidGoal            = Error("invalid_goal")
+	ErrEventConditionNotFound = Error("condition_not_found")
+	ErrInvalidEventCondition  = Error("invalid_condition")
+	ErrEventStatusNotFound    = Error("status_not_found")
+	ErrInvalidEventStatus     = Error("invalid_status")
 )

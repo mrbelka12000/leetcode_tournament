@@ -16,19 +16,18 @@ import (
 )
 
 type Usr struct {
-	usrRepo       Repo
-	leetCodeStats LeetCodeStats
+	usrRepo Repo
 }
 
-func New(usrRepo Repo, leetCodeStats LeetCodeStats) *Usr {
+func New(usrRepo Repo) *Usr {
 	return &Usr{
-		usrRepo:       usrRepo,
-		leetCodeStats: leetCodeStats,
+		usrRepo: usrRepo,
 	}
 }
 
 func (u *Usr) Build(ctx context.Context, obj models.UsrCU) (int64, string, error) {
 	obj.StatusID = ptr.UsrStatusPointer(consts.UsrStatusCreated)
+
 	err := u.validateCU(ctx, obj, 0)
 	if err != nil {
 		return 0, "", fmt.Errorf("validate CU: %w", err)

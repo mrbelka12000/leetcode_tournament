@@ -24,8 +24,8 @@ type Core struct {
 
 func New(repo *repo.Repo, lc *leetcode.LeetCode) *Core {
 	return &Core{
-		Usr:           usrservice.New(repo.Usr, lc),
-		Score:         scoreservice.New(repo.Score),
+		Usr:           usrservice.New(repo.Usr),
+		Score:         scoreservice.New(repo.Score, lc),
 		Event:         eventservice.New(repo.Event),
 		Tournament:    tournamentservice.New(repo.Tournament),
 		UsrEvent:      usreventservice.New(repo.UsrEvent),

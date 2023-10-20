@@ -19,6 +19,11 @@ func (h *Handler) InitRoutes() *mux.Router {
 	r.HandleFunc("/usr", h.getCookie(h.GetUsr)).Methods(http.MethodGet)
 	r.HandleFunc("/users", h.Usrs).Methods(http.MethodGet)
 
+	r.HandleFunc("/event", h.getCookie(h.EventCreate)).Methods(http.MethodPost)
+	r.HandleFunc("/event/update/{id}", h.getCookie(h.EventUpdate)).Methods(http.MethodPost)
+	r.HandleFunc("/event", h.EventList).Methods(http.MethodGet)
+	r.HandleFunc("/event/{id}", h.EventGet).Methods(http.MethodGet)
+
 	return r
 }
 

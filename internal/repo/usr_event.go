@@ -193,7 +193,7 @@ func (u *usrEvent) GetUsrEvents(ctx context.Context, pars *models2.UsrGetEventsP
 
 	var filterValues []interface{}
 	querySelect := `
-	SELECT u.active, u.winner ,e.id, e.usr_id, e.start_time, e.end_time, e.goal, e.condition, e.status_id
+	SELECT e.id, e.usr_id, e.start_time, e.end_time, e.goal, e.condition, e.status_id
 `
 	queryFrom := ` FROM usr_event u join event e on u.event_id = e.id`
 	queryWhere := ` WHERE 1 = 1`
@@ -259,8 +259,6 @@ func (u *usrEvent) GetUsrEvents(ctx context.Context, pars *models2.UsrGetEventsP
 	for rows.Next() {
 		ev := &models2.Event{}
 		err := rows.Scan(
-			&ev.Active,
-			&ev.Winner,
 			&ev.ID,
 			&ev.UsrID,
 			&ev.StartTime,
