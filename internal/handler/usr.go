@@ -140,6 +140,9 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var page int64
+	pars.Offset, pars.Limit, page = h.uExtractPaginationPars(r.URL.Query())
+
 	t, err := template.ParseFiles(templateDir + "users-table.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -147,7 +150,7 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = t.Execute(w, models.PaginatedListRepSt{
-		Page:       1,
+		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
 		Results:    usrs,
