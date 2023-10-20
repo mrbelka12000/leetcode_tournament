@@ -61,4 +61,9 @@ type (
 		Group         *string           `json:"group" schema:"group"`
 		UsernameEmail *string           `json:"username_email" schema:"username_email"`
 	}
+
+	UsrLogin struct {
+		UsernameEmail string `json:"username_email" schema:"username_email"`
+		Password      string `json:"password" schema:"password"`
+	}
 )

@@ -11,7 +11,7 @@ migrate create -ext sql -dir migrations mg_name
 
 ### Apply migration:
 ```
-migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/spotify_multiplayer?sslmode=disable" up
+migrate -path migrations -database "postgres://postgres:postgres@localhost:5432/leetcode?sslmode=disable" up
 ```
 
 

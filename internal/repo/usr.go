@@ -18,7 +18,7 @@ func newUsr(db *sql.DB) *usr {
 	return &usr{db: db}
 }
 
-func (u *usr) Create(ctx context.Context, obj *models.UsrCU) (int64, error) {
+func (u *usr) Create(ctx context.Context, obj models.UsrCU) (int64, error) {
 	var id int64
 
 	err := u.db.QueryRowContext(ctx, `
@@ -28,7 +28,7 @@ func (u *usr) Create(ctx context.Context, obj *models.UsrCU) (int64, error) {
 		($1,$2,$3,$4,$5,$6,$7)
 		RETURNING id
 		`,
-		*obj.Name, *obj.Username, *obj.Email, *obj.Password, *obj.Group, *obj.StatusID, *obj.TypeID).Scan(&id)
+		*obj.Name, *obj.Username, *obj.Email, *obj.Password, obj.Group, *obj.StatusID, *obj.TypeID).Scan(&id)
 	if err != nil {
 		return 0, fmt.Errorf("query row context: %w", err)
 	}
@@ -36,7 +36,7 @@ func (u *usr) Create(ctx context.Context, obj *models.UsrCU) (int64, error) {
 	return id, nil
 }
 
-func (u *usr) Update(ctx context.Context, obj *models.UsrCU, id int64) error {
+func (u *usr) Update(ctx context.Context, obj models.UsrCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE usr u`
 	querySet := ` SET id = id`

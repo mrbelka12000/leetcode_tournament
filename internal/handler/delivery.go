@@ -1,4 +1,4 @@
-package delivery
+package handler
 
 import (
 	"github.com/gorilla/schema"
@@ -10,13 +10,13 @@ const (
 	templateDir = "templates/"
 )
 
-type DeliveryHTTP struct {
+type Handler struct {
 	uc      *usecase.UseCase
 	decoder *schema.Decoder
 }
 
-func New(uc *usecase.UseCase) *DeliveryHTTP {
-	return &DeliveryHTTP{
+func New(uc *usecase.UseCase) *Handler {
+	return &Handler{
 		uc:      uc,
 		decoder: schema.NewDecoder(),
 	}

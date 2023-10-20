@@ -1,11 +1,11 @@
-package delivery
+package handler
 
 import (
 	"html/template"
 	"net/http"
 )
 
-func (d *DeliveryHTTP) Index(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles(templateDir + "index.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

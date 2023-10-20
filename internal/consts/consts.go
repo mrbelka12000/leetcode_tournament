@@ -8,6 +8,12 @@ const (
 	UsrStatusDeleted
 )
 
+func IsValidUsrStatus(s UsrStatus) bool {
+	return s == UsrStatusCreated ||
+		s == UsrStatusConfirmed ||
+		s == UsrStatusDeleted
+}
+
 type UsrType uint
 
 const (
@@ -15,6 +21,12 @@ const (
 	UsrTypeClient                       // заказчик турниров
 	UsrTypeAdmin
 )
+
+func IsValidUsrType(t UsrType) bool {
+	return t == UsrTypeDeveloper ||
+		t == UsrTypeClient ||
+		t == UsrTypeAdmin
+}
 
 type EventCondition string
 

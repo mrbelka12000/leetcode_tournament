@@ -9,8 +9,8 @@ import (
 
 type (
 	Repo interface {
-		Create(ctx context.Context, obj *models.UsrCU) (int64, error)
-		Update(ctx context.Context, obj *models.UsrCU, id int64) error
+		Create(ctx context.Context, obj models.UsrCU) (int64, error)
+		Update(ctx context.Context, obj models.UsrCU, id int64) error
 		Get(ctx context.Context, pars *models.UsrGetPars) (*models.Usr, error)
 		List(ctx context.Context, pars *models.UsrListPars) ([]*models.Usr, int64, error)
 	}
