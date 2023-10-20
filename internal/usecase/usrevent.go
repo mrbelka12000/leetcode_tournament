@@ -10,8 +10,8 @@ import (
 	"github.com/mrbelka12000/leetcode_tournament/pkg/validator"
 )
 
-// EventCreate ..
-func (uc *UseCase) EventCreate(ctx context.Context, obj models.EventCU) (int64, error) {
+// UsrEventCreate ..
+func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (int64, error) {
 	token := ctx.Value(consts.CKey).(string)
 	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
 		Token: &token,
@@ -21,11 +21,11 @@ func (uc *UseCase) EventCreate(ctx context.Context, obj models.EventCU) (int64, 
 	}
 	obj.UsrID = &ses.UsrID
 
-	return uc.cr.Event.Build(ctx, obj)
+	return uc.cr.UsrEvent.Build(ctx, obj)
 }
 
-// EventUpdate ..
-func (uc *UseCase) EventUpdate(ctx context.Context, obj models.EventCU, id int64) error {
+// UsrEventUpdate ..
+func (uc *UseCase) UsrEventUpdate(ctx context.Context, obj models.UsrEventCU, id int64) error {
 	token := ctx.Value(consts.CKey).(string)
 	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
 		Token: &token,
@@ -37,24 +37,24 @@ func (uc *UseCase) EventUpdate(ctx context.Context, obj models.EventCU, id int64
 		return errs.ErrPermissionDenied
 	}
 
-	err = uc.cr.Event.Update(ctx, obj, id)
+	err = uc.cr.UsrEvent.Update(ctx, obj, id)
 	if err != nil {
-		return fmt.Errorf("event update: %w", err)
+		return fmt.Errorf("usr event update: %w", err)
 	}
 
 	return nil
 }
 
-// EventGet ..
-func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (models.Event, error) {
-	return uc.cr.Event.Get(ctx, pars, true)
+// UsrEventGet ..
+func (uc *UseCase) UsrEventGet(ctx context.Context, pars models.UsrEventGetPars) (models.UsrEvent, error) {
+	return uc.cr.UsrEvent.Get(ctx, pars, true)
 }
 
-// EventList ..
-func (uc *UseCase) EventList(ctx context.Context, pars models.EventListPars) ([]models.Event, int64, error) {
+// UsrEventList ..
+func (uc *UseCase) UsrEventList(ctx context.Context, pars models.UsrEventListPars) ([]models.UsrEvent, int64, error) {
 	if err := validator.RequirePageSize(pars.PaginationParams); err != nil {
 		return nil, 0, err
 	}
 
-	return uc.cr.Event.List(ctx, pars)
+	return uc.cr.UsrEvent.List(ctx, pars)
 }

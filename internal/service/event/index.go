@@ -21,6 +21,7 @@ func New(eventRepo Repo) *Event {
 	}
 }
 
+// Build ..
 func (e *Event) Build(ctx context.Context, obj models.EventCU) (int64, error) {
 	obj.StatusID = ptr.EventStatusPointer(consts.EventStatusCreated)
 
@@ -32,6 +33,7 @@ func (e *Event) Build(ctx context.Context, obj models.EventCU) (int64, error) {
 	return e.eventRepo.Create(ctx, obj)
 }
 
+// Update ..
 func (e *Event) Update(ctx context.Context, obj models.EventCU, id int64) error {
 	err := e.validateCU(ctx, obj, id)
 	if err != nil {
@@ -41,25 +43,31 @@ func (e *Event) Update(ctx context.Context, obj models.EventCU, id int64) error 
 	return e.eventRepo.Update(ctx, obj, id)
 }
 
+// Get ..
 func (e *Event) Get(ctx context.Context, pars models.EventGetPars, errNE bool) (models.Event, error) {
 	event, err := e.eventRepo.Get(ctx, pars)
 	if err != nil {
 		return models.Event{}, fmt.Errorf("event get from db: %w", err)
 	}
 	if errNE && event.ID == 0 {
-		return models.Event{}, errs.ErrEventStatusNotFound
+		return models.Event{}, errs.ErrEventNotFound
 	}
 
 	return event, nil
 }
 
+// List ..
 func (e *Event) List(ctx context.Context, pars models.EventListPars) ([]models.Event, int64, error) {
 	return e.eventRepo.List(ctx, pars)
 }
 
+// validateCU ..
 func (e *Event) validateCU(ctx context.Context, obj models.EventCU, id int64) error {
 	forCreate := id == 0
 
+	if forCreate && obj.UsrID == nil {
+		return errs.ErrUsrIDNotFound
+	}
 	if forCreate && obj.StartTime == nil {
 		return errs.ErrStartTimeNotFound
 	}
