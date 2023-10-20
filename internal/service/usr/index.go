@@ -50,7 +50,7 @@ func (u *Usr) Build(ctx context.Context, obj models.UsrCU) (int64, string, error
 }
 
 func (u *Usr) Login(ctx context.Context, obj models.UsrLogin) (int64, string, error) {
-	usr, err := u.Get(ctx, &models.UsrGetPars{
+	usr, err := u.Get(ctx, models.UsrGetPars{
 		UsernameEmail: &obj.UsernameEmail,
 	}, true)
 	if err != nil {
@@ -74,19 +74,19 @@ func (u *Usr) Update(ctx context.Context, obj models.UsrCU, id int64) error {
 	return u.usrRepo.Update(ctx, obj, id)
 }
 
-func (u *Usr) Get(ctx context.Context, pars *models.UsrGetPars, errNE bool) (*models.Usr, error) {
+func (u *Usr) Get(ctx context.Context, pars models.UsrGetPars, errNE bool) (models.Usr, error) {
 	usr, err := u.usrRepo.Get(ctx, pars)
 	if err != nil {
-		return nil, fmt.Errorf("usr get from db: %w", err)
+		return models.Usr{}, fmt.Errorf("usr get from db: %w", err)
 	}
-	if errNE && usr == nil {
-		return nil, errs.ErrUsrStatusNotFound
+	if errNE && usr.ID == 0 {
+		return models.Usr{}, errs.ErrUsrStatusNotFound
 	}
 
 	return usr, nil
 }
 
-func (u *Usr) List(ctx context.Context, pars *models.UsrListPars) ([]*models.Usr, int64, error) {
+func (u *Usr) List(ctx context.Context, pars models.UsrListPars) ([]models.Usr, int64, error) {
 	return u.usrRepo.List(ctx, pars)
 }
 
@@ -101,7 +101,7 @@ func (u *Usr) validateCU(ctx context.Context, obj models.UsrCU, id int64) error 
 		if len([]rune(*obj.Username)) >= 255 || len([]rune(*obj.Username)) == 0 {
 			return errs.ErrInvalidUsername
 		}
-		usr, err := u.Get(ctx, &models.UsrGetPars{
+		usr, err := u.Get(ctx, models.UsrGetPars{
 			Username: pointer.ToString(*obj.Username),
 		}, true)
 		if err == nil {
@@ -120,7 +120,7 @@ func (u *Usr) validateCU(ctx context.Context, obj models.UsrCU, id int64) error 
 		if err != nil {
 			return errs.ErrInvalidEmail
 		}
-		usr, err := u.Get(ctx, &models.UsrGetPars{
+		usr, err := u.Get(ctx, models.UsrGetPars{
 			Email: pointer.ToString(*obj.Email),
 		}, true)
 		if err == nil {

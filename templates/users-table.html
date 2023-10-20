@@ -11,14 +11,14 @@
     </tr>
   </thead>
   <tbody>
-    {{range .Users}}
+    {{range .Results}}
     <tr>
       <td>{{.Name}}</td>
-      <td>{{.Nickname}}</td>
-      <td>{{.SolvedProblems.Easy}}</td>
-      <td>{{.SolvedProblems.Medium}}</td>
-      <td>{{.SolvedProblems.Hard}}</td>
-      <td>{{.SolvedProblems.Total}}</td>
+      <td>{{.Username}}</td>
+      <td>{{.Score.Current.Easy}}</td>
+      <td>{{.Score.Current.Medium}}</td>
+      <td>{{.Score.Current.Hard}}</td>
+      <td>{{.Score.Current.Total}}</td>
     </tr>
     {{end}}
   </tbody>

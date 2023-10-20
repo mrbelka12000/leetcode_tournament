@@ -4,9 +4,11 @@ import (
 	"html/template"
 	"net/http"
 
+	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
+// Registration ..
 func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
@@ -30,7 +32,7 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookie := http.Cookie{
-		Name:     "session",
+		Name:     consts.CookieName,
 		Value:    token,
 		Path:     "*",
 		MaxAge:   3600,
@@ -53,6 +55,7 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Login ..
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -86,8 +89,23 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("success"))
 }
 
-func (h *Handler) UsrUpdate(w http.ResponseWriter, r *http.Request) {
+// ProfileUpdate ..
+func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	var obj models.UsrCU
+
+	err = h.decoder.Decode(&obj, r.Form)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	err = h.uc.UsrUpdate(r.Context(), obj)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -106,16 +124,50 @@ func (h *Handler) UsrUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (h *Handler) GetAllUsers(w http.ResponseWriter, r *http.Request) {
+// Usrs ..
+func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
+
+	var pars models.UsrListPars
+	err := h.decoder.Decode(&pars, r.URL.Query())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	usrs, tCount, err := h.uc.UsrList(r.Context(), pars)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	var page int64
+	pars.Offset, pars.Limit, page = h.uExtractPaginationPars(r.URL.Query())
+
 	t, err := template.ParseFiles(templateDir + "users-table.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	err = t.Execute(w, nil)
+	err = t.Execute(w, models.PaginatedListRepSt{
+		Page:       page,
+		PageSize:   pars.Limit,
+		TotalCount: tCount,
+		Results:    usrs,
+	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+}
+
+func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
+
+	usr, err := h.uc.UsrProfile(r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	_ = usr
 }
