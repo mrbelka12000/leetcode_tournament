@@ -15,8 +15,9 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 	}
 
 	err = uc.cr.Session.Build(ctx, models.Session{
-		UsrID: id,
-		Token: token,
+		UsrID:  id,
+		Token:  token,
+		TypeID: *obj.TypeID,
 	})
 	if err != nil {
 		return 0, "", fmt.Errorf("session build: %w", err)
@@ -35,9 +36,17 @@ func (uc *UseCase) Login(ctx context.Context, obj models.UsrLogin) (int64, strin
 		UsrID: &id,
 	})
 	if err != nil {
-		err := uc.cr.Session.Build(ctx, models.Session{
-			UsrID: id,
-			Token: token,
+		usr, err := uc.cr.Usr.Get(ctx, models.UsrGetPars{
+			ID: &id,
+		}, true)
+		if err != nil {
+			return 0, "", fmt.Errorf("get usr: %w", err)
+		}
+
+		err = uc.cr.Session.Build(ctx, models.Session{
+			UsrID:  id,
+			Token:  token,
+			TypeID: usr.TypeID,
 		})
 		if err != nil {
 			return 0, "", fmt.Errorf("session build: %w", err)

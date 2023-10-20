@@ -11,7 +11,7 @@ type (
 		ID       int64
 		UsrID    int64
 		Token    string
-		TypID    consts.UsrType
+		TypeID   consts.UsrType
 		ExpireAt time.Time
 	}
 	SessionGetPars struct {

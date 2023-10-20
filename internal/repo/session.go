@@ -20,10 +20,10 @@ func newSession(db *sql.DB) *session {
 func (s *session) Save(ctx context.Context, obj models.Session) error {
 	_, err := s.db.ExecContext(ctx, `
 		INSERT INTO session
-			(usr_id, token, expire_at)
+			(usr_id, token,type_id, expire_at)
 		VALUES 
-			($1,$2,$3)		
-`, obj.UsrID, obj.Token, obj.ExpireAt)
+			($1,$2,$3,$4)		
+`, obj.UsrID, obj.Token, obj.TypeID, obj.ExpireAt)
 	if err != nil {
 		return fmt.Errorf("create session in db : %w", err)
 	}
@@ -35,7 +35,7 @@ func (s *session) Get(ctx context.Context, pars models.SessionGetPars) (models.S
 	var filterValues []interface{}
 
 	querySelect := `
-	SELECT s.id, s.usr_id, s.token, s.expire_at
+	SELECT s.id, s.usr_id, s.token, s.type_id, s.expire_at
 `
 	queryFrom := ` FROM session s`
 	queryWhere := ` WHERE 1 = 1`
@@ -61,6 +61,7 @@ func (s *session) Get(ctx context.Context, pars models.SessionGetPars) (models.S
 		&obj.ID,
 		&obj.UsrID,
 		&obj.Token,
+		&obj.TypeID,
 		&obj.ExpireAt,
 	)
 	if err != nil {

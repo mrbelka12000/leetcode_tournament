@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS session
             references usr
             on update cascade on delete cascade,
     token       varchar not null unique,
+    type_id     smallint not null,
     expire_at   timestamp with time zone not null
 );
 
