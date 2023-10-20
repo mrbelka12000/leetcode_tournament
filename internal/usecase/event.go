@@ -7,6 +7,7 @@ import (
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/errs"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/pkg/validator"
 )
 
 // EventCreate ..
@@ -57,5 +58,9 @@ func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (mode
 }
 
 func (uc *UseCase) EventList(ctx context.Context, pars models.EventListPars) ([]models.Event, int64, error) {
+	if err := validator.RequirePageSize(pars.PaginationParams); err != nil {
+		return nil, 0, err
+	}
+
 	return uc.cr.Event.List(ctx, pars)
 }
