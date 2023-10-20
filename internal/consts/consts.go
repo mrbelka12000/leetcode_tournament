@@ -1,9 +1,5 @@
 package consts
 
-const (
-	TimeFormat = "2006-01-02"
-)
-
 type UsrStatus uint
 
 const (
