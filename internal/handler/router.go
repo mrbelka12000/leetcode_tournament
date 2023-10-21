@@ -9,6 +9,7 @@ import (
 func (h *Handler) InitRoutes() *mux.Router {
 	r := mux.NewRouter()
 
+	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 	r.HandleFunc("/", h.Index).Methods(http.MethodGet)
 
 	r.HandleFunc("/registration", h.Registration).Methods(http.MethodPost)
