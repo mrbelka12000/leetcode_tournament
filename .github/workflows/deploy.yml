@@ -18,7 +18,7 @@ jobs:
 
       - name: Login
         run: |
-          echo ${{ secrets.PASSWORD }} | docker login -u $OWNER  --password-stdin
+          echo ${{ secrets.PASSWORD }} | docker login ghcr.io -u $OWNER  -p
 
       - name: Build
         run: |
