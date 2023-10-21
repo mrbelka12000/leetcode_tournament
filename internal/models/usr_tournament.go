@@ -15,8 +15,11 @@ type (
 		Winner       *bool  `json:"winner" schema:"winner"`
 	}
 	UsrTournamentGetPars struct {
-		ID    *int64 `json:"id" schema:"id"`
-		UsrID *int64 `json:"usr_id" schema:"usr_id"`
+		ID           *int64 `json:"id" schema:"id"`
+		UsrID        *int64 `json:"usr_id" schema:"usr_id"`
+		TournamentID *int64 `json:"tournament_id" schema:"tournament_id"`
+		Active       *int64 `json:"active" schema:"active"`
+		Winner       *int64 `json:"winner" schema:"winner"`
 	}
 	UsrTournamentListPars struct {
 		PaginationParams
@@ -28,5 +31,11 @@ type (
 		Winner *bool    `json:"winner" schema:"winner"`
 
 		UsrTournamentGetPars
+	}
+	UsrGetTournamentPars struct {
+		EventListPars
+
+		Active *bool `json:"active" schema:"active"`
+		Winner *bool `json:"winner" schema:"winner"`
 	}
 )

@@ -20,7 +20,7 @@ func newUsrTournament(db *sql.DB) *usrTournament {
 	return &usrTournament{db: db}
 }
 
-func (u *usrTournament) Create(ctx context.Context, obj *models.UsrTournamentCU) (int64, error) {
+func (u *usrTournament) Create(ctx context.Context, obj models.UsrTournamentCU) (int64, error) {
 	var id int64
 
 	err := u.db.QueryRowContext(ctx, `
@@ -38,7 +38,7 @@ func (u *usrTournament) Create(ctx context.Context, obj *models.UsrTournamentCU)
 	return id, nil
 }
 
-func (u *usrTournament) Update(ctx context.Context, obj *models.UsrTournamentCU, id int64) error {
+func (u *usrTournament) Update(ctx context.Context, obj models.UsrTournamentCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE usr_tournament u`
 	querySet := ` SET id = id`
@@ -69,7 +69,7 @@ func (u *usrTournament) Update(ctx context.Context, obj *models.UsrTournamentCU,
 	return nil
 }
 
-func (u *usrTournament) Get(ctx context.Context, pars *models.UsrTournamentGetPars) (*models.UsrTournament, error) {
+func (u *usrTournament) Get(ctx context.Context, pars models.UsrTournamentGetPars) (models.UsrTournament, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -87,31 +87,31 @@ func (u *usrTournament) Get(ctx context.Context, pars *models.UsrTournamentGetPa
 		queryWhere += ` AND u.usr_id = $` + strconv.Itoa(len(filterValues))
 	}
 
-	ue := &models.UsrTournament{}
+	var ut models.UsrTournament
 	row := u.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
-		&ue.ID,
-		&ue.UsrID,
-		&ue.TournamentID,
-		&ue.Active,
-		&ue.Winner,
+		&ut.ID,
+		&ut.UsrID,
+		&ut.TournamentID,
+		&ut.Active,
+		&ut.Winner,
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+			return models.UsrTournament{}, nil
 		}
-		return nil, fmt.Errorf("row scan: %w", err)
+		return models.UsrTournament{}, fmt.Errorf("row scan: %w", err)
 	}
 
 	err = row.Err()
 	if err != nil {
-		return nil, fmt.Errorf("row err: %w", err)
+		return models.UsrTournament{}, fmt.Errorf("row err: %w", err)
 	}
 
-	return ue, nil
+	return ut, nil
 }
 
-func (u *usrTournament) List(ctx context.Context, pars *models.UsrTournamentListPars) ([]*models.UsrTournament, int64, error) {
+func (u *usrTournament) List(ctx context.Context, pars models.UsrTournamentListPars) ([]models.UsrTournament, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -168,21 +168,21 @@ func (u *usrTournament) List(ctx context.Context, pars *models.UsrTournamentList
 	}
 	defer rows.Close()
 
-	var usrTournament []*models.UsrTournament
+	var usrTournament []models.UsrTournament
 	for rows.Next() {
-		ev := &models.UsrTournament{}
+		var ut models.UsrTournament
 		err := rows.Scan(
-			&ev.ID,
-			&ev.UsrID,
-			&ev.TournamentID,
-			&ev.Active,
-			&ev.Winner,
+			&ut.ID,
+			&ut.UsrID,
+			&ut.TournamentID,
+			&ut.Active,
+			&ut.Winner,
 		)
 		if err != nil {
 			return nil, 0, fmt.Errorf("rows scan: %w", err)
 		}
 
-		usrTournament = append(usrTournament, ev)
+		usrTournament = append(usrTournament, ut)
 	}
 
 	return usrTournament, tCount, nil

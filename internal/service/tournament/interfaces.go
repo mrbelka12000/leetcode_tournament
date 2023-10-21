@@ -8,9 +8,9 @@ import (
 
 type (
 	Repo interface {
-		Create(ctx context.Context, obj *models.TournamentCU) (int64, error)
-		Update(ctx context.Context, obj *models.TournamentCU, id int64) error
-		Get(ctx context.Context, pars *models.TournamentGetPars) (*models.Tournament, error)
-		List(ctx context.Context, pars *models.TournamentListPars) ([]*models.Tournament, int64, error)
+		Create(ctx context.Context, obj models.TournamentCU) (int64, error)
+		Update(ctx context.Context, obj models.TournamentCU, id int64) error
+		Get(ctx context.Context, pars models.TournamentGetPars) (models.Tournament, error)
+		List(ctx context.Context, pars models.TournamentListPars) ([]models.Tournament, int64, error)
 	}
 )
