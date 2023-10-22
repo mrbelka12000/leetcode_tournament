@@ -20,11 +20,9 @@ func newUsr(db *sql.DB) *usr {
 
 func (u *usr) Create(ctx context.Context, obj models.UsrCU) (int64, error) {
 	var id int64
-	tx, ok := ctx.Value("tx").(*sql.Tx)
-	if !ok {
-		return 0, fmt.Errorf("transaction not found in context")
-	}
-	err := tx.QueryRowContext(ctx, `
+	conn := coalesceConn(ctx, u.db)
+
+	err := conn.QueryRowContext(ctx, `
 		INSERT INTO usr
 		(name, username, email, password, u_group, status_id, type_id)
 		VALUES 
