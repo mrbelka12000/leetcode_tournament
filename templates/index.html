@@ -49,10 +49,11 @@
 
     <div
       class="container container-fluid"
-      hx-get="/users"
+      hx-get="/users?page=1&page_size=20"
       hx-trigger="load, usersUpdate from:body"
       hx-swap="innerHTML"
       hx-indicator="#spinner"
+      id="usersTable"
     >
       <h2>User Statistics</h2>
       <table class="table table-responsive table-hover">
