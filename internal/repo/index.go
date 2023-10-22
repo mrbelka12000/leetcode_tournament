@@ -7,6 +7,7 @@ import (
 	scoreservice "github.com/mrbelka12000/leetcode_tournament/internal/service/score"
 	sessionservice "github.com/mrbelka12000/leetcode_tournament/internal/service/session"
 	tournamentservice "github.com/mrbelka12000/leetcode_tournament/internal/service/tournament"
+	transactionservice "github.com/mrbelka12000/leetcode_tournament/internal/service/transaction"
 	usrservice "github.com/mrbelka12000/leetcode_tournament/internal/service/usr"
 	usreventservice "github.com/mrbelka12000/leetcode_tournament/internal/service/usrevent"
 	usrtournamentservice "github.com/mrbelka12000/leetcode_tournament/internal/service/usrtournament"
@@ -20,6 +21,7 @@ type Repo struct {
 	UsrEvent      usreventservice.Repo
 	UsrTournament usrtournamentservice.Repo
 	Session       sessionservice.Repo
+	Transaction   transactionservice.Repo
 }
 
 func New(db *sql.DB) *Repo {
@@ -31,5 +33,6 @@ func New(db *sql.DB) *Repo {
 		UsrEvent:      newUsrEvent(db),
 		UsrTournament: newUsrTournament(db),
 		Session:       newSession(db),
+		Transaction:   newTransaction(db),
 	}
 }

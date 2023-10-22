@@ -23,8 +23,11 @@ func newScore(db *sql.DB) *score {
 
 func (s *score) Create(ctx context.Context, obj *models.ScoreCU) (int64, error) {
 	var id int64
-
-	err := s.db.QueryRowContext(ctx, `
+	tx, ok := ctx.Value("tx").(*sql.Tx)
+	if !ok {
+		return 0, fmt.Errorf("transaction not found in context")
+	}
+	err := tx.QueryRowContext(ctx, `
 		INSERT INTO score
 		(usr_id, current, active)
 		VALUES 

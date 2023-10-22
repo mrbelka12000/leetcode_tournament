@@ -10,9 +10,30 @@ import (
 )
 
 func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, string, error) {
+	defer uc.cr.Transaction.RollbackTransaction(ctx)
+	ctx, err := uc.cr.Transaction.BeginTransaction(ctx)
+	if err != nil {
+		return 0, "", err
+	}
 	id, token, err := uc.cr.Usr.Build(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("usr build: %w", err)
+	}
+	leetCodeResp, err := uc.cr.Score.Stats(ctx, *obj.Name)
+	if err != nil {
+		return 0, "", err
+	}
+
+	current := models.NewPoints(uint64(leetCodeResp.Easy), uint64(leetCodeResp.Medium), uint64(leetCodeResp.Hard), uint64(leetCodeResp.Total))
+	scoreObj := models.NewScoreCU(&id, current)
+	id, err = uc.cr.Score.Build(ctx, scoreObj)
+	if err != nil {
+		return 0, "", err
+	}
+
+	err = uc.cr.Transaction.CommitTransaction(ctx)
+	if err != nil {
+		return 0, "", err
 	}
 
 	err = uc.cr.Session.Build(ctx, models.Session{
