@@ -5,8 +5,29 @@ on:
     tags: releases/[1-9]+.[0-9]+.[0-9]+
 #    branches: mrbelka12000-patch-3
 jobs:
+  docker-setup:
+    env:
+      OWNER: ${{ secrets.OWNER }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Login
+        run: |
+          echo ${{ secrets.PASSWORD }} | docker login ghcr.io -u $OWNER  --password-stdin 
+
+      - name: Build
+        run: |
+          docker build -t ghcr.io/$OWNER/leetcode:latest .          
+      - name: Docker push
+        run: |
+          docker push ghcr.io/$OWNER/leetcode:latest
+
   production:
     runs-on: ubuntu-latest
+    needs: docker-setup
     environment:
       name: production
       url: https://pumping-leetcode.kz
@@ -23,4 +44,4 @@ jobs:
           ssh-keyscan -H ${{ secrets.IP }} >> ~/.ssh/known_hosts
       - name: copy builds to server
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.USER_IP }} "cd leetcode_tournament/ && git pull && docker compose up --build -d && exit"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.USER_IP }} "docker compose -f app.yml pull && docker compose -f app.yml up --build -d && exit"
