@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -20,7 +19,6 @@ func main() {
 		log.Fatalf("get config: %v", err)
 	}
 
-	fmt.Println(cfg)
 	db, err := postgres.Connect(cfg)
 	if err != nil {
 		log.Fatalf("connect to postgres: %v", err)
