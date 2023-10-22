@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/schema"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/usecase"
-	"github.com/mrbelka12000/leetcode_tournament/pkg/ratelimiter"
 )
 
 const (
@@ -20,7 +19,7 @@ type Handler struct {
 	limiter rateLimit
 }
 
-func New(uc *usecase.UseCase, limiter *ratelimiter.Limiter) *Handler {
+func New(uc *usecase.UseCase, limiter rateLimit) *Handler {
 	return &Handler{
 		uc:      uc,
 		decoder: schema.NewDecoder(),
