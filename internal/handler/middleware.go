@@ -33,7 +33,7 @@ func (h *Handler) limit(next http.Handler) http.Handler {
 		limiter, err := h.limiter.GetVisitor(ip)
 		if err != nil || limiter.Allow() == false {
 			h.limiter.Block(ip)
-			http.Error(w, http.StatusText(429), http.StatusTooManyRequests)
+			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
 			return
 		}
 
