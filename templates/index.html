@@ -16,6 +16,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <script src="https://unpkg.com/htmx.org/dist/ext/response-targets.js"></script>
     <link rel="stylesheet" href="static/css/main.css" />
   </head>
   <body>
@@ -27,6 +28,14 @@
         data-bs-target="#registrationModal"
       >
         Register
+      </button>
+      <button
+        type="button"
+        class="btn btn-link"
+        data-bs-toggle="modal"
+        data-bs-target="#loginModal"
+      >
+        Login
       </button>
       <button
         type="button"
@@ -66,6 +75,74 @@
       </div>
     </div>
 
+    <div class="modal fade" tabindex="-1" id="loginModal" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Login</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body" hx-ext="response-targets">
+            <form
+              class="form"
+              hx-post="/login"
+              id="loginForm"
+              hx-target-4*="find #failedLogin"
+              hx-target-5*="find #failedLogin"
+            >
+              <div
+                id="failedLogin"
+                class="alert alert-danger p-0"
+                role="alert"
+              ></div>
+              <div class="form-floating mb-3">
+                <input
+                  required
+                  type="text"
+                  class="form-control"
+                  name="username_email"
+                  id="username_email"
+                />
+                <label for="name">Username or email</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  required
+                  type="password"
+                  class="form-control"
+                  name="password"
+                  id="loginPassword"
+                />
+                <label for="loginPassword">Password</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+            <button
+              class="btn btn-outline-primary"
+              form="loginForm"
+              type="submit"
+              id="loginButton"
+            >
+              Login
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div
       class="modal fade"
       tabindex="-1"
@@ -83,29 +160,41 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
-            <form class="form" hx-post="/usr_update" id="userFormUpdate">
-              <input
-                class="log"
-                required
-                type="text"
-                placeholder="name"
-                name="name"
-              />
-              <input
-                class="usn"
-                required
-                type="text"
-                placeholder="nickname"
-                name="nickname"
-              />
-              <input
-                class="usn"
-                required
-                type="text"
-                placeholder="key"
-                name="secret"
-              />
+          <div class="modal-body" hx-ext="response-targets">
+            <form
+              class="form"
+              hx-post="/usr/update"
+              hx-target="#updateAlert"
+              hx-target-4*="find #failedUpdate"
+              hx-target-5*="find #failedUpdate"
+              id="userFormUpdate"
+            >
+              <div id="updateAlert"></div>
+              <div
+                id="failedUpdate"
+                class="alert alert-danger p-0"
+                role="alert"
+              ></div>
+              <div class="form-floating mb-3">
+                <input
+                  required
+                  type="text"
+                  class="form-control"
+                  name="name"
+                  id="updateName"
+                />
+                <label for="updateName">First name</label>
+              </div>
+              <div class="form-floating mb-3">
+                <input
+                  required
+                  type="text"
+                  class="form-control"
+                  name="username"
+                  id="updateUsername"
+                />
+                <label for="updateUsername">Username on LeetCode</label>
+              </div>
             </form>
           </div>
           <div class="modal-footer">
@@ -121,7 +210,6 @@
               form="userFormUpdate"
               type="submit"
               id="updateUserButton"
-              hx-trigger="usersUpdate"
             >
               Update
             </button>
@@ -147,22 +235,28 @@
               aria-label="Close"
             ></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body" hx-ext="response-targets">
             <form
               class="form"
               hx-post="/registration"
-              method="POST"
+              hx-target-4*="find #failedRegistration"
+              hx-target-5*="find #failedRegistration"
               id="userFormCreate"
             >
+              <div
+                id="failedRegistration"
+                class="alert alert-danger p-0"
+                role="alert"
+              ></div>
               <div class="form-floating mb-3">
                 <input
                   required
                   type="text"
                   class="form-control"
                   name="name"
-                  id="name"
+                  id="registrationName"
                 />
-                <label for="name">First name</label>
+                <label for="registrationName">First name</label>
               </div>
               <div class="form-floating mb-3">
                 <input
@@ -170,9 +264,9 @@
                   type="text"
                   class="form-control"
                   name="username"
-                  id="username"
+                  id="registrationUsername"
                 />
-                <label for="username">Username on LeetCode</label>
+                <label for="registrationUsername">Username on LeetCode</label>
               </div>
               <div class="form-floating mb-3">
                 <input
@@ -190,9 +284,9 @@
                   type="password"
                   class="form-control"
                   name="password"
-                  id="password"
+                  id="registrationPassword"
                 />
-                <label for="password">Password</label>
+                <label for="registrationPassword">Password</label>
               </div>
               <div class="form-floating">
                 <select name="type_id" class="form-select" id="type_id">
@@ -215,7 +309,6 @@
               class="btn btn-outline-primary"
               form="userFormCreate"
               type="submit"
-              hx-trigger="usersUpdate"
               id="registerButton"
             >
               Sign Up
@@ -226,6 +319,7 @@
     </div>
 
     <script>
+      htmx.logAll();
       function hideButton(id) {
         const buttonToHide = document.getElementById(id);
         if (!buttonToHide) {

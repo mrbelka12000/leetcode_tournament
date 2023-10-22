@@ -42,17 +42,9 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	t, err := template.ParseFiles(templateDir + "register.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	err = t.Execute(w, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	renderTemplate(w, "register", nil)
 }
 
 // Login ..
@@ -72,7 +64,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	_, token, err := h.uc.Login(r.Context(), usrLogin)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "User not found or incorrect password", http.StatusBadRequest)
 		return
 	}
 	cookie := http.Cookie{
@@ -86,7 +78,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	w.WriteHeader(http.StatusOK)
+	renderTemplate(w, "login", nil)
 }
 
 // ProfileUpdate ..
@@ -111,19 +103,9 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.ParseFiles(templateDir + "update.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	err = t.Execute(w, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
+	renderTemplate(w, "update", nil)
 }
 
 // Usrs ..
@@ -145,22 +127,12 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.ParseFiles(templateDir + "users-table.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = t.Execute(w, models.PaginatedListRepSt{
+	renderTemplate(w, "users-table", models.PaginatedListRepSt{
 		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
 		Results:    usrs,
 	})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
 
 func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
@@ -172,4 +144,17 @@ func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = usr
+}
+
+func renderTemplate(w http.ResponseWriter, templateName string, result interface{}) {
+	t, err := template.ParseFiles(templateDir + templateName + ".html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = t.Execute(w, result)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
