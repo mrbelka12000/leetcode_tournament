@@ -25,34 +25,16 @@ func (s *score) Create(ctx context.Context, obj *models.ScoreCU) (int64, error) 
 	var id int64
 
 	conn := coalesceConn(ctx, s.db)
-
-	switch c := conn.(type) {
-	case *sql.Tx:
-		err := c.QueryRowContext(ctx, `
+	err := conn.QueryRowContext(ctx, `
 		INSERT INTO score
 		(usr_id, current, active)
 		VALUES 
 		($1,$2,$3)
 		RETURNING id
 		`,
-			*obj.UsrID, *obj.Current, *obj.Active).Scan(&id)
-		if err != nil {
-			return 0, fmt.Errorf("query row context: %w", err)
-		}
-	case *sql.DB:
-		err := c.QueryRowContext(ctx, `
-		INSERT INTO score
-		(usr_id, current, active)
-		VALUES 
-		($1,$2,$3)
-		RETURNING id
-		`,
-			*obj.UsrID, *obj.Current, *obj.Active).Scan(&id)
-		if err != nil {
-			return 0, fmt.Errorf("query row context: %w", err)
-		}
-	default:
-		return 0, fmt.Errorf("not found sql operation in db")
+		*obj.UsrID, *obj.Current, *obj.Active).Scan(&id)
+	if err != nil {
+		return 0, fmt.Errorf("query row context: %w", err)
 	}
 
 	return id, nil

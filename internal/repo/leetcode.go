@@ -3,17 +3,15 @@ package repo
 import (
 	"context"
 	"database/sql"
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4"
 )
 
 const ErrMsg = "PG-error"
 const TransactionCtxKey = "pg_transaction"
 
 type conSt interface {
-	Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error)
-	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
-	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
+	ExecContext(ctx context.Context, sql string, arguments ...any) (sql.Result, error)
+	QueryContext(ctx context.Context, sql string, args ...any) (*sql.Rows, error)
+	QueryRowContext(ctx context.Context, sql string, args ...any) *sql.Row
 }
 
 type txContainerSt struct {
@@ -42,7 +40,7 @@ func getContextTransaction(ctx context.Context) *sql.Tx {
 	return nil
 }
 
-func coalesceConn(ctx context.Context, db *sql.DB) interface{} {
+func coalesceConn(ctx context.Context, db *sql.DB) conSt {
 	tx := getContextTransaction(ctx)
 	if tx != nil {
 		return tx
