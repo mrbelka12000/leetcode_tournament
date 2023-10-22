@@ -27,7 +27,6 @@ func (u *Score) Stats(ctx context.Context, nickname string) (resp leetcode.LCGet
 		return leetcode.LCGetProblemsSolvedResp{}, err
 	}
 	return resp, nil
-
 }
 
 func (u *Score) Build(ctx context.Context, obj *models.ScoreCU) (int64, error) {
@@ -45,7 +44,11 @@ func (u *Score) Build(ctx context.Context, obj *models.ScoreCU) (int64, error) {
 }
 
 func (u *Score) Update(ctx context.Context, obj *models.ScoreCU, id int64) error {
-	err := u.scoreRepo.Update(ctx, obj, id)
+	err := u.validateCU(ctx, obj, id)
+	if err != nil {
+		return err
+	}
+	err = u.scoreRepo.Update(ctx, obj, id)
 	if err != nil {
 		return err
 	}
@@ -76,7 +79,7 @@ func (u *Score) validateCU(ctx context.Context, obj *models.ScoreCU, id int64) e
 		return errs.ErrUsrIDNotFound
 	}
 
-	if forCreate && obj.UsrID != nil {
+	if obj.UsrID != nil {
 		_, err := u.Get(ctx, &models.ScoreGetPars{
 			ID:    &id,
 			UsrID: obj.UsrID,

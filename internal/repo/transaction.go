@@ -19,12 +19,12 @@ func (u *transaction) BeginTransaction(ctx context.Context) (context.Context, er
 	if err != nil {
 		return nil, fmt.Errorf("begin transaction: %w", err)
 	}
-	txContext := context.WithValue(ctx, "tx", tx)
+	txContext := context.WithValue(ctx, TransactionCtxKey, tx)
 	return txContext, nil
 }
 
 func (u *transaction) RollbackTransaction(ctx context.Context) error {
-	tx, ok := ctx.Value("tx").(*sql.Tx)
+	tx, ok := ctx.Value(TransactionCtxKey).(*sql.Tx)
 	if !ok {
 		return fmt.Errorf("transaction not found in context")
 	}
@@ -37,7 +37,7 @@ func (u *transaction) RollbackTransaction(ctx context.Context) error {
 }
 
 func (u *transaction) CommitTransaction(ctx context.Context) error {
-	tx, ok := ctx.Value("tx").(*sql.Tx)
+	tx, ok := ctx.Value(TransactionCtxKey).(*sql.Tx)
 	if !ok {
 		return fmt.Errorf("transaction not found in context")
 	}

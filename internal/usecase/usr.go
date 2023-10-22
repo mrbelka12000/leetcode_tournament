@@ -23,15 +23,16 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 	if err != nil {
 		return 0, "", err
 	}
-
-	current := models.NewPoints(uint64(leetCodeResp.Easy), uint64(leetCodeResp.Medium), uint64(leetCodeResp.Hard), uint64(leetCodeResp.Total))
-	scoreObj := models.NewScoreCU(&id, current)
-	id, err = uc.cr.Score.Build(ctx, scoreObj)
-	if err != nil {
-		return 0, "", err
+	scoreCU := &models.ScoreCU{
+		UsrID: &id,
+		Current: &models.Points{
+			Easy:   leetCodeResp.Easy,
+			Medium: leetCodeResp.Medium,
+			Hard:   leetCodeResp.Hard,
+			Total:  leetCodeResp.Total,
+		},
 	}
-
-	err = uc.cr.Transaction.CommitTransaction(ctx)
+	id, err = uc.cr.Score.Build(ctx, scoreCU)
 	if err != nil {
 		return 0, "", err
 	}
@@ -43,6 +44,10 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 	})
 	if err != nil {
 		return 0, "", fmt.Errorf("session build: %w", err)
+	}
+	err = uc.cr.Transaction.CommitTransaction(ctx)
+	if err != nil {
+		return 0, "", err
 	}
 
 	return id, token, nil
