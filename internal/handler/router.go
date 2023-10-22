@@ -13,11 +13,22 @@ func (h *Handler) InitRoutes() *mux.Router {
 	r := mux.NewRouter()
 
 	r.HandleFunc("/", h.Index).Methods(http.MethodGet)
+
 	r.HandleFunc("/registration", h.Registration).Methods(http.MethodPost)
 	r.HandleFunc("/login", h.Login).Methods(http.MethodPost)
 	r.HandleFunc("/usr/update", h.getCookie(h.ProfileUpdate)).Methods(http.MethodPost)
 	r.HandleFunc("/usr", h.getCookie(h.GetUsr)).Methods(http.MethodGet)
 	r.HandleFunc("/users", h.Usrs).Methods(http.MethodGet)
+
+	r.HandleFunc("/event", h.getCookie(h.EventCreate)).Methods(http.MethodPost)
+	r.HandleFunc("/event/update/{id}", h.getCookie(h.EventUpdate)).Methods(http.MethodPost)
+	r.HandleFunc("/event", h.EventList).Methods(http.MethodGet)
+	r.HandleFunc("/event/{id}", h.EventGet).Methods(http.MethodGet)
+
+	r.HandleFunc("/usr_event", h.getCookie(h.UsrEventCreate)).Methods(http.MethodPost)
+	r.HandleFunc("/usr_event/update/{id}", h.getCookie(h.UsrEventUpdate)).Methods(http.MethodPost)
+	r.HandleFunc("/usr_event", h.UsrEventList).Methods(http.MethodGet)
+	r.HandleFunc("/usr_event/{id}", h.UsrEventGet).Methods(http.MethodGet)
 
 	return r
 }

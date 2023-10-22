@@ -10,21 +10,19 @@ type (
 	Event struct {
 		ID        int64                 `json:"id" schema:"id"`
 		UsrID     int64                 `json:"usr_id" schema:"usr_id"`
-		StartTime time.Time             `json:"start_time"`
-		EndTime   time.Time             `json:"end_time"`
+		StartTime time.Time             `json:"start_time" schema:"start_time"`
+		EndTime   time.Time             `json:"end_time" schema:"end_time"`
 		Goal      int                   `json:"goal" schema:"goal"`
 		Condition consts.EventCondition `json:"condition" schema:"condition"`
 		StatusID  consts.EventStatus    `json:"status_id" schema:"status_id"`
-		Winner    bool                  `json:"winner" schema:"winner"`
-		Active    bool                  `json:"active" schema:"active"`
 	}
 	EventCU struct {
-		UsrID     *int64                 `json:"usr_id" schema:"usr_id"`
+		UsrID     *int64                 `json:"-" schema:"-"`
 		StartTime *time.Time             `json:"start_time" schema:"start_time"`
 		EndTime   *time.Time             `json:"end_time" schema:"end_time"`
 		Goal      *int                   `json:"goal" schema:"goal"`
 		Condition *consts.EventCondition `json:"condition" schema:"condition"`
-		StatusID  *consts.EventStatus    `json:"status_id" schema:"status_id"`
+		StatusID  *consts.EventStatus    `json:"-" schema:"-"`
 	}
 	EventGetPars struct {
 		ID    *int64 `json:"id" schema:"id"`

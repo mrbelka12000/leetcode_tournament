@@ -6,6 +6,7 @@ import (
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/pkg/validator"
 )
 
 func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, string, error) {
@@ -72,6 +73,10 @@ func (uc *UseCase) UsrUpdate(ctx context.Context, obj models.UsrCU) error {
 }
 
 func (uc *UseCase) UsrList(ctx context.Context, pars models.UsrListPars) ([]models.Usr, int64, error) {
+	if err := validator.RequirePageSize(pars.PaginationParams); err != nil {
+		return nil, 0, err
+	}
+
 	return uc.cr.Usr.List(ctx, pars)
 }
 

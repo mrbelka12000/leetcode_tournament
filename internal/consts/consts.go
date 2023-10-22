@@ -8,10 +8,10 @@ const (
 	UsrStatusDeleted
 )
 
-func IsValidUsrStatus(s UsrStatus) bool {
-	return s == UsrStatusCreated ||
-		s == UsrStatusConfirmed ||
-		s == UsrStatusDeleted
+func IsValidUsrStatus(v UsrStatus) bool {
+	return v == UsrStatusCreated ||
+		v == UsrStatusConfirmed ||
+		v == UsrStatusDeleted
 }
 
 type UsrType uint
@@ -22,10 +22,10 @@ const (
 	UsrTypeAdmin
 )
 
-func IsValidUsrType(t UsrType) bool {
-	return t == UsrTypeDeveloper ||
-		t == UsrTypeClient ||
-		t == UsrTypeAdmin
+func IsValidUsrType(v UsrType) bool {
+	return v == UsrTypeDeveloper ||
+		v == UsrTypeClient ||
+		v == UsrTypeAdmin
 }
 
 type EventCondition string
@@ -35,6 +35,12 @@ const (
 	EventConditionOnMax        EventCondition = "on_max"         // кто решит больше всего задач за определнный период
 	EventConditionOnTimeExceed EventCondition = "on_time_exceed" // может быть много победителей, победители определяется путем если превысил нужное количество задач
 )
+
+func IsValidEventCondition(v EventCondition) bool {
+	return v == EventConditionOnFirst ||
+		v == EventConditionOnMax ||
+		v == EventConditionOnTimeExceed
+}
 
 type EventStatus uint
 
@@ -46,6 +52,13 @@ const (
 	EventStatusFinished EventStatus = 100
 )
 
+func IsValidEventStatus(v EventStatus) bool {
+	return v == EventStatusCreated ||
+		v == EventStatusStarted ||
+		v == EventStatusCanceled ||
+		v == EventStatusFinished
+}
+
 type TournamentStatus uint
 
 const (
@@ -55,6 +68,13 @@ const (
 
 	TournamentStatusFinished TournamentStatus = 100
 )
+
+func IsValidTournamentStatus(v TournamentStatus) bool {
+	return v == TournamentStatusCreated ||
+		v == TournamentStatusStarted ||
+		v == TournamentStatusCanceled ||
+		v == TournamentStatusFinished
+}
 
 // COOKIE
 

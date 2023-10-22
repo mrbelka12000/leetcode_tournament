@@ -15,8 +15,11 @@ type (
 		Winner  *bool  `json:"winner" schema:"winner"`
 	}
 	UsrEventGetPars struct {
-		ID    *int64 `json:"id" schema:"id"`
-		UsrID *int64 `json:"usr_id" schema:"usr_id"`
+		ID      *int64 `json:"id" schema:"id"`
+		UsrID   *int64 `json:"usr_id" schema:"usr_id"`
+		EventID *int64 `json:"event_id" schema:"event_id"`
+		Active  *int64 `json:"active" schema:"active"`
+		Winner  *int64 `json:"winner" schema:"winner"`
 	}
 	UsrEventListPars struct {
 		PaginationParams

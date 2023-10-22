@@ -86,7 +86,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	w.Write([]byte("success"))
+	w.WriteHeader(http.StatusOK)
 }
 
 // ProfileUpdate ..
@@ -122,6 +122,8 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 // Usrs ..
@@ -134,14 +136,14 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var page int64
+	pars.Offset, pars.Limit, page = h.uExtractPaginationPars(r.URL.Query())
+
 	usrs, tCount, err := h.uc.UsrList(r.Context(), pars)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	var page int64
-	pars.Offset, pars.Limit, page = h.uExtractPaginationPars(r.URL.Query())
 
 	t, err := template.ParseFiles(templateDir + "users-table.html")
 	if err != nil {

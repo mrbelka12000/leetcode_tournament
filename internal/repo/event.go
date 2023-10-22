@@ -20,7 +20,7 @@ func newEvent(db *sql.DB) *event {
 	return &event{db: db}
 }
 
-func (e *event) Create(ctx context.Context, obj *models.EventCU) (int64, error) {
+func (e *event) Create(ctx context.Context, obj models.EventCU) (int64, error) {
 	var id int64
 
 	err := e.db.QueryRowContext(ctx, `
@@ -38,7 +38,7 @@ func (e *event) Create(ctx context.Context, obj *models.EventCU) (int64, error) 
 	return id, nil
 }
 
-func (e *event) Update(ctx context.Context, obj *models.EventCU, id int64) error {
+func (e *event) Update(ctx context.Context, obj models.EventCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE event e`
 	querySet := ` SET id = id`
@@ -77,7 +77,7 @@ func (e *event) Update(ctx context.Context, obj *models.EventCU, id int64) error
 	return nil
 }
 
-func (e *event) Get(ctx context.Context, pars *models.EventGetPars) (*models.Event, error) {
+func (e *event) Get(ctx context.Context, pars models.EventGetPars) (models.Event, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -95,7 +95,7 @@ func (e *event) Get(ctx context.Context, pars *models.EventGetPars) (*models.Eve
 		queryWhere += ` AND e.usr_id = $` + strconv.Itoa(len(filterValues))
 	}
 
-	ev := &models.Event{}
+	ev := models.Event{}
 	row := e.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&ev.ID,
@@ -108,20 +108,20 @@ func (e *event) Get(ctx context.Context, pars *models.EventGetPars) (*models.Eve
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+			return models.Event{}, nil
 		}
-		return nil, fmt.Errorf("row scan: %w", err)
+		return models.Event{}, fmt.Errorf("row scan: %w", err)
 	}
 
 	err = row.Err()
 	if err != nil {
-		return nil, fmt.Errorf("row err: %w", err)
+		return models.Event{}, fmt.Errorf("row err: %w", err)
 	}
 
 	return ev, nil
 }
 
-func (e *event) List(ctx context.Context, pars *models.EventListPars) ([]*models.Event, int64, error) {
+func (e *event) List(ctx context.Context, pars models.EventListPars) ([]models.Event, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -179,9 +179,9 @@ func (e *event) List(ctx context.Context, pars *models.EventListPars) ([]*models
 	}
 	defer rows.Close()
 
-	var events []*models.Event
+	var events []models.Event
 	for rows.Next() {
-		ev := &models.Event{}
+		ev := models.Event{}
 		err := rows.Scan(
 			&ev.ID,
 			&ev.UsrID,

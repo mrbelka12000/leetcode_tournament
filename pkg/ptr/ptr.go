@@ -9,3 +9,7 @@ func UsrStatusPointer(v consts.UsrStatus) *consts.UsrStatus {
 func UsrTypePointer(v consts.UsrType) *consts.UsrType {
 	return &v
 }
+
+func EventStatusPointer(v consts.EventStatus) *consts.EventStatus {
+	return &v
+}
