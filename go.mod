@@ -15,7 +15,10 @@ require (
 
 require (
 	github.com/AlekSi/pointer v1.2.0 // indirect
+	github.com/benbjohnson/clock v1.3.0 // indirect
 	github.com/google/uuid v1.3.1 // indirect
 	github.com/gorilla/schema v1.2.0 // indirect
+	go.uber.org/ratelimit v0.3.0 // indirect
 	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/time v0.3.0 // indirect
 )
