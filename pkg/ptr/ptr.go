@@ -13,3 +13,7 @@ func UsrTypePointer(v consts.UsrType) *consts.UsrType {
 func EventStatusPointer(v consts.EventStatus) *consts.EventStatus {
 	return &v
 }
+
+func TournamentStatusPointer(v consts.TournamentStatus) *consts.TournamentStatus {
+	return &v
+}

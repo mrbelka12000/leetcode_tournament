@@ -20,7 +20,7 @@ func newTournament(db *sql.DB) *tournament {
 	return &tournament{db: db}
 }
 
-func (t *tournament) Create(ctx context.Context, obj *models.TournamentCU) (int64, error) {
+func (t *tournament) Create(ctx context.Context, obj models.TournamentCU) (int64, error) {
 	var id int64
 
 	err := t.db.QueryRowContext(ctx, `
@@ -38,7 +38,7 @@ func (t *tournament) Create(ctx context.Context, obj *models.TournamentCU) (int6
 	return id, nil
 }
 
-func (t *tournament) Update(ctx context.Context, obj *models.TournamentCU, id int64) error {
+func (t *tournament) Update(ctx context.Context, obj models.TournamentCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE tournament t`
 	querySet := ` SET id = id`
@@ -81,7 +81,7 @@ func (t *tournament) Update(ctx context.Context, obj *models.TournamentCU, id in
 	return nil
 }
 
-func (t *tournament) Get(ctx context.Context, pars *models.TournamentGetPars) (*models.Tournament, error) {
+func (t *tournament) Get(ctx context.Context, pars models.TournamentGetPars) (models.Tournament, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -99,7 +99,7 @@ func (t *tournament) Get(ctx context.Context, pars *models.TournamentGetPars) (*
 		queryWhere += ` AND t.usr_id = $` + strconv.Itoa(len(filterValues))
 	}
 
-	tr := &models.Tournament{}
+	var tr models.Tournament
 	row := t.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&tr.ID,
@@ -113,20 +113,20 @@ func (t *tournament) Get(ctx context.Context, pars *models.TournamentGetPars) (*
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+			return models.Tournament{}, nil
 		}
-		return nil, fmt.Errorf("row scan: %w", err)
+		return models.Tournament{}, fmt.Errorf("row scan: %w", err)
 	}
 
 	err = row.Err()
 	if err != nil {
-		return nil, fmt.Errorf("row err: %w", err)
+		return models.Tournament{}, fmt.Errorf("row err: %w", err)
 	}
 
 	return tr, nil
 }
 
-func (t *tournament) List(ctx context.Context, pars *models.TournamentListPars) ([]*models.Tournament, int64, error) {
+func (t *tournament) List(ctx context.Context, pars models.TournamentListPars) ([]models.Tournament, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -180,9 +180,9 @@ func (t *tournament) List(ctx context.Context, pars *models.TournamentListPars) 
 	}
 	defer rows.Close()
 
-	var tournaments []*models.Tournament
+	var tournaments []models.Tournament
 	for rows.Next() {
-		tr := &models.Tournament{}
+		var tr models.Tournament
 		err := rows.Scan(
 			&tr.ID,
 			&tr.UsrID,

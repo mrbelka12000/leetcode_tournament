@@ -19,6 +19,7 @@ func New(usrEventRepo Repo) *UsrEvent {
 		usrEventRepo: usrEventRepo,
 	}
 }
+
 func (u *UsrEvent) Build(ctx context.Context, obj models.UsrEventCU) (int64, error) {
 	obj.Active = pointer.ToBool(true)
 	obj.Winner = pointer.ToBool(false)

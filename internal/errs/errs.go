@@ -7,7 +7,12 @@ func (e Error) Error() string {
 }
 
 const (
+
+	// Service errors
+
 	ErrPermissionDenied = Error("permission_denied")
+
+	// Usr errors
 
 	ErrUsrIDNotFound     = Error("usr_id_not_found")
 	ErrEmailNotFound     = Error("email_not_found")
@@ -25,8 +30,9 @@ const (
 	ErrInvalidUsrStatus  = Error("invalid_status")
 	ErrUsrTypeNotFound   = Error("type_not_found")
 	ErrInvalidUsrType    = Error("invalid_type")
+	ErrUsrNotFound       = Error("usr_not_found")
 
-	ErrUsrNotFound = Error("usr_not_found")
+	// Event errors
 
 	ErrEventIDNotFound        = Error("event_id_not_found")
 	ErrStartTimeNotFound      = Error("start_time_not_found")
@@ -39,9 +45,23 @@ const (
 	ErrInvalidEventCondition  = Error("invalid_condition")
 	ErrEventStatusNotFound    = Error("status_not_found")
 	ErrInvalidEventStatus     = Error("invalid_status")
+	ErrEventNotFound          = Error("event_not_found")
 
-	ErrEventNotFound = Error("event_not_found")
+	// UsrEvent errors
 
 	ErrUsrEventNotFound = Error("usr_event_not_found")
 	ErrActiveNotFound   = Error("active_not_found")
+
+	// Tournament errors
+
+	ErrTournamentIDNotFound     = Error("event_id_not_found")
+	ErrTournamentStatusNotFound = Error("status_not_found")
+	ErrInvalidTournamentStatus  = Error("invalid_status")
+	ErrTournamentNotFound       = Error("tournament_not_found")
+	ErrTournamentCostNotFound   = Error("cost_not_found")
+	ErrInvalidTournamentCost    = Error("invalid_cost")
+	ErrTournamentPrizeNotFound  = Error("prize_pool_not_found")
+	ErrInvalidTournamentPrize   = Error("invalid_prize_pool")
+
+	ErrUsrTournamentNotFound = Error("usr_event_not_found")
 )
