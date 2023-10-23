@@ -43,7 +43,7 @@ func (l *LeetCode) Stats(ctx context.Context, username string) (resp LCGetProble
 					SubmitStatsGlobal struct {
 						AcSubmissionNum []struct {
 							Difficulty string `json:"difficulty"`
-							Count      int    `json:"count"`
+							Count      uint64 `json:"count"`
 						} `json:"acSubmissionNum"`
 					} `json:"submitStatsGlobal"`
 				} `json:"matchedUser"`
@@ -74,10 +74,10 @@ func (l *LeetCode) Stats(ctx context.Context, username string) (resp LCGetProble
 	}
 
 	if len(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum) > 3 {
-		resp.Total = uint64(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[0].Count)
-		resp.Easy = uint64(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[1].Count)
-		resp.Medium = uint64(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[2].Count)
-		resp.Hard = uint64(out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[3].Count)
+		resp.Total = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[0].Count
+		resp.Easy = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[1].Count
+		resp.Medium = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[2].Count
+		resp.Hard = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[3].Count
 	}
 	return resp, nil
 }
