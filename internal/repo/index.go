@@ -53,17 +53,17 @@ type txContainerSt struct {
 
 func ExecContext(ctx context.Context, db *sql.DB, sql string, args ...any) (sql.Result, error) {
 	conn := coalesceConn(ctx, db)
-	return conn.ExecContext(ctx, sql, args)
+	return conn.ExecContext(ctx, sql, args...)
 }
 
 func QueryContext(ctx context.Context, db *sql.DB, sql string, args ...any) (*sql.Rows, error) {
 	conn := coalesceConn(ctx, db)
-	return conn.QueryContext(ctx, sql, args)
+	return conn.QueryContext(ctx, sql, args...)
 }
 
 func QueryRowContext(ctx context.Context, db *sql.DB, sql string, args ...any) *sql.Row {
 	conn := coalesceConn(ctx, db)
-	return conn.QueryRowContext(ctx, sql, args)
+	return conn.QueryRowContext(ctx, sql, args...)
 }
 
 func getContextTransactionContainer(ctx context.Context) *txContainerSt {
