@@ -10,8 +10,8 @@ const (
 
 	// Service errors
 
-	ErrPermissionDenied = Error("permission_denied")
-
+	ErrPermissionDenied  = Error("permission_denied")
+	ErrRateLimiterWorked = Error("rate_limiter_worked")
 	// Usr errors
 
 	ErrUsrIDNotFound     = Error("usr_id_not_found")
