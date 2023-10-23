@@ -39,7 +39,6 @@ func (u *Usr) Build(ctx context.Context, obj models.UsrCU) (int64, string, error
 	}
 
 	*obj.Password = string(hashedPassword)
-
 	id, err := u.usrRepo.Create(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("create usr: %w", err)

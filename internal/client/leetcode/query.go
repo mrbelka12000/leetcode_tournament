@@ -21,8 +21,8 @@ const query = `
 	}`
 
 type LCGetProblemsSolvedResp struct {
-	Easy   int
-	Medium int
-	Hard   int
-	Total  int
+	Easy   uint64
+	Medium uint64
+	Hard   uint64
+	Total  uint64
 }

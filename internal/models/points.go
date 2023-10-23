@@ -13,6 +13,15 @@ type Points struct {
 	Total  uint64 `json:"total" schema:"total"`
 }
 
+func NewPoints(easy, medium, hard, total uint64) *Points {
+	return &Points{
+		Easy:   easy,
+		Medium: medium,
+		Hard:   hard,
+		Total:  total,
+	}
+}
+
 // Scan method to unmarshal jsonb from postgres
 func (p *Points) Scan(src interface{}) (err error) {
 	switch src.(type) {
