@@ -16,12 +16,14 @@ const (
 type Handler struct {
 	uc      *usecase.UseCase
 	decoder *schema.Decoder
+	limiter rateLimit
 }
 
-func New(uc *usecase.UseCase) *Handler {
+func New(uc *usecase.UseCase, limiter rateLimit) *Handler {
 	return &Handler{
 		uc:      uc,
 		decoder: schema.NewDecoder(),
+		limiter: limiter,
 	}
 }
 
