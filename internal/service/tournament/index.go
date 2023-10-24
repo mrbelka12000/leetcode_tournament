@@ -53,7 +53,7 @@ func (e *Tournament) Get(ctx context.Context, pars models.TournamentGetPars, err
 		return models.Tournament{}, fmt.Errorf("tournament get from db: %w", err)
 	}
 	if errNE && tournament.ID == 0 {
-		return models.Tournament{}, errs.ErrTournamentNotFound
+		return models.Tournament{}, errs.ErrNotFound
 	}
 
 	return tournament, nil

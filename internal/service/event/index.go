@@ -50,7 +50,7 @@ func (e *Event) Get(ctx context.Context, pars models.EventGetPars, errNE bool) (
 		return models.Event{}, fmt.Errorf("event get from db: %w", err)
 	}
 	if errNE && event.ID == 0 {
-		return models.Event{}, errs.ErrEventNotFound
+		return models.Event{}, errs.ErrNotFound
 	}
 
 	return event, nil

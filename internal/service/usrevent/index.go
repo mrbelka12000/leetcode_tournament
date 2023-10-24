@@ -52,7 +52,7 @@ func (u *UsrEvent) Get(ctx context.Context, pars models.UsrEventGetPars, errNE b
 		return models.UsrEvent{}, fmt.Errorf("usr event get from db: %w", err)
 	}
 	if errNE && usr.ID == 0 {
-		return models.UsrEvent{}, errs.ErrUsrEventNotFound
+		return models.UsrEvent{}, errs.ErrNotFound
 	}
 
 	return usr, nil
