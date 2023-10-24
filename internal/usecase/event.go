@@ -46,8 +46,45 @@ func (uc *UseCase) EventUpdate(ctx context.Context, obj models.EventCU, id int64
 }
 
 // EventGet ..
-func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (models.Event, error) {
-	return uc.cr.Event.Get(ctx, pars, true)
+func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (models.EventPage, error) {
+	var (
+		eventPage models.EventPage
+		err       error
+	)
+
+	eventPage.Event, err = uc.cr.Event.Get(ctx, pars, true)
+	if err != nil {
+		return models.EventPage{}, fmt.Errorf("get event: %w", err)
+	}
+
+	usrEvents, _, err := uc.cr.UsrEvent.List(ctx, models.UsrEventListPars{
+		UsrEventGetPars: models.UsrEventGetPars{
+			EventID: pars.ID,
+		},
+	})
+	if err != nil {
+		return models.EventPage{}, fmt.Errorf("get usr events: %w", err)
+	}
+
+	eventPage.Usrs = make([]models.Usr, len(usrEvents))
+	for i := 0; i < len(usrEvents); i++ {
+		eventPage.Usrs[i], err = uc.cr.Usr.Get(ctx, models.UsrGetPars{
+			ID:       &usrEvents[i].UsrID,
+			HideInfo: true,
+		}, true)
+		if err != nil {
+			return models.EventPage{}, fmt.Errorf("get usr: %w", err)
+		}
+
+		eventPage.Usrs[i].Score, err = uc.cr.Score.Get(ctx, models.ScoreGetPars{
+			UsrID: &usrEvents[i].UsrID,
+		}, true)
+		if err != nil {
+			return models.EventPage{}, fmt.Errorf("get score: %w", err)
+		}
+	}
+
+	return eventPage, nil
 }
 
 // EventList ..
