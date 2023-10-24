@@ -18,7 +18,7 @@ func newSession(db *sql.DB) *session {
 }
 
 func (s *session) Save(ctx context.Context, obj models.Session) error {
-	_, err := ExecContext(ctx, s.db, `
+	_, err := s.db.ExecContext(ctx, `
 		INSERT INTO session
 			(usr_id, token,type_id, expire_at)
 		VALUES 
@@ -56,7 +56,7 @@ func (s *session) Get(ctx context.Context, pars models.SessionGetPars) (models.S
 
 	var obj models.Session
 
-	row := QueryRowContext(ctx, s.db, querySelect+queryFrom+queryWhere, filterValues...)
+	row := s.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&obj.ID,
 		&obj.UsrID,
@@ -72,7 +72,7 @@ func (s *session) Get(ctx context.Context, pars models.SessionGetPars) (models.S
 }
 
 func (s *session) Delete(ctx context.Context, token string) error {
-	_, err := ExecContext(ctx, s.db, `
+	_, err := s.db.ExecContext(ctx, `
 	DELETE 
 		FROM session
 	WHERE token =$1
@@ -85,7 +85,7 @@ func (s *session) Delete(ctx context.Context, token string) error {
 }
 
 func (s *session) Update(ctx context.Context, obj models.Session) error {
-	_, err := ExecContext(ctx, s.db, `
+	_, err := s.db.ExecContext(ctx, `
 		UPDATE session
 		SET token = $1
 		WHERE usr_id = $2

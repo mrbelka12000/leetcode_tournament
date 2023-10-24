@@ -27,7 +27,7 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 		return 0, "", err
 	}
 
-	id, err = uc.cr.Score.Build(ctx, models.ScoreCU{
+	id, err = uc.cr.Score.Build(ctx, &models.ScoreCU{
 		UsrID: &id,
 		Current: &models.Points{
 			Easy:   leetCodeResp.Easy,
@@ -40,7 +40,6 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 		return 0, "", err
 	}
 
-	fmt.Println(id, token)
 	err = uc.cr.Session.Build(ctx, models.Session{
 		UsrID:  id,
 		Token:  token,

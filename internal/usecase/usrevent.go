@@ -12,13 +12,6 @@ import (
 
 // UsrEventCreate ..
 func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (int64, error) {
-	ctx, err := uc.cr.Transaction.BeginTransaction(ctx)
-	if err != nil {
-		return 0, fmt.Errorf("begin transaction: %w", err)
-	}
-
-	defer uc.cr.Transaction.RollbackTransaction(ctx)
-
 	token := ctx.Value(consts.CKey).(string)
 	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
 		Token: &token,
@@ -28,45 +21,7 @@ func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (i
 	}
 	obj.UsrID = &ses.UsrID
 
-	id, err := uc.cr.UsrEvent.Build(ctx, obj)
-	if err != nil {
-		return 0, fmt.Errorf("build: %w", err)
-	}
-
-	usr, err := uc.cr.Usr.Get(ctx, models.UsrGetPars{
-		ID: &id,
-	}, true)
-	if err != nil {
-		return 0, fmt.Errorf("usr get: %w", err)
-	}
-
-	score, err := uc.cr.Score.Get(ctx, models.ScoreGetPars{
-		UsrID: &usr.ID,
-	}, true)
-	if err != nil {
-		return 0, fmt.Errorf("score get: %w", err)
-	}
-
-	resp, err := uc.cr.Score.Stats(ctx, usr.Username)
-	if err != nil {
-		return 0, fmt.Errorf("get leetcode score: %w", err)
-	}
-
-	err = uc.cr.Score.Update(ctx, models.ScoreCU{Footprint: models.NewPoints(
-		resp.Easy,
-		resp.Medium,
-		resp.Hard,
-		resp.Total)}, score.ID)
-	if err != nil {
-		return 0, fmt.Errorf("update score: %w", err)
-	}
-
-	err = uc.cr.Transaction.CommitTransaction(ctx)
-	if err != nil {
-		return 0, fmt.Errorf("commit transaction: %w", err)
-	}
-
-	return id, nil
+	return uc.cr.UsrEvent.Build(ctx, obj)
 }
 
 // UsrEventUpdate ..
