@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"database/sql"
+	"fmt"
 
 	eventservice "github.com/mrbelka12000/leetcode_tournament/internal/service/event"
 	scoreservice "github.com/mrbelka12000/leetcode_tournament/internal/service/score"
@@ -48,7 +49,7 @@ type conSt interface {
 }
 
 type txContainerSt struct {
-	tx sql.Tx
+	tx *sql.Tx
 }
 
 func ExecContext(ctx context.Context, db *sql.DB, sql string, args ...any) (sql.Result, error) {
@@ -83,7 +84,7 @@ func getContextTransactionContainer(ctx context.Context) *txContainerSt {
 func getContextTransaction(ctx context.Context) *sql.Tx {
 	container := getContextTransactionContainer(ctx)
 	if container != nil {
-		return &container.tx
+		return container.tx
 	}
 	return nil
 }
@@ -91,6 +92,7 @@ func getContextTransaction(ctx context.Context) *sql.Tx {
 func coalesceConn(ctx context.Context, db *sql.DB) conSt {
 	tx := getContextTransaction(ctx)
 	if tx != nil {
+		fmt.Println("suka")
 		return tx
 	}
 	return db

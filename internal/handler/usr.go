@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -171,5 +172,5 @@ func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = usr
+	fmt.Printf("%+v \n ", usr)
 }

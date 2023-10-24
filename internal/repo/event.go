@@ -23,7 +23,7 @@ func newEvent(db *sql.DB) *event {
 func (e *event) Create(ctx context.Context, obj models.EventCU) (int64, error) {
 	var id int64
 
-	err := e.db.QueryRowContext(ctx, `
+	err := QueryRowContext(ctx, e.db, `
 		INSERT INTO event
 		(usr_id, start_time, end_time, goal, condition, status_id)
 		VALUES 
@@ -69,7 +69,7 @@ func (e *event) Update(ctx context.Context, obj models.EventCU, id int64) error 
 		querySet += ` , status_id = $` + strconv.Itoa(len(updateValues))
 	}
 
-	_, err := e.db.ExecContext(ctx, queryUpdate+querySet+queryWhere, updateValues...)
+	_, err := ExecContext(ctx, e.db, queryUpdate+querySet+queryWhere, updateValues...)
 	if err != nil {
 		return fmt.Errorf("exec context: %w", err)
 	}
@@ -96,7 +96,7 @@ func (e *event) Get(ctx context.Context, pars models.EventGetPars) (models.Event
 	}
 
 	ev := models.Event{}
-	row := e.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
+	row := QueryRowContext(ctx, e.db, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&ev.ID,
 		&ev.UsrID,
@@ -162,7 +162,7 @@ func (e *event) List(ctx context.Context, pars models.EventListPars) ([]models.E
 
 	var tCount int64
 	if pars.Limit > 0 {
-		err := e.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
+		err := QueryRowContext(ctx, e.db, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -173,7 +173,7 @@ func (e *event) List(ctx context.Context, pars models.EventListPars) ([]models.E
 		queryLimit = ` limit ` + strconv.FormatInt(pars.Limit, 10)
 	}
 
-	rows, err := e.db.QueryContext(ctx, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
+	rows, err := QueryContext(ctx, e.db, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("query context: %w", err)
 	}
