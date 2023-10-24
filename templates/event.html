@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Event Page</title>
+</head>
+<body>
+
+<h1>Event Page</h1>
+
+<table border="1">
+    <tr>
+        <th>Event</th>
+    </tr>
+    <tr>
+        <td>
+            <table>
+                <tr><td>ID</td><td>{{.Event.ID}}</td></tr>
+                <tr><td>UsrID</td><td>{{.Event.UsrID}}</td></tr>
+                <tr><td>StartTime</td><td>{{.Event.StartTime}}</td></tr>
+                <tr><td>EndTime</td><td>{{.Event.EndTime}}</td></tr>
+                <tr><td>Goal</td><td>{{.Event.Goal}}</td></tr>
+                <tr><td>Condition</td><td>{{.Event.Condition}}</td></tr>
+                <tr><td>StatusID</td><td>{{.Event.StatusID}}</td></tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table border="1">
+    <tr>
+        <th>Usrs</th>
+    </tr>
+    {{range .Usrs}}
+    <tr>
+        <td>
+            <table>
+                <tr><td>ID</td><td>{{.ID}}</td></tr>
+                <tr><td>Name</td><td>{{.Name}}</td></tr>
+                <tr><td>Username</td><td>{{.Username}}</td></tr>
+                <tr><td>Email</td><td>{{.Email}}</td></tr>
+                <tr><td>Password</td><td>{{.Password}}</td></tr>
+                <tr><td>Group</td><td>{{.Group}}</td></tr>
+                <tr><td>StatusID</td><td>{{.StatusID}}</td></tr>
+                <tr><td>TypeID</td><td>{{.TypeID}}</td></tr>
+                <tr><td>Score</td></tr>
+                <tr>
+                    <td>
+                        <table>
+                            <tr><td>ID</td><td>{{.Score.ID}}</td></tr>
+                            <tr><td>UsrID</td><td>{{.Score.UsrID}}</td></tr>
+                            <tr><td>Current</td></tr>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr><td>Easy</td><td>{{.Score.Current.Easy}}</td></tr>
+                                        <tr><td>Medium</td><td>{{.Score.Current.Medium}}</td></tr>
+                                        <tr><td>Hard</td><td>{{.Score.Current.Hard}}</td></tr>
+                                        <tr><td>Total</td><td>{{.Score.Current.Total}}</td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td>Footprint</td></tr>
+                            <tr>
+                                <td>
+                                    <table>
+                                        <tr><td>Easy</td><td>{{.Score.Footprint.Easy}}</td></tr>
+                                        <tr><td>Medium</td><td>{{.Score.Footprint.Medium}}</td></tr>
+                                        <tr><td>Hard</td><td>{{.Score.Footprint.Hard}}</td></tr>
+                                        <tr><td>Total</td><td>{{.Score.Footprint.Total}}</td></tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr><td>Active</td><td>{{.Score.Active}}</td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{end}}
+</table>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ const (
 
 	ErrPermissionDenied  = Error("permission_denied")
 	ErrRateLimiterWorked = Error("rate_limiter_worked")
+	ErrNotFound          = Error("not_found")
 	// Usr errors
 
 	ErrUsrIDNotFound     = Error("usr_id_not_found")

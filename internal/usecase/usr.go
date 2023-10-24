@@ -9,10 +9,25 @@ import (
 	"github.com/mrbelka12000/leetcode_tournament/pkg/validator"
 )
 
+// Registration ..
 func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, string, error) {
 	id, token, err := uc.cr.Usr.Build(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("usr build: %w", err)
+	}
+
+	stats, err := uc.cr.Score.Stats(ctx, *obj.Username)
+	if err != nil {
+		return 0, "", fmt.Errorf("get usr stats: %w", err)
+	}
+
+	point := models.Points(stats)
+	_, err = uc.cr.Score.Build(ctx, models.ScoreCU{
+		UsrID:   &id,
+		Current: &point,
+	})
+	if err != nil {
+		return 0, "", fmt.Errorf("score build: %w", err)
 	}
 
 	err = uc.cr.Session.Build(ctx, models.Session{
@@ -27,6 +42,7 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 	return id, token, nil
 }
 
+// Login ..
 func (uc *UseCase) Login(ctx context.Context, obj models.UsrLogin) (int64, string, error) {
 	id, token, err := uc.cr.Usr.Login(ctx, obj)
 	if err != nil {
@@ -59,6 +75,7 @@ func (uc *UseCase) Login(ctx context.Context, obj models.UsrLogin) (int64, strin
 	return id, ses.Token, nil
 }
 
+// UsrUpdate ..
 func (uc *UseCase) UsrUpdate(ctx context.Context, obj models.UsrCU) error {
 	token := ctx.Value(consts.CKey).(string)
 
@@ -72,14 +89,30 @@ func (uc *UseCase) UsrUpdate(ctx context.Context, obj models.UsrCU) error {
 	return uc.cr.Usr.Update(ctx, obj, ses.UsrID)
 }
 
+// UsrList ..
 func (uc *UseCase) UsrList(ctx context.Context, pars models.UsrListPars) ([]models.Usr, int64, error) {
 	if err := validator.RequirePageSize(pars.PaginationParams); err != nil {
 		return nil, 0, err
 	}
 
-	return uc.cr.Usr.List(ctx, pars)
+	result, tCount, err := uc.cr.Usr.List(ctx, pars)
+	if err != nil {
+		return nil, 0, fmt.Errorf("get usrs list: %w", err)
+	}
+
+	for i := 0; i < len(result); i++ {
+		result[i].Score, err = uc.cr.Score.Get(ctx, models.ScoreGetPars{
+			UsrID: &result[i].ID,
+		}, true)
+		if err != nil {
+			return nil, 0, fmt.Errorf("get score: %w", err)
+		}
+	}
+
+	return result, tCount, nil
 }
 
+// UsrProfile ..
 func (uc *UseCase) UsrProfile(ctx context.Context) (models.Usr, error) {
 	token := ctx.Value(consts.CKey).(string)
 	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{

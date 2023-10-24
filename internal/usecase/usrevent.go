@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/AlekSi/pointer"
+
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/errs"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
@@ -20,6 +22,34 @@ func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (i
 		return 0, fmt.Errorf("get session by token: %w", err)
 	}
 	obj.UsrID = &ses.UsrID
+
+	usr, err := uc.cr.Usr.Get(ctx, models.UsrGetPars{
+		ID: &ses.UsrID,
+	}, true)
+	if err != nil {
+		return 0, fmt.Errorf("get usr: %w", err)
+	}
+
+	score, err := uc.cr.Score.Get(ctx, models.ScoreGetPars{
+		UsrID: &ses.UsrID,
+	}, true)
+	if err != nil {
+		return 0, fmt.Errorf("get score: %w", err)
+	}
+
+	stats, err := uc.cr.Score.Stats(ctx, usr.Username)
+	if err != nil {
+		return 0, fmt.Errorf("get stats: %w", err)
+	}
+
+	point := models.Points(stats)
+	err = uc.cr.Score.Update(ctx, models.ScoreCU{
+		Footprint: &point,
+		Active:    pointer.ToBool(true),
+	}, score.ID)
+	if err != nil {
+		return 0, fmt.Errorf("score update: %w", err)
+	}
 
 	return uc.cr.UsrEvent.Build(ctx, obj)
 }

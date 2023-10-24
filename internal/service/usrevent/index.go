@@ -52,7 +52,7 @@ func (u *UsrEvent) Get(ctx context.Context, pars models.UsrEventGetPars, errNE b
 		return models.UsrEvent{}, fmt.Errorf("usr event get from db: %w", err)
 	}
 	if errNE && usr.ID == 0 {
-		return models.UsrEvent{}, errs.ErrUsrEventNotFound
+		return models.UsrEvent{}, errs.ErrNotFound
 	}
 
 	return usr, nil
@@ -80,8 +80,8 @@ func (u *UsrEvent) validateCU(ctx context.Context, obj models.UsrEventCU, id int
 		_, err := u.Get(ctx, models.UsrEventGetPars{
 			UsrID:   obj.UsrID,
 			EventID: obj.EventID,
-		}, false)
-		if err != nil {
+		}, true)
+		if err == nil {
 			return errs.ErrPermissionDenied
 		}
 	}

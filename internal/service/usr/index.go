@@ -79,7 +79,11 @@ func (u *Usr) Get(ctx context.Context, pars models.UsrGetPars, errNE bool) (mode
 		return models.Usr{}, fmt.Errorf("usr get from db: %w", err)
 	}
 	if errNE && usr.ID == 0 {
-		return models.Usr{}, errs.ErrUsrStatusNotFound
+		return models.Usr{}, errs.ErrNotFound
+	}
+
+	if pars.HideInfo {
+		usr.Password = ""
 	}
 
 	return usr, nil
