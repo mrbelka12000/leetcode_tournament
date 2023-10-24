@@ -114,12 +114,6 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	fmt.Println(eventPage.Event)
-
-	for _, v := range eventPage.Usrs {
-		fmt.Printf("%+v \n", v)
-	}
 }
 
 func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
