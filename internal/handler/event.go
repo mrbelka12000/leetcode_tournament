@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 	"strconv"
 
@@ -94,15 +95,25 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	pars.ID = pointer.ToInt64(id)
 
-	event, err := h.uc.EventGet(r.Context(), pars)
+	pars.ID = pointer.ToInt64(id)
+	eventPage, err := h.uc.EventGet(r.Context(), pars)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Printf("%+v \n", event)
+	t, err := template.ParseFiles(templateDir + "event.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = t.Execute(w, eventPage)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {

@@ -35,7 +35,7 @@ func (u *Score) Stats(ctx context.Context, nickname string) (resp leetcode.LCGet
 
 // Build ..
 func (u *Score) Build(ctx context.Context, obj models.ScoreCU) (int64, error) {
-	obj.Active = pointer.ToBool(true)
+	obj.Active = pointer.ToBool(false)
 
 	err := u.validateCU(ctx, obj, 0)
 	if err != nil {

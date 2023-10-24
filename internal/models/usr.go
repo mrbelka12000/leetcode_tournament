@@ -44,6 +44,8 @@ type (
 
 	// UsrGetPars
 	UsrGetPars struct {
+		HideInfo bool
+
 		ID            *int64            `json:"id" schema:"id"`
 		Username      *string           `json:"username" schema:"username"`
 		Email         *string           `json:"email" schema:"email"`

@@ -80,8 +80,8 @@ func (u *UsrEvent) validateCU(ctx context.Context, obj models.UsrEventCU, id int
 		_, err := u.Get(ctx, models.UsrEventGetPars{
 			UsrID:   obj.UsrID,
 			EventID: obj.EventID,
-		}, false)
-		if err != nil {
+		}, true)
+		if err == nil {
 			return errs.ErrPermissionDenied
 		}
 	}

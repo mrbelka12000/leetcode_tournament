@@ -21,7 +21,7 @@ func newScore(db *sql.DB) *score {
 	return &score{db: db}
 }
 
-func (s *score) Create(ctx context.Context, obj *models.ScoreCU) (int64, error) {
+func (s *score) Create(ctx context.Context, obj models.ScoreCU) (int64, error) {
 	var id int64
 
 	err := s.db.QueryRowContext(ctx, `
@@ -39,7 +39,7 @@ func (s *score) Create(ctx context.Context, obj *models.ScoreCU) (int64, error) 
 	return id, nil
 }
 
-func (s *score) Update(ctx context.Context, obj *models.ScoreCU, id int64) error {
+func (s *score) Update(ctx context.Context, obj models.ScoreCU, id int64) error {
 	updateValues := []interface{}{id}
 	queryUpdate := ` UPDATE score s`
 	querySet := ` SET id = id`
@@ -70,7 +70,7 @@ func (s *score) Update(ctx context.Context, obj *models.ScoreCU, id int64) error
 	return nil
 }
 
-func (s *score) Get(ctx context.Context, pars *models.ScoreGetPars) (*models.Score, error) {
+func (s *score) Get(ctx context.Context, pars models.ScoreGetPars) (models.Score, error) {
 	var filterValues []interface{}
 
 	querySelect := `
@@ -88,7 +88,7 @@ func (s *score) Get(ctx context.Context, pars *models.ScoreGetPars) (*models.Sco
 		queryWhere += ` AND s.usr_id = $` + strconv.Itoa(len(filterValues))
 	}
 
-	sc := &models.Score{}
+	var sc models.Score
 	row := s.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&sc.ID,
@@ -99,20 +99,20 @@ func (s *score) Get(ctx context.Context, pars *models.ScoreGetPars) (*models.Sco
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, nil
+			return models.Score{}, nil
 		}
-		return nil, fmt.Errorf("row scan: %w", err)
+		return models.Score{}, fmt.Errorf("row scan: %w", err)
 	}
 
 	err = row.Err()
 	if err != nil {
-		return nil, fmt.Errorf("row err: %w", err)
+		return models.Score{}, fmt.Errorf("row err: %w", err)
 	}
 
 	return sc, nil
 }
 
-func (s *score) List(ctx context.Context, pars *models.ScoreListPars) ([]*models.Score, int64, error) {
+func (s *score) List(ctx context.Context, pars models.ScoreListPars) ([]models.Score, int64, error) {
 	var err error
 
 	var filterValues []interface{}
@@ -163,9 +163,9 @@ func (s *score) List(ctx context.Context, pars *models.ScoreListPars) ([]*models
 	}
 	defer rows.Close()
 
-	var scores []*models.Score
+	var scores []models.Score
 	for rows.Next() {
-		sc := &models.Score{}
+		var sc models.Score
 		err := rows.Scan(
 			&sc.ID,
 			&sc.UsrID,

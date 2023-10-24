@@ -82,6 +82,10 @@ func (u *Usr) Get(ctx context.Context, pars models.UsrGetPars, errNE bool) (mode
 		return models.Usr{}, errs.ErrNotFound
 	}
 
+	if pars.HideInfo {
+		usr.Password = ""
+	}
+
 	return usr, nil
 }
 
