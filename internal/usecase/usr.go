@@ -95,7 +95,21 @@ func (uc *UseCase) UsrList(ctx context.Context, pars models.UsrListPars) ([]mode
 		return nil, 0, err
 	}
 
-	return uc.cr.Usr.List(ctx, pars)
+	result, tCount, err := uc.cr.Usr.List(ctx, pars)
+	if err != nil {
+		return nil, 0, fmt.Errorf("get usrs list: %w", err)
+	}
+
+	for i := 0; i < len(result); i++ {
+		result[i].Score, err = uc.cr.Score.Get(ctx, models.ScoreGetPars{
+			UsrID: &result[i].ID,
+		}, true)
+		if err != nil {
+			return nil, 0, fmt.Errorf("get score: %w", err)
+		}
+	}
+
+	return result, tCount, nil
 }
 
 // UsrProfile ..

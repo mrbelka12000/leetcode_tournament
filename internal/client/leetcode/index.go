@@ -78,6 +78,7 @@ func (l *LeetCode) Stats(ctx context.Context, username string) (resp LCGetProble
 		resp.Easy = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[1].Count
 		resp.Medium = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[2].Count
 		resp.Hard = out.Data.MatchedUser.SubmitStatsGlobal.AcSubmissionNum[3].Count
+		return resp, nil
 	}
-	return resp, nil
+	return resp, fmt.Errorf("no leetcode profile with this username %v", username)
 }
