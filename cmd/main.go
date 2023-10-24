@@ -1,8 +1,12 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/go-co-op/gocron"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/client/leetcode"
 	"github.com/mrbelka12000/leetcode_tournament/internal/handler"
@@ -35,9 +39,25 @@ func main() {
 	deliv := handler.New(uc, rateLimiter)
 	r := deliv.InitRoutes()
 
+	go runCronJobs(context.Background(), uc)
+
 	log.Println("starting on port: ", cfg.HTTPPort)
 	if err := http.ListenAndServe(":"+cfg.HTTPPort, r); err != nil {
 		log.Printf("run server error: %v \n", err)
 		return
 	}
+}
+
+func runCronJobs(ctx context.Context, uc *usecase.UseCase) {
+	s := gocron.NewScheduler(time.UTC)
+
+	s.Every(4).Minute().Do(func() {
+		err := uc.UsrScoreUpdate(ctx)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	})
+
+	s.StartBlocking()
 }

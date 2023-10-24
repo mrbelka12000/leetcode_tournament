@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
@@ -92,4 +93,37 @@ func (uc *UseCase) UsrProfile(ctx context.Context) (models.Usr, error) {
 	return uc.cr.Usr.Get(ctx, models.UsrGetPars{
 		ID: &ses.ID,
 	}, true)
+}
+
+func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
+	usrs, _, err := uc.cr.Usr.List(ctx, models.UsrListPars{})
+	if err != nil {
+		return err
+	}
+
+	for i := 0; i < len(usrs); i++ {
+		score, err := uc.cr.Score.Get(ctx, models.ScoreGetPars{
+			UsrID: &usrs[i].ID,
+		}, true)
+		if err != nil {
+			return err
+		}
+
+		stats, err := uc.cr.Score.Stats(ctx, usrs[i].Username)
+		if err != nil {
+			return err
+		}
+
+		point := models.Points(stats)
+
+		err = uc.cr.Score.Update(ctx, models.ScoreCU{
+			Current: &point,
+		}, score.ID)
+		if err != nil {
+			return err
+		}
+	}
+
+	log.Println("UsrScoreUpdate successfully worked")
+	return nil
 }
