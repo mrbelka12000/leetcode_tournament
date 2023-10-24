@@ -43,7 +43,7 @@ func (l *LeetCode) Stats(ctx context.Context, username string) (resp LCGetProble
 					SubmitStatsGlobal struct {
 						AcSubmissionNum []struct {
 							Difficulty string `json:"difficulty"`
-							Count      uint64 `json:"count"`
+							Count      int    `json:"count"`
 						} `json:"acSubmissionNum"`
 					} `json:"submitStatsGlobal"`
 				} `json:"matchedUser"`

@@ -10,34 +10,9 @@ import (
 )
 
 func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, string, error) {
-	ctx, err := uc.cr.Transaction.BeginTransaction(ctx)
-	if err != nil {
-		return 0, "", err
-	}
-
-	defer uc.cr.Transaction.RollbackTransaction(ctx)
-
 	id, token, err := uc.cr.Usr.Build(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("usr build: %w", err)
-	}
-
-	leetCodeResp, err := uc.cr.Score.Stats(ctx, *obj.Name)
-	if err != nil {
-		return 0, "", err
-	}
-
-	id, err = uc.cr.Score.Build(ctx, &models.ScoreCU{
-		UsrID: &id,
-		Current: &models.Points{
-			Easy:   leetCodeResp.Easy,
-			Medium: leetCodeResp.Medium,
-			Hard:   leetCodeResp.Hard,
-			Total:  leetCodeResp.Total,
-		},
-	})
-	if err != nil {
-		return 0, "", err
 	}
 
 	err = uc.cr.Session.Build(ctx, models.Session{
@@ -47,11 +22,6 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 	})
 	if err != nil {
 		return 0, "", fmt.Errorf("session build: %w", err)
-	}
-
-	err = uc.cr.Transaction.CommitTransaction(ctx)
-	if err != nil {
-		return 0, "", err
 	}
 
 	return id, token, nil
