@@ -15,13 +15,6 @@ type ScoreCU struct {
 	Active    *bool   `json:"active" schema:"active"`
 }
 
-func NewScoreCU(usrID *int64, current *Points) *ScoreCU {
-	return &ScoreCU{
-		UsrID:   usrID,
-		Current: current,
-	}
-}
-
 type ScoreGetPars struct {
 	ID    *int64 `schema:"id"`
 	UsrID *int64 `schema:"usr_id"`

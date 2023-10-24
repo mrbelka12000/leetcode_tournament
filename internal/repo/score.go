@@ -24,8 +24,7 @@ func newScore(db *sql.DB) *score {
 func (s *score) Create(ctx context.Context, obj *models.ScoreCU) (int64, error) {
 	var id int64
 
-	conn := coalesceConn(ctx, s.db)
-	err := conn.QueryRowContext(ctx, `
+	err := s.db.QueryRowContext(ctx, `
 		INSERT INTO score
 		(usr_id, current, active)
 		VALUES 
