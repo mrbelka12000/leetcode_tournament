@@ -131,7 +131,7 @@ func (uc *UseCase) UsrProfile(ctx context.Context) (models.Usr, error) {
 func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
 	usrs, _, err := uc.cr.Usr.List(ctx, models.UsrListPars{})
 	if err != nil {
-		return err
+		return fmt.Errorf("usr list: %w", err)
 	}
 
 	for i := 0; i < len(usrs); i++ {
@@ -139,12 +139,12 @@ func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
 			UsrID: &usrs[i].ID,
 		}, true)
 		if err != nil {
-			return err
+			return fmt.Errorf("score get: %w", err)
 		}
 
 		stats, err := uc.cr.Score.Stats(ctx, usrs[i].Username)
 		if err != nil {
-			return err
+			return fmt.Errorf("get stats: %w", err)
 		}
 
 		point := models.Points(stats)
@@ -153,7 +153,7 @@ func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
 			Current: &point,
 		}, score.ID)
 		if err != nil {
-			return err
+			return fmt.Errorf("score update: %w", err)
 		}
 	}
 
