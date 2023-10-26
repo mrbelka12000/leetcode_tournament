@@ -8,6 +8,7 @@ import (
 	"github.com/AlekSi/pointer"
 	"github.com/gorilla/mux"
 
+	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
@@ -32,7 +33,12 @@ func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	alert := consts.SuccessAlert{
+		AlertType:    consts.SuccessAlertType(1),
+		AlertMessage: "UsrEvent successfully created",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // UsrEventUpdate ..
@@ -69,7 +75,15 @@ func (h *Handler) UsrEventUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.Header().Add("Hx-trigger", "eventUpdate")
+
+	alert := consts.SuccessAlert{
+		AlertType:      consts.SuccessAlertType(1),
+		AlertMessage:   "UsrEvent successfully created",
+		ButtonIdToHide: "",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // UsrEventGet ..
@@ -129,5 +143,5 @@ func (h *Handler) UsrEventList(w http.ResponseWriter, r *http.Request) {
 		Results:    events,
 	}
 
-	fmt.Println(resp)
+	RenderTemplate(w, "users-table", resp)
 }

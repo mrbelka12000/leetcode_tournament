@@ -85,3 +85,20 @@ var CKey CookieKey = "token"
 const (
 	CookieName = "session"
 )
+
+const (
+	TemplateDir = "templates/"
+)
+
+type SuccessAlertType uint
+
+const (
+	Success SuccessAlertType = iota + 1
+	Fail
+)
+
+type SuccessAlert struct {
+	AlertType      SuccessAlertType
+	AlertMessage   string
+	ButtonIdToHide string
+}

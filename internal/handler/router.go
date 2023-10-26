@@ -23,11 +23,6 @@ func (h *Handler) InitRoutes() *mux.Router {
 	r.HandleFunc("/event", h.EventList).Methods(http.MethodGet)
 	r.HandleFunc("/event/{id}", h.EventGet).Methods(http.MethodGet)
 
-	r.HandleFunc("/usr_event", h.getCookie(h.UsrEventCreate)).Methods(http.MethodPost)
-	r.HandleFunc("/usr_event/update/{id}", h.getCookie(h.UsrEventUpdate)).Methods(http.MethodPost)
-	r.HandleFunc("/usr_event", h.UsrEventList).Methods(http.MethodGet)
-	r.HandleFunc("/usr_event/{id}", h.UsrEventGet).Methods(http.MethodGet)
-
 	r.HandleFunc("/tournament", h.getCookie(h.TournamentCreate)).Methods(http.MethodPost)
 	r.HandleFunc("/tournament/update/{id}", h.getCookie(h.TournamentUpdate)).Methods(http.MethodPost)
 	r.HandleFunc("/tournament", h.TournamentList).Methods(http.MethodGet)

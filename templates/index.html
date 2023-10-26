@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/static/leetcode.ico" />
     <title>User Statistics</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -45,36 +46,49 @@
       >
         Update User
       </button>
+      <a
+        class="btn btn-link"
+        hx-get="/users?page=1&page_size=20"
+        hx-target="#layout"
+        >Users Statistics</a
+      >
+      <a
+        class="btn btn-link"
+        hx-get="/event?page=1&page_size=20"
+        hx-target="#layout"
+        >Events</a
+      >
     </header>
 
-    <div
-      class="container container-fluid"
-      hx-get="/users?page=1&page_size=20"
-      hx-trigger="load, usersUpdate from:body"
-      hx-swap="innerHTML"
-      hx-indicator="#spinner"
-      id="usersTable"
-    >
-      <h2>User Statistics</h2>
-      <table class="table table-responsive table-hover">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Nickname</th>
-            <th>Easy</th>
-            <th>Medium</th>
-            <th>Hard</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <main class="container container-fluid" id="layout">
+      <div
+        hx-get="/users?page=1&page_size=20"
+        hx-trigger="load, usersUpdate from:body"
+        hx-swap="innerHTML"
+        hx-indicator="#spinner"
+        id="usersTable"
+      >
+        <h2>User Statistics</h2>
+        <table class="table table-responsive table-hover">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Nickname</th>
+              <th>Easy</th>
+              <th>Medium</th>
+              <th>Hard</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
 
-      <div id="spinner" class="d-flex align-items-center htmx-indicator">
-        <strong role="status">Loading...</strong>
-        <div class="spinner-border ms-auto" aria-hidden="true"></div>
+        <div id="spinner" class="d-flex align-items-center htmx-indicator">
+          <strong role="status">Loading...</strong>
+          <div class="spinner-border ms-auto" aria-hidden="true"></div>
+        </div>
       </div>
-    </div>
+    </main>
 
     <div class="modal fade" tabindex="-1" id="loginModal" aria-hidden="true">
       <div class="modal-dialog">
@@ -320,7 +334,7 @@
     </div>
 
     <script>
-      htmx.logAll();
+      // htmx.logAll();
       function hideButton(id) {
         const buttonToHide = document.getElementById(id);
         if (!buttonToHide) {

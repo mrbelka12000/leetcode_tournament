@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"html/template"
 	"net/http"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
@@ -44,7 +43,13 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	renderTemplate(w, "register", nil)
+	alert := consts.SuccessAlert{
+		AlertType:      consts.SuccessAlertType(1),
+		AlertMessage:   "Successfully registered",
+		ButtonIdToHide: "registerButton",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // Login ..
@@ -78,7 +83,13 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	renderTemplate(w, "login", nil)
+	alert := consts.SuccessAlert{
+		AlertType:      consts.SuccessAlertType(1),
+		AlertMessage:   "Successfully logged in",
+		ButtonIdToHide: "loginButton",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // ProfileUpdate ..
@@ -105,7 +116,7 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	renderTemplate(w, "update", nil)
+	RenderTemplate(w, "update", nil)
 }
 
 // Usrs ..
@@ -127,7 +138,7 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	renderTemplate(w, "users-table", models.PaginatedListRepSt{
+	RenderTemplate(w, "users-table", models.PaginatedListRepSt{
 		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
@@ -144,17 +155,4 @@ func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
 	}
 
 	_ = usr
-}
-
-func renderTemplate(w http.ResponseWriter, templateName string, result interface{}) {
-	t, err := template.ParseFiles(templateDir + templateName + ".html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	err = t.Execute(w, result)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
