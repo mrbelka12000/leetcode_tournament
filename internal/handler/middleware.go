@@ -22,6 +22,20 @@ func (h *Handler) getCookie(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+func (h *Handler) setCookieIfExists(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie(consts.CookieName)
+		if err != nil {
+			next(w, r)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), consts.CKey, cookie.Value)
+		next(w, r.WithContext(ctx))
+		return
+	}
+}
+
 func (h *Handler) limit(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)

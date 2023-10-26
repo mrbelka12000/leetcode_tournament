@@ -45,16 +45,29 @@ func (uc *UseCase) EventUpdate(ctx context.Context, obj models.EventCU, id int64
 	return nil
 }
 
-// EventGet ..
-func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (models.EventPage, error) {
+// EventPageGet ..
+func (uc *UseCase) EventPageGet(ctx context.Context, pars models.EventGetPars) (models.EventPage, error) {
 	var (
 		eventPage models.EventPage
 		err       error
+		usrID     int64
 	)
+
+	token, ok := ctx.Value(consts.CKey).(string)
+	if ok {
+		ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
+			Token: &token,
+		})
+		if err != nil {
+			return eventPage, fmt.Errorf("get session by token: %w", err)
+		}
+
+		usrID = ses.UsrID
+	}
 
 	eventPage.Event, err = uc.cr.Event.Get(ctx, pars, true)
 	if err != nil {
-		return models.EventPage{}, fmt.Errorf("get event: %w", err)
+		return eventPage, fmt.Errorf("get event: %w", err)
 	}
 
 	usrEvents, _, err := uc.cr.UsrEvent.List(ctx, models.UsrEventListPars{
@@ -63,7 +76,7 @@ func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (mode
 		},
 	})
 	if err != nil {
-		return models.EventPage{}, fmt.Errorf("get usr events: %w", err)
+		return eventPage, fmt.Errorf("get usr events: %w", err)
 	}
 
 	eventPage.Usrs = make([]models.Usr, len(usrEvents))
@@ -73,14 +86,18 @@ func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (mode
 			HideInfo: true,
 		}, true)
 		if err != nil {
-			return models.EventPage{}, fmt.Errorf("get usr: %w", err)
+			return eventPage, fmt.Errorf("get usr: %w", err)
 		}
 
 		eventPage.Usrs[i].Score, err = uc.cr.Score.Get(ctx, models.ScoreGetPars{
 			UsrID: &usrEvents[i].UsrID,
 		}, true)
 		if err != nil {
-			return models.EventPage{}, fmt.Errorf("get score: %w", err)
+			return eventPage, fmt.Errorf("get score: %w", err)
+		}
+
+		if usrEvents[i].UsrID == usrID {
+			eventPage.IsParticipating = true
 		}
 	}
 

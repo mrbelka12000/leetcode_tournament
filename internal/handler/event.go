@@ -102,19 +102,27 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pars.ID = pointer.ToInt64(id)
-	eventPage, err := h.uc.EventGet(r.Context(), pars)
+	eventPage, err := h.uc.EventPageGet(r.Context(), pars)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	var t = template.New("t")
+	// не работает
+	//t, err := template.New("tmpl").Funcs(template.FuncMap{"find": find}).ParseFiles(consts.TemplateDir + "event.html")
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
 
-	_, err = t.Funcs(template.FuncMap{"find": find}).ParseFiles(consts.TemplateDir + "event.html")
+	//  работает
+	t, err := template.ParseFiles(consts.TemplateDir + "event.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	t = t.Funcs(template.FuncMap{"find": find})
 
 	err = t.Execute(w, eventPage)
 	if err != nil {

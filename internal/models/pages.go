@@ -5,6 +5,7 @@ type Index struct {
 
 // EventPage оторбражается на странице /event/{id}
 type EventPage struct {
-	Event Event
-	Usrs  []Usr
+	Event           Event
+	Usrs            []Usr
+	IsParticipating bool
 }
