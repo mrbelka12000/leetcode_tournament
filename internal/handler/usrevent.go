@@ -33,6 +33,8 @@ func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Add("Hx-trigger", "eventUpdate")
+
 	alert := consts.SuccessAlert{
 		AlertType:    consts.SuccessAlertType(1),
 		AlertMessage: "UsrEvent successfully created",
