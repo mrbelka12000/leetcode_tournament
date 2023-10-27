@@ -20,8 +20,8 @@ func (h *Handler) InitRoutes() *mux.Router {
 
 	r.HandleFunc("/event", h.getCookie(h.EventCreate)).Methods(http.MethodPost)
 	r.HandleFunc("/event/update/{id}", h.getCookie(h.EventUpdate)).Methods(http.MethodPost)
-	r.HandleFunc("/event", h.EventList).Methods(http.MethodGet)
-	r.HandleFunc("/event/{id}", h.EventGet).Methods(http.MethodGet)
+	r.HandleFunc("/event", h.setCookieIfExists(h.EventList)).Methods(http.MethodGet)
+	r.HandleFunc("/event/{id}", h.setCookieIfExists(h.EventGet)).Methods(http.MethodGet)
 
 	r.HandleFunc("/tournament", h.getCookie(h.TournamentCreate)).Methods(http.MethodPost)
 	r.HandleFunc("/tournament/update/{id}", h.getCookie(h.TournamentUpdate)).Methods(http.MethodPost)
