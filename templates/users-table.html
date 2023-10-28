@@ -4,10 +4,11 @@
     <tr>
       <th>Name</th>
       <th>Nickname</th>
-      <th>Count of Easy</th>
-      <th>Count of Medium</th>
-      <th>Count of Hard</th>
-      <th>Count of All</th>
+      <th>From</th>
+      <th>Easy</th>
+      <th>Medium</th>
+      <th>Hard</th>
+      <th>Total</th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,11 @@
     <tr>
       <td>{{.Name}}</td>
       <td>{{.Username}}</td>
+      {{ if .Group}}
+      <td>{{.Group}}</td>
+      {{else}}
+      <td></td>
+      {{end}}
       <td>{{.Score.Current.Easy}}</td>
       <td>{{.Score.Current.Medium}}</td>
       <td>{{.Score.Current.Hard}}</td>

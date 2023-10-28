@@ -1,0 +1,164 @@
+<div class="d-flex column-gap-3">
+  <h2>Events</h2>
+  <button
+    type="button"
+    class="btn btn-light"
+    data-bs-toggle="modal"
+    data-bs-target="#createEventModal"
+  >
+    Create Event
+  </button>
+</div>
+<table class="table table-responsive table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>UsrID</th>
+      <th>StartTime</th>
+      <th>EndTime</th>
+      <th>Goal</th>
+      <th>Condition</th>
+      <th>StatusID</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{range .Results}}
+    <tr
+      hx-target="#layout"
+      hx-get="/event/{{.ID}}"
+      hx-trigger="click"
+      class="pe-auto"
+    >
+      <td>{{.ID}}</td>
+      <td>{{.UsrID}}</td>
+      <td>{{.StartTime}}</td>
+      <td>{{.EndTime}}</td>
+      <td>{{.Goal}}</td>
+      <td>{{.Condition}}</td>
+      {{ if eq 1 .StatusID }}
+      <td>Created</td>
+      {{ else if eq 2 .StatusID }}
+      <td>Started</td>
+      {{ else if eq 3 .StatusID }}
+      <td>Cancelled</td>
+      {{ else if eq 100 .StatusID }}
+      <td>Finished</td>
+      {{ end }}
+    </tr>
+    {{end}}
+  </tbody>
+</table>
+
+<div class="modal fade" tabindex="-1" id="createEventModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create Event</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form class="form" id="createEventForm">
+          <div id="createEventAlert"></div>
+          <div
+            id="failedCreateEvent"
+            class="alert alert-danger p-0"
+            role="alert"
+          ></div>
+          <div class="mb-3">
+            <label for="start_time" class="mx-3">Start time</label>
+            <input
+              required
+              type="datetime-local"
+              name="start_time"
+              id="start_time"
+            />
+          </div>
+          <div class="mb-3">
+            <label for="end_time" class="mx-3">End time</label>
+            <input
+              required
+              type="datetime-local"
+              name="end_time"
+              id="end_time"
+            />
+          </div>
+          <div class="form-floating mb-3">
+            <input
+              required
+              type="number"
+              class="form-control"
+              name="goal"
+              id="goal"
+            />
+            <label for="goal">Goal</label>
+          </div>
+          <div class="form-floating mb-3">
+            <select
+              name="condition"
+              required
+              class="form-select"
+              id="condition"
+            >
+              <option value="on_max">
+                Maximum number of solved problems in a given time
+              </option>
+              <option value="on_first">First to reach the goal</option>
+              <option value="on_time_exceed">
+                Finish the goal in a given time
+              </option>
+            </select>
+            <label for="condition">Condition</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
+        <button
+          class="btn btn-outline-primary"
+          form="createEventForm"
+          type="submit"
+          id="createEventButton"
+        >
+          Create
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById("createEventForm");
+  if (!form) {
+    console.warn("form is missing");
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const data = Object.fromEntries(new FormData(form));
+    const successAlert = document.getElementById("createEventAlert");
+
+    successAlert.innerHTML = createEvent(data).then((res) => {
+      if (res.ok) {
+        return res.text();
+      }
+      return res.text().then((text) => {
+        const failedAlert = document.getElementById("failedCreateEvent");
+        failedAlert.innerHTML = text;
+      });
+    });
+  });
+
+  function createEvent(data) {
+    const res = fetch("/event", { method: "POST" }, data);
+
+    return res;
+  }
+</script>

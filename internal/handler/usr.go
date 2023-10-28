@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"html/template"
 	"net/http"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
@@ -42,17 +41,15 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	t, err := template.ParseFiles(templateDir + "register.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	w.Header().Add("Hx-trigger", "usersUpdate")
+
+	alert := consts.SuccessAlert{
+		AlertType:      consts.SuccessAlertType(1),
+		AlertMessage:   "Successfully registered",
+		ButtonIdToHide: "registerButton",
 	}
 
-	err = t.Execute(w, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	RenderTemplate(w, "alert", alert)
 }
 
 // Login ..
@@ -72,7 +69,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	_, token, err := h.uc.Login(r.Context(), usrLogin)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, "User not found or incorrect password", http.StatusBadRequest)
 		return
 	}
 	cookie := http.Cookie{
@@ -86,7 +83,13 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
-	w.WriteHeader(http.StatusOK)
+	alert := consts.SuccessAlert{
+		AlertType:      consts.SuccessAlertType(1),
+		AlertMessage:   "Successfully logged in",
+		ButtonIdToHide: "loginButton",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // ProfileUpdate ..
@@ -111,19 +114,9 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.ParseFiles(templateDir + "update.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	err = t.Execute(w, nil)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
+	RenderTemplate(w, "update", nil)
 }
 
 // Usrs ..
@@ -145,22 +138,12 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t, err := template.ParseFiles(templateDir + "users-table.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	err = t.Execute(w, models.PaginatedListRepSt{
+	RenderTemplate(w, "users-table", models.PaginatedListRepSt{
 		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
 		Results:    usrs,
 	})
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
 }
 
 func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
