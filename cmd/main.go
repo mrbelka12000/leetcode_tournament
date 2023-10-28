@@ -30,6 +30,8 @@ func main() {
 	}
 	defer db.Close()
 
+	s := gocron.NewScheduler(time.UTC)
+
 	leetcodeClient := leetcode.New(cfg.LeetCodeApiURL)
 	rateLimiter := ratelimiter.New(5, 25)
 
@@ -39,7 +41,7 @@ func main() {
 	deliv := handler.New(uc, rateLimiter)
 	r := deliv.InitRoutes()
 
-	go runCronJobs(context.Background(), uc)
+	go runCronJobs(context.Background(), s, uc)
 
 	log.Println("starting on port: ", cfg.HTTPPort)
 	if err := http.ListenAndServe(":"+cfg.HTTPPort, r); err != nil {
@@ -48,11 +50,17 @@ func main() {
 	}
 }
 
-func runCronJobs(ctx context.Context, uc *usecase.UseCase) {
-	s := gocron.NewScheduler(time.UTC)
-
-	s.Every(4).Minute().Do(func() {
+func runCronJobs(ctx context.Context, s *gocron.Scheduler, uc *usecase.UseCase) {
+	s.Every(5).Minute().Do(func() {
 		err := uc.UsrScoreUpdate(ctx)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+	})
+
+	s.Every(1).Minute().Do(func() {
+		err := uc.EventFinish(ctx)
 		if err != nil {
 			log.Println(err)
 			return

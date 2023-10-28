@@ -3,10 +3,15 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
+	"github.com/AlekSi/pointer"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/errs"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/pkg/ptr"
 	"github.com/mrbelka12000/leetcode_tournament/pkg/validator"
 )
 
@@ -94,4 +99,93 @@ func (uc *UseCase) EventList(ctx context.Context, pars models.EventListPars) ([]
 	}
 
 	return uc.cr.Event.List(ctx, pars)
+}
+
+func (uc *UseCase) EventFinish(ctx context.Context) error {
+	events, _, err := uc.cr.Event.List(ctx, models.EventListPars{
+		StatusID: ptr.EventStatusPointer(consts.EventStatusStarted),
+	})
+	if err != nil {
+		return fmt.Errorf("get events: %w", err)
+	}
+
+	for i := 0; i < len(events); i++ {
+		if events[i].EndTime.After(time.Now()) {
+			continue
+		}
+
+		usrEvents, _, err := uc.cr.UsrEvent.List(ctx, models.UsrEventListPars{
+			UsrEventGetPars: models.UsrEventGetPars{
+				EventID: &events[i].ID,
+			},
+		})
+		if err != nil {
+			return fmt.Errorf("get usr events: %w", err)
+		}
+
+		var (
+			maxTotal   uint64
+			usrEventID int64
+		)
+
+	USREVENT:
+		for j := 0; j < len(usrEvents); j++ {
+			usr, err := uc.UsrGet(ctx, models.UsrGetPars{
+				ID:        &usrEvents[j].UsrID,
+				WithScore: true,
+			})
+			if err != nil {
+				return fmt.Errorf("get usr with score: %w", err)
+			}
+
+			solved := usr.Score.Current.Total - usr.Score.Footprint.Total
+			if solved < events[i].Goal {
+				continue
+			}
+
+			switch events[i].Condition {
+			case consts.EventConditionOnMax:
+				if solved > maxTotal {
+					maxTotal = solved
+					usrEventID = usrEvents[i].ID
+				}
+			case consts.EventConditionOnFirst:
+				err = uc.cr.UsrEvent.Update(ctx, models.UsrEventCU{
+					Winner: pointer.ToBool(true),
+				}, usrEvents[i].ID)
+				if err != nil {
+					return fmt.Errorf("winner set to usr event: %w", err)
+				}
+
+				break USREVENT
+			case consts.EventConditionOnTimeExceed:
+				err = uc.cr.UsrEvent.Update(ctx, models.UsrEventCU{
+					Winner: pointer.ToBool(true),
+				}, usrEvents[i].ID)
+				if err != nil {
+					return fmt.Errorf("winner set to usr event: %w", err)
+				}
+			}
+		}
+
+		if usrEventID != 0 {
+			err = uc.cr.UsrEvent.Update(ctx, models.UsrEventCU{
+				Winner: pointer.ToBool(true),
+			}, usrEventID)
+			if err != nil {
+				return fmt.Errorf("winner set to usr event: %w", err)
+			}
+		}
+
+		err = uc.cr.Event.Update(ctx, models.EventCU{
+			StatusID: ptr.EventStatusPointer(consts.EventStatusFinished),
+		}, events[i].ID)
+		if err != nil {
+			return fmt.Errorf("event finish: %w", err)
+		}
+
+	}
+
+	log.Println("events finisher successfully worked")
+	return nil
 }
