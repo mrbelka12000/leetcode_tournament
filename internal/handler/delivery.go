@@ -9,10 +9,6 @@ import (
 	"github.com/mrbelka12000/leetcode_tournament/internal/usecase"
 )
 
-const (
-	templateDir = "templates/"
-)
-
 type Handler struct {
 	uc      *usecase.UseCase
 	decoder *schema.Decoder

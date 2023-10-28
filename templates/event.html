@@ -1,84 +1,78 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Event Page</title>
-</head>
-<body>
+<div class="d-flex column-gap-3">
+  <h2>Event Details</h2>
+  {{if .IsParticipating}}
+  <button class="btn btn-success" disabled type="button">
+    Already participating
+  </button>
+  {{else}}
+  <button
+    class="btn btn-light"
+    hx-post="/usr_event"
+    hx-swap="none"
+    type="button"
+    name="event_id"
+    value="{{.Event.ID}}"
+  >
+    Participate
+  </button>
+  {{end}}
+</div>
 
-<h1>Event Page</h1>
+<h5>
+  ID:
+  <small class="text-body-secondary" id="eventId">{{.Event.ID}}</small>
+</h5>
+<h5>
+  UsrID:
+  <small class="text-body-secondary">{{.Event.UsrID}}</small>
+</h5>
+<h5>
+  StartTime:
+  <small class="text-body-secondary">{{.Event.StartTime}}</small>
+</h5>
+<h5>
+  EndTime:
+  <small class="text-body-secondary">{{.Event.EndTime}}</small>
+</h5>
+<h5>
+  Goal:
+  <small class="text-body-secondary">{{.Event.Goal}}</small>
+</h5>
+<h5>
+  Condition:
+  <small class="text-body-secondary">{{.Event.Condition}}</small>
+</h5>
+<h5>
+  StatusID:
+  <small class="text-body-secondary">{{.Event.StatusID}}</small>
+</h5>
 
-<table border="1">
+<h3>Participating users</h3>
+<table class="table table-responsive table-hover">
+  <thead>
     <tr>
-        <th>Event</th>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Group</th>
+      <th>StatusID</th>
+      <th>TypeID</th>
+      <th>Score before</th>
+      <th>Score now</th>
     </tr>
-    <tr>
-        <td>
-            <table>
-                <tr><td>ID</td><td>{{.Event.ID}}</td></tr>
-                <tr><td>UsrID</td><td>{{.Event.UsrID}}</td></tr>
-                <tr><td>StartTime</td><td>{{.Event.StartTime}}</td></tr>
-                <tr><td>EndTime</td><td>{{.Event.EndTime}}</td></tr>
-                <tr><td>Goal</td><td>{{.Event.Goal}}</td></tr>
-                <tr><td>Condition</td><td>{{.Event.Condition}}</td></tr>
-                <tr><td>StatusID</td><td>{{.Event.StatusID}}</td></tr>
-            </table>
-        </td>
-    </tr>
-</table>
-
-<table border="1">
-    <tr>
-        <th>Usrs</th>
-    </tr>
+  </thead>
+  <tbody>
     {{range .Usrs}}
     <tr>
-        <td>
-            <table>
-                <tr><td>ID</td><td>{{.ID}}</td></tr>
-                <tr><td>Name</td><td>{{.Name}}</td></tr>
-                <tr><td>Username</td><td>{{.Username}}</td></tr>
-                <tr><td>Email</td><td>{{.Email}}</td></tr>
-                <tr><td>Password</td><td>{{.Password}}</td></tr>
-                <tr><td>Group</td><td>{{.Group}}</td></tr>
-                <tr><td>StatusID</td><td>{{.StatusID}}</td></tr>
-                <tr><td>TypeID</td><td>{{.TypeID}}</td></tr>
-                <tr><td>Score</td></tr>
-                <tr>
-                    <td>
-                        <table>
-                            <tr><td>ID</td><td>{{.Score.ID}}</td></tr>
-                            <tr><td>UsrID</td><td>{{.Score.UsrID}}</td></tr>
-                            <tr><td>Current</td></tr>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr><td>Easy</td><td>{{.Score.Current.Easy}}</td></tr>
-                                        <tr><td>Medium</td><td>{{.Score.Current.Medium}}</td></tr>
-                                        <tr><td>Hard</td><td>{{.Score.Current.Hard}}</td></tr>
-                                        <tr><td>Total</td><td>{{.Score.Current.Total}}</td></tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr><td>Footprint</td></tr>
-                            <tr>
-                                <td>
-                                    <table>
-                                        <tr><td>Easy</td><td>{{.Score.Footprint.Easy}}</td></tr>
-                                        <tr><td>Medium</td><td>{{.Score.Footprint.Medium}}</td></tr>
-                                        <tr><td>Hard</td><td>{{.Score.Footprint.Hard}}</td></tr>
-                                        <tr><td>Total</td><td>{{.Score.Footprint.Total}}</td></tr>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr><td>Active</td><td>{{.Score.Active}}</td></tr>
-                        </table>
-                    </td>
-                </tr>
-            </table>
-        </td>
+      <td>{{.ID}}</td>
+      <td>{{.Name}}</td>
+      <td>{{.Username}}</td>
+      <td>{{.Group}}</td>
+      <td>{{.StatusID}}</td>
+      <td>{{.TypeID}}</td>
+      <td>{{.Score.Footprint.Total}}</td>
+      <td>{{.Score.Current.Total}}</td>
     </tr>
     {{end}}
+  </tbody>
 </table>
-
-</body>
-</html>

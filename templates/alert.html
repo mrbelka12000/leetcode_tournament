@@ -1,0 +1,8 @@
+{{$alertType := "success"}} {{ if eq .AlertType 1 }} {{$alertType = "success"}}
+{{ else if eq .AlertType 2 }} {{$alertType = "danger"}} {{end}}
+<div class="alert alert-{{$alertType}}" role="alert">{{.AlertMessage}}</div>
+{{if .ButtonIdToHide }}
+<script>
+  hideButton("{{.ButtonIdToHide}}");
+</script>
+{{end}}

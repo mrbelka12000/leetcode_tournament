@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -9,6 +8,7 @@ import (
 	"github.com/AlekSi/pointer"
 	"github.com/gorilla/mux"
 
+	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
@@ -33,7 +33,7 @@ func (h *Handler) EventCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	RenderTemplate(w, "event", nil)
 }
 
 // EventUpdate ..
@@ -70,7 +70,12 @@ func (h *Handler) EventUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	alert := consts.SuccessAlert{
+		AlertType:    consts.SuccessAlertType(1),
+		AlertMessage: "Event successfully updated",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // EventGet ..
@@ -97,17 +102,27 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pars.ID = pointer.ToInt64(id)
-	eventPage, err := h.uc.EventGet(r.Context(), pars)
+	eventPage, err := h.uc.EventPageGet(r.Context(), pars)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	t, err := template.ParseFiles(templateDir + "event.html")
+	// не работает
+	//t, err := template.New("tmpl").Funcs(template.FuncMap{"find": find}).ParseFiles(consts.TemplateDir + "event.html")
+	//if err != nil {
+	//	http.Error(w, err.Error(), http.StatusInternalServerError)
+	//	return
+	//}
+
+	//  работает
+	t, err := template.ParseFiles(consts.TemplateDir + "event.html")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	t = t.Funcs(template.FuncMap{"find": find})
 
 	err = t.Execute(w, eventPage)
 	if err != nil {
@@ -140,5 +155,12 @@ func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
 		Results:    events,
 	}
 
-	fmt.Println(resp)
+	RenderTemplate(w, "events-table", resp)
+}
+
+func find(arr []int) bool {
+	// for _, v := range arr {
+	// 	if
+	// }
+	return true
 }
