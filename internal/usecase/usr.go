@@ -3,6 +3,8 @@ package usecase
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
@@ -122,7 +124,61 @@ func (uc *UseCase) UsrProfile(ctx context.Context) (models.Usr, error) {
 		return models.Usr{}, fmt.Errorf("get session by token: %w", err)
 	}
 
-	return uc.cr.Usr.Get(ctx, models.UsrGetPars{
-		ID: &ses.ID,
-	}, true)
+	return uc.UsrGet(ctx, models.UsrGetPars{
+		ID:        &ses.ID,
+		WithScore: true,
+	})
+}
+
+func (uc *UseCase) UsrGet(ctx context.Context, pars models.UsrGetPars) (models.Usr, error) {
+	usr, err := uc.cr.Usr.Get(ctx, pars, true)
+	if err != nil {
+		return models.Usr{}, fmt.Errorf("get usr: %w", err)
+	}
+
+	if pars.WithScore {
+		usr.Score, err = uc.cr.Score.Get(ctx, models.ScoreGetPars{
+			UsrID: &usr.ID,
+		}, true)
+		if err != nil {
+			return models.Usr{}, fmt.Errorf("get score for usr: %w", err)
+		}
+	}
+
+	return usr, nil
+}
+
+func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
+	usrs, _, err := uc.cr.Usr.List(ctx, models.UsrListPars{})
+	if err != nil {
+		return fmt.Errorf("usr list: %w", err)
+	}
+
+	for i := 0; i < len(usrs); i++ {
+		time.Sleep(2 * time.Second)
+		score, err := uc.cr.Score.Get(ctx, models.ScoreGetPars{
+			UsrID: &usrs[i].ID,
+		}, true)
+		if err != nil {
+			return fmt.Errorf("score get: %w", err)
+		}
+
+		stats, err := uc.cr.Score.Stats(ctx, usrs[i].Username)
+		if err != nil {
+			log.Printf("can not get stats from leetocode for usr: %v \n", usrs[i].Username)
+			continue
+		}
+
+		point := models.Points(stats)
+
+		err = uc.cr.Score.Update(ctx, models.ScoreCU{
+			Current: &point,
+		}, score.ID)
+		if err != nil {
+			return fmt.Errorf("score update: %w", err)
+		}
+	}
+
+	log.Println("UsrScoreUpdate successfully worked")
+	return nil
 }

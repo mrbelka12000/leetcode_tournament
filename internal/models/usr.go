@@ -53,6 +53,8 @@ type (
 		TypeID        *consts.UsrType   `json:"type_id" schema:"type_id"`
 		Group         *string           `json:"group" schema:"group"`
 		UsernameEmail *string           `json:"username_email" schema:"username_email"`
+
+		WithScore bool `json:"with_score" schema:"with_score"`
 	}
 
 	UsrLogin struct {

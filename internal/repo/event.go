@@ -159,6 +159,10 @@ func (e *event) List(ctx context.Context, pars models.EventListPars) ([]models.E
 		filterValues = append(filterValues, *pars.Condition)
 		queryWhere += ` AND e.condition = $` + strconv.Itoa(len(filterValues))
 	}
+	if pars.StatusID != nil {
+		filterValues = append(filterValues, *pars.StatusID)
+		queryWhere += ` AND e.status_id = $` + strconv.Itoa(len(filterValues))
+	}
 
 	var tCount int64
 	if pars.Limit > 0 {
