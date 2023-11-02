@@ -20,6 +20,6 @@ WORKDIR /
 
 COPY --from=buildenv  /app/ /
 
-EXPOSE 3000
+EXPOSE 8000
 
 CMD ["/main"]
