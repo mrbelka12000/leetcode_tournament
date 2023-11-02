@@ -94,6 +94,8 @@
               class="form-control"
               name="goal"
               id="goal"
+              min="1"
+              value="1"
             />
             <label for="goal">Goal</label>
           </div>
@@ -139,26 +141,57 @@
     console.warn("form is missing");
   }
 
+  clearAlerts();
+
   form.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const data = Object.fromEntries(new FormData(form));
-    const successAlert = document.getElementById("createEventAlert");
 
-    successAlert.innerHTML = createEvent(data).then((res) => {
+    transformedData = {
+      ...data,
+      start_time: new Date(data.start_time).toISOString().split(".")[0] + "Z",
+      end_time: new Date(data.end_time).toISOString().split(".")[0] + "Z",
+    };
+
+    createEvent(transformedData).then((res) => {
       if (res.ok) {
-        return res.text();
+        return res.text().then((res) => {
+          const successAlert = document.getElementById("createEventAlert");
+          successAlert.innerHTML = res;
+          clearAlerts();
+          successAlert.classList.remove(["visually-hidden"]);
+        });
       }
       return res.text().then((text) => {
         const failedAlert = document.getElementById("failedCreateEvent");
         failedAlert.innerHTML = text;
+        clearAlerts();
+        failedAlert.classList.remove(["visually-hidden"]);
       });
     });
   });
 
   function createEvent(data) {
-    const res = fetch("/event", { method: "POST" }, data);
+    const encoded = new URLSearchParams(data);
+
+    const res = fetch("/event", {
+      method: "POST",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: encoded,
+    });
 
     return res;
+  }
+
+  function clearAlerts() {
+    document
+      .getElementById("failedCreateEvent")
+      .classList.add("visually-hidden");
+    document
+      .getElementById("createEventAlert")
+      .classList.add("visually-hidden");
   }
 </script>

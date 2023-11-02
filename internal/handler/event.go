@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"html/template"
 	"net/http"
 	"strconv"
 
@@ -33,7 +32,12 @@ func (h *Handler) EventCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "event", nil)
+	alert := consts.SuccessAlert{
+		AlertType:    consts.SuccessAlertType(1),
+		AlertMessage: "Event successfully created",
+	}
+
+	RenderTemplate(w, "alert", alert)
 }
 
 // EventUpdate ..
@@ -108,27 +112,7 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// не работает
-	//t, err := template.New("tmpl").Funcs(template.FuncMap{"find": find}).ParseFiles(consts.TemplateDir + "event.html")
-	//if err != nil {
-	//	http.Error(w, err.Error(), http.StatusInternalServerError)
-	//	return
-	//}
-
-	//  работает
-	t, err := template.ParseFiles(consts.TemplateDir + "event.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	t = t.Funcs(template.FuncMap{"find": find})
-
-	err = t.Execute(w, eventPage)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	RenderTemplate(w, "event", eventPage)
 }
 
 func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
