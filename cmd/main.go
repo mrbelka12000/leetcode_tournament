@@ -20,7 +20,8 @@ import (
 )
 
 func main() {
-	log := zerolog.New(os.Stdout)
+	log := zerolog.New(os.Stdout).With().Timestamp().Caller().Logger()
+
 	cfg, err := config.Get()
 	if err != nil {
 		log.Fatal().Err(err).Msg("get config")
