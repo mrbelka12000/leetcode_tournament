@@ -23,7 +23,7 @@ func newUsrTournament(db *sql.DB) *usrTournament {
 func (u *usrTournament) Create(ctx context.Context, obj models.UsrTournamentCU) (int64, error) {
 	var id int64
 
-	err := u.db.QueryRowContext(ctx, `
+	err := QueryRow(ctx, u.db, `
 		INSERT INTO usr_tournament
 		(usr_id, tournament_id, active, winner)
 		VALUES 
@@ -61,7 +61,7 @@ func (u *usrTournament) Update(ctx context.Context, obj models.UsrTournamentCU, 
 		querySet += ` , winner = $` + strconv.Itoa(len(updateValues))
 	}
 
-	_, err := u.db.ExecContext(ctx, queryUpdate+querySet+queryWhere, updateValues...)
+	_, err := Exec(ctx, u.db, queryUpdate+querySet+queryWhere, updateValues...)
 	if err != nil {
 		return fmt.Errorf("exec context: %w", err)
 	}
@@ -88,7 +88,7 @@ func (u *usrTournament) Get(ctx context.Context, pars models.UsrTournamentGetPar
 	}
 
 	var ut models.UsrTournament
-	row := u.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
+	row := QueryRow(ctx, u.db, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&ut.ID,
 		&ut.UsrID,
@@ -151,7 +151,7 @@ func (u *usrTournament) List(ctx context.Context, pars models.UsrTournamentListP
 	}
 	var tCount int64
 	if pars.Limit > 0 {
-		err := u.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
+		err := QueryRow(ctx, u.db, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -162,7 +162,7 @@ func (u *usrTournament) List(ctx context.Context, pars models.UsrTournamentListP
 		queryLimit = ` limit ` + strconv.FormatInt(pars.Limit, 10)
 	}
 
-	rows, err := u.db.QueryContext(ctx, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
+	rows, err := Query(ctx, u.db, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("query context: %w", err)
 	}

@@ -78,9 +78,12 @@ func IsValidTournamentStatus(v TournamentStatus) bool {
 
 // COOKIE
 
-type CookieKey string
+type ContextKey string
 
-var CKey CookieKey = "token"
+var (
+	CKey              ContextKey = "token"
+	TransactionCtxKey ContextKey = "pg_transaction"
+)
 
 const (
 	CookieName = "session"

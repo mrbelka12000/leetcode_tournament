@@ -24,7 +24,7 @@ func newScore(db *sql.DB) *score {
 func (s *score) Create(ctx context.Context, obj models.ScoreCU) (int64, error) {
 	var id int64
 
-	err := s.db.QueryRowContext(ctx, `
+	err := QueryRow(ctx, s.db, `
 		INSERT INTO score
 		(usr_id, current, active)
 		VALUES 
@@ -62,7 +62,7 @@ func (s *score) Update(ctx context.Context, obj models.ScoreCU, id int64) error 
 		querySet += ` , active = $` + strconv.Itoa(len(updateValues))
 	}
 
-	_, err := s.db.ExecContext(ctx, queryUpdate+querySet+queryWhere, updateValues...)
+	_, err := Exec(ctx, s.db, queryUpdate+querySet+queryWhere, updateValues...)
 	if err != nil {
 		return fmt.Errorf("exec context: %w", err)
 	}
@@ -89,7 +89,7 @@ func (s *score) Get(ctx context.Context, pars models.ScoreGetPars) (models.Score
 	}
 
 	var sc models.Score
-	row := s.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
+	row := QueryRow(ctx, s.db, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&sc.ID,
 		&sc.UsrID,
@@ -146,7 +146,7 @@ func (s *score) List(ctx context.Context, pars models.ScoreListPars) ([]models.S
 	fmt.Println(filterValues, queryWhere)
 	var tCount int64
 	if pars.Limit > 0 {
-		err := s.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
+		err := QueryRow(ctx, s.db, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -157,7 +157,7 @@ func (s *score) List(ctx context.Context, pars models.ScoreListPars) ([]models.S
 		queryLimit = ` limit ` + strconv.FormatInt(pars.Limit, 10)
 	}
 
-	rows, err := s.db.QueryContext(ctx, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
+	rows, err := Query(ctx, s.db, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("query context: %w", err)
 	}

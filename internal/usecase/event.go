@@ -119,6 +119,12 @@ func (uc *UseCase) EventList(ctx context.Context, pars models.EventListPars) ([]
 }
 
 func (uc *UseCase) EventFinish(ctx context.Context) error {
+	ctx, err := uc.cr.Tx.ContextWithTransaction(ctx)
+	if err != nil {
+		return err
+	}
+	defer uc.cr.Tx.RollbackContextTransaction(ctx)
+
 	events, _, err := uc.cr.Event.List(ctx, models.EventListPars{
 		StatusID: ptr.EventStatusPointer(consts.EventStatusStarted),
 	})
@@ -201,6 +207,11 @@ func (uc *UseCase) EventFinish(ctx context.Context) error {
 			return fmt.Errorf("event finish: %w", err)
 		}
 
+	}
+
+	err = uc.cr.Tx.CommitContextTransaction(ctx)
+	if err != nil {
+		return err
 	}
 
 	log.Println("events finisher successfully worked")

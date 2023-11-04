@@ -13,6 +13,12 @@ import (
 
 // Registration ..
 func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, string, error) {
+	ctx, err := uc.cr.Tx.ContextWithTransaction(ctx)
+	if err != nil {
+		return 0, "", err
+	}
+	defer uc.cr.Tx.RollbackContextTransaction(ctx)
+
 	id, token, err := uc.cr.Usr.Build(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("usr build: %w", err)
@@ -41,11 +47,22 @@ func (uc *UseCase) Registration(ctx context.Context, obj models.UsrCU) (int64, s
 		return 0, "", fmt.Errorf("session build: %w", err)
 	}
 
+	err = uc.cr.Tx.CommitContextTransaction(ctx)
+	if err != nil {
+		return 0, "", err
+	}
+
 	return id, token, nil
 }
 
 // Login ..
 func (uc *UseCase) Login(ctx context.Context, obj models.UsrLogin) (int64, string, error) {
+	ctx, err := uc.cr.Tx.ContextWithTransaction(ctx)
+	if err != nil {
+		return 0, "", err
+	}
+	defer uc.cr.Tx.RollbackContextTransaction(ctx)
+
 	id, token, err := uc.cr.Usr.Login(ctx, obj)
 	if err != nil {
 		return 0, "", fmt.Errorf("usr login: %w", err)
@@ -72,6 +89,11 @@ func (uc *UseCase) Login(ctx context.Context, obj models.UsrLogin) (int64, strin
 		}
 
 		return id, token, nil
+	}
+
+	err = uc.cr.Tx.CommitContextTransaction(ctx)
+	if err != nil {
+		return 0, "", err
 	}
 
 	return id, ses.Token, nil
@@ -149,6 +171,12 @@ func (uc *UseCase) UsrGet(ctx context.Context, pars models.UsrGetPars) (models.U
 }
 
 func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
+	ctx, err := uc.cr.Tx.ContextWithTransaction(ctx)
+	if err != nil {
+		return err
+	}
+	defer uc.cr.Tx.RollbackContextTransaction(ctx)
+
 	usrs, _, err := uc.cr.Usr.List(ctx, models.UsrListPars{})
 	if err != nil {
 		return fmt.Errorf("usr list: %w", err)
@@ -177,6 +205,11 @@ func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
 		if err != nil {
 			return fmt.Errorf("score update: %w", err)
 		}
+	}
+
+	err = uc.cr.Tx.CommitContextTransaction(ctx)
+	if err != nil {
+		return err
 	}
 
 	log.Println("UsrScoreUpdate successfully worked")

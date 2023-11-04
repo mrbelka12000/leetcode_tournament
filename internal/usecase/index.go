@@ -9,5 +9,7 @@ type UseCase struct {
 }
 
 func New(cr *service.Core) *UseCase {
-	return &UseCase{cr: cr}
+	return &UseCase{
+		cr: cr,
+	}
 }
