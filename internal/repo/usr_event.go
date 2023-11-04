@@ -23,7 +23,7 @@ func newUsrEvent(db *sql.DB) *usrEvent {
 func (u *usrEvent) Create(ctx context.Context, obj models.UsrEventCU) (int64, error) {
 	var id int64
 
-	err := u.db.QueryRowContext(ctx, `
+	err := QueryRow(ctx, u.db, `
 		INSERT INTO usr_event
 		(usr_id, event_id, active, winner)
 		VALUES 
@@ -61,7 +61,7 @@ func (u *usrEvent) Update(ctx context.Context, obj models.UsrEventCU, id int64) 
 		querySet += ` , winner = $` + strconv.Itoa(len(updateValues))
 	}
 
-	_, err := u.db.ExecContext(ctx, queryUpdate+querySet+queryWhere, updateValues...)
+	_, err := Exec(ctx, u.db, queryUpdate+querySet+queryWhere, updateValues...)
 	if err != nil {
 		return fmt.Errorf("exec context: %w", err)
 	}
@@ -100,7 +100,7 @@ func (u *usrEvent) Get(ctx context.Context, pars models.UsrEventGetPars) (models
 	}
 
 	var ue models.UsrEvent
-	row := u.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
+	row := QueryRow(ctx, u.db, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&ue.ID,
 		&ue.UsrID,
@@ -163,7 +163,7 @@ func (u *usrEvent) List(ctx context.Context, pars models.UsrEventListPars) ([]mo
 	}
 	var tCount int64
 	if pars.Limit > 0 {
-		err := u.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
+		err := QueryRow(ctx, u.db, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -174,7 +174,7 @@ func (u *usrEvent) List(ctx context.Context, pars models.UsrEventListPars) ([]mo
 		queryLimit = ` limit ` + strconv.FormatInt(pars.Limit, 10)
 	}
 
-	rows, err := u.db.QueryContext(ctx, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
+	rows, err := Query(ctx, u.db, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("query context: %w", err)
 	}
@@ -249,7 +249,7 @@ func (u *usrEvent) GetUsrEvents(ctx context.Context, pars models.UsrGetEventsPar
 
 	var tCount int64
 	if pars.Limit > 0 {
-		err := u.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
+		err := QueryRow(ctx, u.db, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -260,7 +260,7 @@ func (u *usrEvent) GetUsrEvents(ctx context.Context, pars models.UsrGetEventsPar
 		queryLimit = ` limit ` + strconv.FormatInt(pars.Limit, 10)
 	}
 
-	rows, err := u.db.QueryContext(ctx, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
+	rows, err := Query(ctx, u.db, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("query context: %w", err)
 	}

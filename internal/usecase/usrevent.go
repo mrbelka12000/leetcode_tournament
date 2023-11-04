@@ -14,6 +14,12 @@ import (
 
 // UsrEventCreate ..
 func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (int64, error) {
+	ctx, err := uc.cr.Tx.ContextWithTransaction(ctx)
+	if err != nil {
+		return 0, err
+	}
+	defer uc.cr.Tx.RollbackContextTransaction(ctx)
+
 	token := ctx.Value(consts.CKey).(string)
 	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
 		Token: &token,
@@ -51,7 +57,17 @@ func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (i
 		return 0, fmt.Errorf("score update: %w", err)
 	}
 
-	return uc.cr.UsrEvent.Build(ctx, obj)
+	id, err := uc.cr.UsrEvent.Build(ctx, obj)
+	if err != nil {
+		return 0, fmt.Errorf("usr event build: %w", err)
+	}
+
+	err = uc.cr.Tx.CommitContextTransaction(ctx)
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
 
 // UsrEventUpdate ..

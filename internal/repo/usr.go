@@ -21,7 +21,7 @@ func newUsr(db *sql.DB) *usr {
 func (u *usr) Create(ctx context.Context, obj models.UsrCU) (int64, error) {
 	var id int64
 
-	err := u.db.QueryRowContext(ctx, `
+	err := QueryRow(ctx, u.db, `
 		INSERT INTO usr
 		(name, username, email, password, u_group, status_id, type_id)
 		VALUES 
@@ -72,7 +72,7 @@ func (u *usr) Update(ctx context.Context, obj models.UsrCU, id int64) error {
 		querySet += ` , type_id = $` + strconv.Itoa(len(updateValues))
 	}
 
-	_, err := u.db.ExecContext(ctx, queryUpdate+querySet+queryWhere, updateValues...)
+	_, err := Exec(ctx, u.db, queryUpdate+querySet+queryWhere, updateValues...)
 	if err != nil {
 		return fmt.Errorf("exec context: %w", err)
 	}
@@ -115,7 +115,7 @@ func (u *usr) Get(ctx context.Context, pars models.UsrGetPars) (models.Usr, erro
 	}
 
 	usr := models.Usr{}
-	row := u.db.QueryRowContext(ctx, querySelect+queryFrom+queryWhere, filterValues...)
+	row := QueryRow(ctx, u.db, querySelect+queryFrom+queryWhere, filterValues...)
 	err := row.Scan(
 		&usr.ID,
 		&usr.Name,
@@ -178,7 +178,7 @@ func (u *usr) List(ctx context.Context, pars models.UsrListPars) ([]models.Usr, 
 
 	var tCount int64
 	if pars.Limit > 0 {
-		err := u.db.QueryRowContext(ctx, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
+		err := QueryRow(ctx, u.db, `select count(*)`+queryFrom+queryWhere, filterValues...).Scan(&tCount)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -189,7 +189,7 @@ func (u *usr) List(ctx context.Context, pars models.UsrListPars) ([]models.Usr, 
 		queryLimit = ` limit ` + strconv.FormatInt(pars.Limit, 10)
 	}
 
-	rows, err := u.db.QueryContext(ctx, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
+	rows, err := Query(ctx, u.db, querySelect+queryFrom+queryWhere+queryOrderBy+queryOffset+queryLimit, filterValues...)
 	if err != nil {
 		return nil, 0, fmt.Errorf("query context: %w", err)
 	}

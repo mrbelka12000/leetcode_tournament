@@ -12,6 +12,7 @@ func (h *Handler) getCookie(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie(consts.CookieName)
 		if err != nil {
+			h.log.Error().Err(err)
 			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
@@ -40,6 +41,7 @@ func (h *Handler) limit(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ip, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
+			h.log.Error().Err(err)
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
@@ -47,6 +49,7 @@ func (h *Handler) limit(next http.Handler) http.Handler {
 		limiter, err := h.limiter.GetVisitor(ip)
 		if err != nil || limiter.Allow() == false {
 			h.limiter.Block(ip)
+			h.log.Error().Err(err)
 			http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
 			return
 		}

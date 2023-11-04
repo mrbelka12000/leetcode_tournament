@@ -15,6 +15,7 @@ import (
 func (h *Handler) UsrTournamentCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -22,12 +23,14 @@ func (h *Handler) UsrTournamentCreate(w http.ResponseWriter, r *http.Request) {
 	var obj models.UsrTournamentCU
 	err = h.decoder.Decode(&obj, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, err = h.uc.UsrTournamentCreate(r.Context(), obj)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -39,6 +42,7 @@ func (h *Handler) UsrTournamentCreate(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) UsrTournamentUpdate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -46,6 +50,7 @@ func (h *Handler) UsrTournamentUpdate(w http.ResponseWriter, r *http.Request) {
 	var obj models.UsrTournamentCU
 	err = h.decoder.Decode(&obj, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -53,18 +58,21 @@ func (h *Handler) UsrTournamentUpdate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
+		h.log.Err(err).Send()
 		http.Error(w, "no id in path", http.StatusBadRequest)
 		return
 	}
 
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.uc.UsrTournamentUpdate(r.Context(), obj, id)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -78,6 +86,7 @@ func (h *Handler) UsrTournamentGet(w http.ResponseWriter, r *http.Request) {
 	var pars models.UsrTournamentGetPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -85,12 +94,14 @@ func (h *Handler) UsrTournamentGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
+		h.log.Err(err).Send()
 		http.Error(w, "no id in path", http.StatusBadRequest)
 		return
 	}
 
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -98,6 +109,7 @@ func (h *Handler) UsrTournamentGet(w http.ResponseWriter, r *http.Request) {
 
 	event, err := h.uc.UsrTournamentGet(r.Context(), pars)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -109,6 +121,7 @@ func (h *Handler) UsrTournamentList(w http.ResponseWriter, r *http.Request) {
 	var pars models.UsrTournamentListPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -118,6 +131,7 @@ func (h *Handler) UsrTournamentList(w http.ResponseWriter, r *http.Request) {
 
 	events, tCount, err := h.uc.UsrTournamentList(r.Context(), pars)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
