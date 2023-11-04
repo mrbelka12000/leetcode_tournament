@@ -3,7 +3,6 @@ package usecase
 import (
 	"context"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/AlekSi/pointer"
@@ -208,12 +207,13 @@ func (uc *UseCase) EventFinish(ctx context.Context) error {
 		}
 
 	}
-
 	err = uc.cr.Tx.CommitContextTransaction(ctx)
 	if err != nil {
 		return err
 	}
 
-	log.Println("events finisher successfully worked")
+	uc.log.Info().Msg("events finisher successfully worked")
+
+
 	return nil
 }

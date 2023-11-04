@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/go-co-op/gocron"
+	"github.com/rs/zerolog"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/client/leetcode"
 	"github.com/mrbelka12000/leetcode_tournament/internal/handler"
@@ -19,14 +20,16 @@ import (
 )
 
 func main() {
+	log := zerolog.New(os.Stdout).With().Timestamp().Caller().Logger()
+
 	cfg, err := config.Get()
 	if err != nil {
-		log.Fatalf("get config: %v", err)
+		log.Fatal().Err(err).Msg("get config")
 	}
 
 	db, err := postgres.Connect(cfg)
 	if err != nil {
-		log.Fatalf("connect to postgres: %v", err)
+		log.Fatal().Err(err).Msg("connect to postgres")
 	}
 	defer db.Close()
 
@@ -37,24 +40,25 @@ func main() {
 
 	repo := repo.New(db)
 	cr := service.New(repo, leetcodeClient)
-	uc := usecase.New(cr)
-	deliv := handler.New(uc, rateLimiter)
+	uc := usecase.New(cr, log)
+	deliv := handler.New(uc, rateLimiter, log)
+
 	r := deliv.InitRoutes()
 
-	go runCronJobs(context.Background(), s, uc)
+	go runCronJobs(context.Background(), log, s, uc)
 
-	log.Println("starting on port: ", cfg.HTTPPort)
+	log.Info().Msgf("starting on port: %v", cfg.HTTPPort)
 	if err := http.ListenAndServe(":"+cfg.HTTPPort, r); err != nil {
-		log.Printf("run server error: %v \n", err)
+		log.Err(err).Msg("run server error")
 		return
 	}
 }
 
-func runCronJobs(ctx context.Context, s *gocron.Scheduler, uc *usecase.UseCase) {
+func runCronJobs(ctx context.Context, log zerolog.Logger, s *gocron.Scheduler, uc *usecase.UseCase) {
 	s.Every(5).Minute().Do(func() {
 		err := uc.UsrScoreUpdate(ctx)
 		if err != nil {
-			log.Println(err)
+			log.Err(err).Send()
 			return
 		}
 	})
@@ -62,7 +66,7 @@ func runCronJobs(ctx context.Context, s *gocron.Scheduler, uc *usecase.UseCase) 
 	s.Every(1).Minute().Do(func() {
 		err := uc.EventFinish(ctx)
 		if err != nil {
-			log.Println(err)
+			log.Err(err).Send()
 			return
 		}
 	})

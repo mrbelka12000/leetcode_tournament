@@ -16,6 +16,7 @@ import (
 func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -23,12 +24,14 @@ func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 	var obj models.UsrEventCU
 	err = h.decoder.Decode(&obj, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, err = h.uc.UsrEventCreate(r.Context(), obj)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -47,6 +50,7 @@ func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) UsrEventUpdate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -54,6 +58,7 @@ func (h *Handler) UsrEventUpdate(w http.ResponseWriter, r *http.Request) {
 	var obj models.UsrEventCU
 	err = h.decoder.Decode(&obj, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -61,18 +66,21 @@ func (h *Handler) UsrEventUpdate(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
+		h.log.Err(err).Send()
 		http.Error(w, "no id in path", http.StatusBadRequest)
 		return
 	}
 
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.uc.UsrEventUpdate(r.Context(), obj, id)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -94,6 +102,7 @@ func (h *Handler) UsrEventGet(w http.ResponseWriter, r *http.Request) {
 	var pars models.UsrEventGetPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -101,12 +110,14 @@ func (h *Handler) UsrEventGet(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idStr, ok := vars["id"]
 	if !ok {
+		h.log.Err(err).Send()
 		http.Error(w, "no id in path", http.StatusBadRequest)
 		return
 	}
 
 	id, err := strconv.ParseInt(idStr, 10, 64)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -114,6 +125,7 @@ func (h *Handler) UsrEventGet(w http.ResponseWriter, r *http.Request) {
 
 	event, err := h.uc.UsrEventGet(r.Context(), pars)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -125,6 +137,7 @@ func (h *Handler) UsrEventList(w http.ResponseWriter, r *http.Request) {
 	var pars models.UsrEventListPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -134,6 +147,7 @@ func (h *Handler) UsrEventList(w http.ResponseWriter, r *http.Request) {
 
 	events, tCount, err := h.uc.UsrEventList(r.Context(), pars)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}

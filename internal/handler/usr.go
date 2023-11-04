@@ -12,6 +12,7 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -20,12 +21,14 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 
 	err = h.decoder.Decode(&usr, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, token, err := h.uc.Registration(r.Context(), usr)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -56,6 +59,7 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -63,12 +67,14 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var usrLogin models.UsrLogin
 	err = h.decoder.Decode(&usrLogin, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, token, err := h.uc.Login(r.Context(), usrLogin)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, "User not found or incorrect password", http.StatusBadRequest)
 		return
 	}
@@ -96,6 +102,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -104,12 +111,14 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	err = h.decoder.Decode(&obj, r.Form)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	err = h.uc.UsrUpdate(r.Context(), obj)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -125,6 +134,7 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 	var pars models.UsrListPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -134,6 +144,7 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 
 	usrs, tCount, err := h.uc.UsrList(r.Context(), pars)
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -150,6 +161,7 @@ func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
 
 	usr, err := h.uc.UsrProfile(r.Context())
 	if err != nil {
+		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
