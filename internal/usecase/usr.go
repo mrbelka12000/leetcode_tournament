@@ -179,6 +179,6 @@ func (uc *UseCase) UsrScoreUpdate(ctx context.Context) error {
 		}
 	}
 
-	log.Println("UsrScoreUpdate successfully worked")
+	uc.log.Info().Msg("UsrScoreUpdate successfully worked")
 	return nil
 }
