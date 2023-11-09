@@ -69,9 +69,9 @@ func (uc *UseCase) EventPageGet(ctx context.Context, pars models.EventGetPars) (
 		usrID = ses.UsrID
 	}
 
-	eventPage.Event, err = uc.cr.Event.Get(ctx, pars, true)
+	eventPage.Event, err = uc.EventGet(ctx, pars)
 	if err != nil {
-		return eventPage, fmt.Errorf("get event: %w", err)
+		return models.EventPage{}, fmt.Errorf("get event: %w", err)
 	}
 
 	usrEvents, _, err := uc.cr.UsrEvent.List(ctx, models.UsrEventListPars{
@@ -106,6 +106,22 @@ func (uc *UseCase) EventPageGet(ctx context.Context, pars models.EventGetPars) (
 	}
 
 	return eventPage, nil
+}
+
+func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (models.Event, error) {
+	event, err := uc.cr.Event.Get(ctx, pars, true)
+	if err != nil {
+		return models.Event{}, err
+	}
+
+	event.Usr, err = uc.cr.Usr.Get(ctx, models.UsrGetPars{
+		ID: &event.UsrID,
+	}, true)
+	if err != nil {
+		return models.Event{}, fmt.Errorf("get usr: %w", err)
+	}
+
+	return event, nil
 }
 
 // EventList ..
@@ -213,7 +229,6 @@ func (uc *UseCase) EventFinish(ctx context.Context) error {
 	}
 
 	uc.log.Info().Msg("events finisher successfully worked")
-
 
 	return nil
 }
