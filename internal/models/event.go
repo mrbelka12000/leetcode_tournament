@@ -15,6 +15,7 @@ type (
 		Goal      uint64                `json:"goal" schema:"goal"`
 		Condition consts.EventCondition `json:"condition" schema:"condition"`
 		StatusID  consts.EventStatus    `json:"status_id" schema:"status_id"`
+		Usr       Usr                   `json:"usr" schema:"usr"`
 	}
 	EventCU struct {
 		UsrID     *int64                 `json:"-" schema:"-"`
