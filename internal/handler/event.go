@@ -36,7 +36,7 @@ func (h *Handler) EventCreate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	alert := consts.SuccessAlert{
-		AlertType:    consts.SuccessAlertType(1),
+		AlertType:    consts.Success,
 		AlertMessage: "Event successfully created",
 	}
 
@@ -83,7 +83,7 @@ func (h *Handler) EventUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	alert := consts.SuccessAlert{
-		AlertType:    consts.SuccessAlertType(1),
+		AlertType:    consts.Success,
 		AlertMessage: "Event successfully updated",
 	}
 
@@ -124,7 +124,11 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "event", eventPage)
+	RenderTemplate(w, "event",
+		h.uc.FillGeneral(
+			r.Context(),
+			eventPage),
+	)
 }
 
 func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
@@ -146,19 +150,12 @@ func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := models.PaginatedListRepSt{
+	RenderTemplate(w, "events-table", models.PaginatedListRepSt{
 		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
-		Results:    events,
-	}
-
-	RenderTemplate(w, "events-table", resp)
-}
-
-func find(arr []int) bool {
-	// for _, v := range arr {
-	// 	if
-	// }
-	return true
+		Results: h.uc.FillGeneral(
+			r.Context(),
+			events),
+	})
 }

@@ -20,12 +20,9 @@ func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (i
 	}
 	defer uc.cr.Tx.RollbackContextTransaction(ctx)
 
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return 0, fmt.Errorf("get session by token: %w", err)
+		return 0, err
 	}
 	obj.UsrID = &ses.UsrID
 
@@ -72,13 +69,11 @@ func (uc *UseCase) UsrEventCreate(ctx context.Context, obj models.UsrEventCU) (i
 
 // UsrEventUpdate ..
 func (uc *UseCase) UsrEventUpdate(ctx context.Context, obj models.UsrEventCU, id int64) error {
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return fmt.Errorf("get session by token: %w", err)
+		return err
 	}
+
 	if ses.TypeID != consts.UsrTypeAdmin {
 		return errs.ErrPermissionDenied
 	}

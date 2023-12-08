@@ -39,7 +39,7 @@ func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Hx-trigger", "eventUpdate")
 
 	alert := consts.SuccessAlert{
-		AlertType:    consts.SuccessAlertType(1),
+		AlertType:    consts.Success,
 		AlertMessage: "UsrEvent successfully created",
 	}
 
@@ -88,7 +88,7 @@ func (h *Handler) UsrEventUpdate(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Hx-trigger", "eventUpdate")
 
 	alert := consts.SuccessAlert{
-		AlertType:      consts.SuccessAlertType(1),
+		AlertType:      consts.Success,
 		AlertMessage:   "UsrEvent successfully created",
 		ButtonIdToHide: "",
 	}
@@ -152,12 +152,13 @@ func (h *Handler) UsrEventList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp := models.PaginatedListRepSt{
+	RenderTemplate(w, "users-table", models.PaginatedListRepSt{
 		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
-		Results:    events,
-	}
-
-	RenderTemplate(w, "users-table", resp)
+		Results: h.uc.FillGeneral(
+			r.Context(),
+			events,
+		),
+	})
 }

@@ -1,6 +1,6 @@
 <div class="d-flex column-gap-3">
   <h2>Event Details</h2>
-  {{if .IsParticipating}}
+  {{if .Data.IsParticipating}}
   <button class="btn btn-success" disabled type="button">
     Already participating
   </button>
@@ -11,7 +11,7 @@
     hx-swap="none"
     type="button"
     name="event_id"
-    value="{{.Event.ID}}"
+    value="{{.Data.Event.ID}}"
   >
     Participate
   </button>
@@ -20,35 +20,35 @@
 
 <h5>
   ID:
-  <small class="text-body-secondary" id="eventId">{{.Event.ID}}</small>
+  <small class="text-body-secondary" id="eventId">{{.Data.Event.ID}}</small>
 </h5>
 <h5>
   UsrID:
-  <small class="text-body-secondary">{{.Event.UsrID}}</small>
+  <small class="text-body-secondary">{{.Data.Event.UsrID}}</small>
 </h5>
 <h5>
   StartTime:
-  <small class="text-body-secondary">{{.Event.StartTime}}</small>
+  <small class="text-body-secondary">{{.Data.Event.StartTime}}</small>
 </h5>
 <h5>
   EndTime:
-  <small class="text-body-secondary">{{.Event.EndTime}}</small>
+  <small class="text-body-secondary">{{.Data.Event.EndTime}}</small>
 </h5>
 <h5>
   Goal:
-  <small class="text-body-secondary">{{.Event.Goal}}</small>
+  <small class="text-body-secondary">{{.Data.Event.Goal}}</small>
 </h5>
 <h5>
   Condition:
-  <small class="text-body-secondary">{{.Event.Condition}}</small>
+  <small class="text-body-secondary">{{.Data.Event.Condition}}</small>
 </h5>
 <h5>
   StatusID:
-  <small class="text-body-secondary">{{.Event.StatusID}}</small>
+  <small class="text-body-secondary">{{.Data.Event.StatusID}}</small>
 </h5>
 <h5>
   Usr:
-  <small class="text-body-secondary">{{.Event.Usr}}</small>
+  <small class="text-body-secondary">{{.Data.Event.Usr}}</small>
 </h5>
 
 <h3>Participating users</h3>
@@ -66,7 +66,7 @@
     </tr>
   </thead>
   <tbody>
-    {{range .Usrs}}
+    {{range .Data.Usrs}}
     <tr>
       <td>{{.ID}}</td>
       <td>{{.Name}}</td>

@@ -107,14 +107,14 @@ func (h *Handler) UsrTournamentGet(w http.ResponseWriter, r *http.Request) {
 	}
 	pars.ID = pointer.ToInt64(id)
 
-	event, err := h.uc.UsrTournamentGet(r.Context(), pars)
+	usrTournament, err := h.uc.UsrTournamentGet(r.Context(), pars)
 	if err != nil {
 		h.log.Err(err).Send()
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	fmt.Printf("%+v \n", event)
+	fmt.Printf("%+v \n", usrTournament)
 }
 
 func (h *Handler) UsrTournamentList(w http.ResponseWriter, r *http.Request) {
