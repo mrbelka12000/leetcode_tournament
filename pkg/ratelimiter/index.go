@@ -27,6 +27,9 @@ type (
 	}
 )
 
+// New initialize new rate limiter
+// r: window time
+// b: block time
 func New(r, b int) *Limiter {
 	l := &Limiter{
 		visitors: make(map[string]*visitor),
