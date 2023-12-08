@@ -36,7 +36,7 @@ func main() {
 	s := gocron.NewScheduler(time.UTC)
 
 	leetcodeClient := leetcode.New(cfg.LeetCodeApiURL)
-	rateLimiter := ratelimiter.New(5, 25)
+	rateLimiter := ratelimiter.New(cfg.RateLimitWindow, cfg.RateBlockTime)
 
 	repo := repo.New(db)
 	cr := service.New(repo, leetcodeClient)
