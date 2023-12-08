@@ -115,7 +115,8 @@ func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (mode
 	}
 
 	event.Usr, err = uc.cr.Usr.Get(ctx, models.UsrGetPars{
-		ID: &event.UsrID,
+		ID:       &event.UsrID,
+		HideInfo: true,
 	}, true)
 	if err != nil {
 		return models.Event{}, fmt.Errorf("get usr: %w", err)
