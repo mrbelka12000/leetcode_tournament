@@ -47,7 +47,7 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
 	alert := consts.SuccessAlert{
-		AlertType:      consts.SuccessAlertType(1),
+		AlertType:      consts.Success,
 		AlertMessage:   "Successfully registered",
 		ButtonIdToHide: "registerButton",
 	}
@@ -90,7 +90,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	http.SetCookie(w, &cookie)
 
 	alert := consts.SuccessAlert{
-		AlertType:      consts.SuccessAlertType(1),
+		AlertType:      consts.Success,
 		AlertMessage:   "Successfully logged in",
 		ButtonIdToHide: "loginButton",
 	}
@@ -153,7 +153,10 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		Page:       page,
 		PageSize:   pars.Limit,
 		TotalCount: tCount,
-		Results:    usrs,
+		Results: h.uc.FillGeneral(
+			r.Context(),
+			usrs,
+		),
 	})
 }
 
