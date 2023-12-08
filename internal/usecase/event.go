@@ -16,13 +16,11 @@ import (
 
 // EventCreate ..
 func (uc *UseCase) EventCreate(ctx context.Context, obj models.EventCU) (int64, error) {
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return 0, fmt.Errorf("get session by token: %w", err)
+		return 0, err
 	}
+
 	obj.UsrID = &ses.UsrID
 
 	return uc.cr.Event.Build(ctx, obj)
@@ -30,13 +28,11 @@ func (uc *UseCase) EventCreate(ctx context.Context, obj models.EventCU) (int64, 
 
 // EventUpdate ..
 func (uc *UseCase) EventUpdate(ctx context.Context, obj models.EventCU, id int64) error {
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return fmt.Errorf("get session by token: %w", err)
+		return err
 	}
+
 	if ses.TypeID != consts.UsrTypeAdmin {
 		return errs.ErrPermissionDenied
 	}
@@ -57,17 +53,11 @@ func (uc *UseCase) EventPageGet(ctx context.Context, pars models.EventGetPars) (
 		usrID     int64
 	)
 
-	token, ok := ctx.Value(consts.CKey).(string)
-	if ok {
-		ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-			Token: &token,
-		})
-		if err != nil {
-			return eventPage, fmt.Errorf("get session by token: %w", err)
-		}
-
-		usrID = ses.UsrID
+	ses, err := uc.getSessionFromContext(ctx, false)
+	if err != nil {
+		return models.EventPage{}, err
 	}
+	usrID = ses.UsrID
 
 	eventPage.Event, err = uc.EventGet(ctx, pars)
 	if err != nil {
@@ -115,7 +105,8 @@ func (uc *UseCase) EventGet(ctx context.Context, pars models.EventGetPars) (mode
 	}
 
 	event.Usr, err = uc.cr.Usr.Get(ctx, models.UsrGetPars{
-		ID: &event.UsrID,
+		ID:       &event.UsrID,
+		HideInfo: true,
 	}, true)
 	if err != nil {
 		return models.Event{}, fmt.Errorf("get usr: %w", err)

@@ -6,7 +6,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 	"github.com/mrbelka12000/leetcode_tournament/pkg/validator"
 )
@@ -101,13 +100,9 @@ func (uc *UseCase) Login(ctx context.Context, obj models.UsrLogin) (int64, strin
 
 // UsrUpdate ..
 func (uc *UseCase) UsrUpdate(ctx context.Context, obj models.UsrCU) error {
-	token := ctx.Value(consts.CKey).(string)
-
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return fmt.Errorf("get session by token: %w", err)
+		return err
 	}
 
 	return uc.cr.Usr.Update(ctx, obj, ses.UsrID)
@@ -138,12 +133,9 @@ func (uc *UseCase) UsrList(ctx context.Context, pars models.UsrListPars) ([]mode
 
 // UsrProfile ..
 func (uc *UseCase) UsrProfile(ctx context.Context) (models.Usr, error) {
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return models.Usr{}, fmt.Errorf("get session by token: %w", err)
+		return models.Usr{}, err
 	}
 
 	return uc.UsrGet(ctx, models.UsrGetPars{
