@@ -1,0 +1,251 @@
+package components
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/consts"
+
+templ Modals(modal consts.Modals) {
+	switch modal {
+		case 1:
+			<div class="modal fade" tabindex="-1" id="loginModal" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Login</h5>
+							<button
+ 								type="button"
+ 								class="btn-close"
+ 								data-bs-dismiss="modal"
+ 								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body" hx-ext="response-targets">
+							<form
+ 								class="form"
+ 								hx-post="/login"
+ 								id="loginForm"
+ 								hx-target-4*="find #failedLogin"
+ 								hx-target-5*="find #failedLogin"
+							>
+								<div
+ 									id="failedLogin"
+ 									class="alert alert-danger p-0"
+ 									role="alert"
+								></div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="text"
+ 										class="form-control"
+ 										name="username_email"
+ 										id="username_email"
+									/>
+									<label for="name">Username or email</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="password"
+ 										class="form-control"
+ 										name="password"
+ 										id="loginPassword"
+									/>
+									<label for="loginPassword">Password</label>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button
+ 								type="button"
+ 								class="btn btn-secondary"
+ 								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button
+ 								class="btn btn-outline-primary"
+ 								form="loginForm"
+ 								type="submit"
+ 								id="loginButton"
+							>
+								Login
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		case 2:
+			<div
+ 				class="modal fade"
+ 				tabindex="-1"
+ 				id="updateUserModal"
+ 				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Update User</h5>
+							<button
+ 								type="button"
+ 								class="btn-close"
+ 								data-bs-dismiss="modal"
+ 								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body" hx-ext="response-targets">
+							<form
+ 								class="form"
+ 								hx-post="/usr/update"
+ 								hx-target="#updateAlert"
+ 								hx-target-4*="find #failedUpdate"
+ 								hx-target-5*="find #failedUpdate"
+ 								id="userFormUpdate"
+							>
+								<div id="updateAlert"></div>
+								<div
+ 									id="failedUpdate"
+ 									class="alert alert-danger p-0"
+ 									role="alert"
+								></div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="text"
+ 										class="form-control"
+ 										name="name"
+ 										id="updateName"
+									/>
+									<label for="updateName">First name</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="text"
+ 										class="form-control"
+ 										name="username"
+ 										id="updateUsername"
+									/>
+									<label for="updateUsername">Username on LeetCode</label>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button
+ 								type="button"
+ 								class="btn btn-secondary"
+ 								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button
+ 								class="btn btn-outline-primary"
+ 								form="userFormUpdate"
+ 								type="submit"
+ 								id="updateUserButton"
+							>
+								Update
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		case 3:
+			<div
+ 				class="modal fade"
+ 				tabindex="-1"
+ 				id="registrationModal"
+ 				aria-hidden="true"
+			>
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title">Registration</h5>
+							<button
+ 								type="button"
+ 								class="btn-close"
+ 								data-bs-dismiss="modal"
+ 								aria-label="Close"
+							></button>
+						</div>
+						<div class="modal-body" hx-ext="response-targets">
+							<form
+ 								class="form"
+ 								hx-post="/registration"
+ 								hx-target-4*="find #failedRegistration"
+ 								hx-target-5*="find #failedRegistration"
+ 								id="userFormCreate"
+							>
+								<div
+ 									id="failedRegistration"
+ 									class="alert alert-danger p-0"
+ 									role="alert"
+								></div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="text"
+ 										class="form-control"
+ 										name="name"
+ 										id="registrationName"
+									/>
+									<label for="registrationName">First name</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="text"
+ 										class="form-control"
+ 										name="username"
+ 										id="registrationUsername"
+									/>
+									<label for="registrationUsername">Username on LeetCode</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="text"
+ 										class="form-control"
+ 										name="email"
+ 										id="email"
+									/>
+									<label for="email">Email</label>
+								</div>
+								<div class="form-floating mb-3">
+									<input
+ 										required
+ 										type="password"
+ 										class="form-control"
+ 										name="password"
+ 										id="registrationPassword"
+									/>
+									<label for="registrationPassword">Password</label>
+								</div>
+								<div class="form-floating">
+									<select name="type_id" class="form-select" id="type_id">
+										<option value="1">Participant</option>
+										<option value="2">Tournament creator</option>
+									</select>
+									<label for="floatingSelect">Participation type</label>
+								</div>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button
+ 								type="button"
+ 								class="btn btn-secondary"
+ 								data-bs-dismiss="modal"
+							>
+								Close
+							</button>
+							<button
+ 								class="btn btn-outline-primary"
+ 								form="userFormCreate"
+ 								type="submit"
+ 								id="registerButton"
+							>
+								Sign Up
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+	}
+}

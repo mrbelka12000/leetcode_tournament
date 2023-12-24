@@ -1,14 +1,15 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
 	"github.com/AlekSi/pointer"
 	"github.com/gorilla/mux"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/view/pages"
 )
 
 // EventCreate ..
@@ -35,12 +36,12 @@ func (h *Handler) EventCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	alert := consts.SuccessAlert{
-		AlertType:    consts.Success,
-		AlertMessage: "Event successfully created",
-	}
+	// alert := consts.SuccessAlert{
+	// 	AlertType:    consts.Success,
+	// 	AlertMessage: "Event successfully created",
+	// }
 
-	RenderTemplate(w, "alert", alert)
+	// view.RenderTemplate(w, r, "alert", alert)
 }
 
 // EventUpdate ..
@@ -82,12 +83,12 @@ func (h *Handler) EventUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	alert := consts.SuccessAlert{
-		AlertType:    consts.Success,
-		AlertMessage: "Event successfully updated",
-	}
+	// alert := consts.SuccessAlert{
+	// 	AlertType:    consts.Success,
+	// 	AlertMessage: "Event successfully updated",
+	// }
 
-	RenderTemplate(w, "alert", alert)
+	// view.RenderTemplate(w, r, "alert", alert)
 }
 
 // EventGet ..
@@ -124,11 +125,12 @@ func (h *Handler) EventGet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "event",
-		h.uc.FillGeneral(
-			r.Context(),
-			eventPage),
-	)
+	component := pages.EventDetails(h.uc.FillGeneral(
+		r.Context(),
+		eventPage,
+	))
+
+	component.Render(context.Background(), w)
 }
 
 func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
@@ -150,12 +152,10 @@ func (h *Handler) EventList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "events-table", models.PaginatedListRepSt{
-		Page:       page,
-		PageSize:   pars.Limit,
-		TotalCount: tCount,
-		Results: h.uc.FillGeneral(
-			r.Context(),
-			events),
-	})
+	component := pages.EventsPage(h.uc.FillGeneral(
+		r.Context(),
+		events,
+	), page, pars.Limit, tCount)
+
+	component.Render(context.Background(), w)
 }

@@ -1,0 +1,13 @@
+package components
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/models"
+
+templ Base(data models.General, contents templ.Component) {
+	@Header(data.Usr.Name)
+	<main class="container container-fluid" id="layout">
+		@contents
+	</main>
+	@Modals(1)
+	@Modals(2)
+	@Modals(3)
+}

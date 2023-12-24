@@ -1,0 +1,95 @@
+package pages 
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/models"
+import "github.com/mrbelka12000/leetcode_tournament/internal/view"
+import "github.com/mrbelka12000/leetcode_tournament/internal/view/components"
+import "fmt"
+
+templ EventDetails(data models.General) {
+	@view.Layout() {
+		@components.Base(data, eventPage(data.Data.(models.EventPage)))
+	}
+}
+
+templ eventPage(data models.EventPage) {
+	<div class="d-flex column-gap-3">
+		<h2>Event Details</h2>
+		if data.IsParticipating {
+			<button class="btn btn-success" disabled type="button">
+				Already participating
+			</button>
+		} else {
+			<button
+ 				class="btn btn-light"
+ 				hx-post="/usr_event"
+ 				hx-swap="none"
+ 				type="button"
+ 				name="event_id"
+ 				value={ fmt.Sprint(data.Event.ID) }
+			>
+				Participate
+			</button>
+		}
+	</div>
+	<h5>
+		ID:
+		<small class="text-body-secondary" id="eventId">{  fmt.Sprint(data.Event.ID) } </small>
+	</h5>
+	<h5>
+		UsrID:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.UsrID) } </small>
+	</h5>
+	<h5>
+		StartTime:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.StartTime) } </small>
+	</h5>
+	<h5>
+		EndTime:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.EndTime) } </small>
+	</h5>
+	<h5>
+		Goal:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.Goal) } </small>
+	</h5>
+	<h5>
+		Condition:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.Condition) } </small>
+	</h5>
+	<h5>
+		StatusID:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.StatusID) } </small>
+	</h5>
+	<h5>
+		Usr:
+		<small class="text-body-secondary">{  fmt.Sprint(data.Event.Usr) } </small>
+	</h5>
+	<h3>Participating users</h3>
+	<table class="table table-responsive table-hover">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Username</th>
+				<th>Group</th>
+				<th>StatusID</th>
+				<th>TypeID</th>
+				<th>Score before</th>
+				<th>Score now</th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, user := range data.Usrs {
+				<tr>
+					<td>{ fmt.Sprint(user.ID) } </td>
+					<td>{ user.Name } </td>
+					<td>{ user.Username } </td>
+					<td>{ fmt.Sprint(user.Group) } </td>
+					<td>{ fmt.Sprint(user.StatusID) } </td>
+					<td>{ fmt.Sprint(user.TypeID) } </td>
+					<td>{ fmt.Sprint(user.Score.Footprint.Total) } </td>
+					<td>{ fmt.Sprint(user.Score.Current.Total) } </td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}

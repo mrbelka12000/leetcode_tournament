@@ -8,7 +8,6 @@ import (
 	"github.com/AlekSi/pointer"
 	"github.com/gorilla/mux"
 
-	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
 )
 
@@ -38,12 +37,12 @@ func (h *Handler) UsrEventCreate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "eventUpdate")
 
-	alert := consts.SuccessAlert{
-		AlertType:    consts.Success,
-		AlertMessage: "UsrEvent successfully created",
-	}
+	// alert := consts.SuccessAlert{
+	// 	AlertType:    consts.Success,
+	// 	AlertMessage: "UsrEvent successfully created",
+	// }
 
-	RenderTemplate(w, "alert", alert)
+	// view.RenderTemplate(w, r, "alert", alert)
 }
 
 // UsrEventUpdate ..
@@ -87,13 +86,13 @@ func (h *Handler) UsrEventUpdate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "eventUpdate")
 
-	alert := consts.SuccessAlert{
-		AlertType:      consts.Success,
-		AlertMessage:   "UsrEvent successfully created",
-		ButtonIdToHide: "",
-	}
+	// alert := consts.SuccessAlert{
+	// 	AlertType:      consts.Success,
+	// 	AlertMessage:   "UsrEvent successfully created",
+	// 	ButtonIdToHide: "",
+	// }
 
-	RenderTemplate(w, "alert", alert)
+	// view.RenderTemplate(w, r, "alert", alert)
 }
 
 // UsrEventGet ..
@@ -142,23 +141,24 @@ func (h *Handler) UsrEventList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var page int64
-	pars.Offset, pars.Limit, page = h.uExtractPaginationPars(r.URL.Query())
+	// var page int64
+	// pars.Offset, pars.Limit, page = h.uExtractPaginationPars(r.URL.Query())
 
-	events, tCount, err := h.uc.UsrEventList(r.Context(), pars)
-	if err != nil {
-		h.log.Err(err).Send()
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	// events, tCount, err := h.uc.UsrEventList(r.Context(), pars)
+	// if err != nil {
+	// 	h.log.Err(err).Send()
+	// 	http.Error(w, err.Error(), http.StatusBadRequest)
+	// 	return
+	// }
 
-	RenderTemplate(w, "users-table", models.PaginatedListRepSt{
-		Page:       page,
-		PageSize:   pars.Limit,
-		TotalCount: tCount,
-		Results: h.uc.FillGeneral(
-			r.Context(),
-			events,
-		),
-	})
+	// RenderTemplate(w, "users-table", models.PaginatedListRepSt{
+	// 	Page:       page,
+	// 	PageSize:   pars.Limit,
+	// 	TotalCount: tCount,
+	// 	Results: h.uc.FillGeneral(
+	// 		r.Context(),
+	// 		events,
+	// 	),
+	// })
+	// 	Results:    events
 }

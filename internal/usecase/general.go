@@ -19,6 +19,5 @@ func (uc *UseCase) FillGeneral(ctx context.Context, data interface{}) (gen model
 	if err != nil {
 		return gen
 	}
-
 	return gen
 }

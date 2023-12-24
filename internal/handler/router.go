@@ -11,7 +11,7 @@ func (h *Handler) InitRoutes() *mux.Router {
 
 	r.PathPrefix("/static").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
 
-	r.HandleFunc("/", h.Index).Methods(http.MethodGet)
+	r.HandleFunc("/", h.setCookieIfExists(h.Index)).Methods(http.MethodGet)
 
 	r.HandleFunc("/registration", h.Registration).Methods(http.MethodPost)
 	r.HandleFunc("/login", h.Login).Methods(http.MethodPost)
@@ -19,10 +19,10 @@ func (h *Handler) InitRoutes() *mux.Router {
 	r.HandleFunc("/usr", h.getCookie(h.GetUsr)).Methods(http.MethodGet)
 	r.HandleFunc("/users", h.setCookieIfExists(h.Usrs)).Methods(http.MethodGet)
 
-	r.HandleFunc("/event", h.getCookie(h.EventCreate)).Methods(http.MethodPost)
-	r.HandleFunc("/event/update/{id}", h.getCookie(h.EventUpdate)).Methods(http.MethodPost)
-	r.HandleFunc("/event", h.setCookieIfExists(h.EventList)).Methods(http.MethodGet)
-	r.HandleFunc("/event/{id}", h.setCookieIfExists(h.EventGet)).Methods(http.MethodGet)
+	r.HandleFunc("/events", h.getCookie(h.EventCreate)).Methods(http.MethodPost)
+	r.HandleFunc("/events/update/{id}", h.getCookie(h.EventUpdate)).Methods(http.MethodPost)
+	r.HandleFunc("/events", h.setCookieIfExists(h.EventList)).Methods(http.MethodGet)
+	r.HandleFunc("/events/{id}", h.setCookieIfExists(h.EventGet)).Methods(http.MethodGet)
 
 	// not implemented !!!
 	//r.HandleFunc("/tournament", h.getCookie(h.TournamentCreate)).Methods(http.MethodPost)

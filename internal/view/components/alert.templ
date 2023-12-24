@@ -1,0 +1,23 @@
+package components
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/consts"
+
+script buttonHide(buttonId string) {
+  const buttonToHide = document.getElementById(buttonId);
+  if (!buttonToHide) {
+    console.warn(`${buttonId} is missing`);
+  }
+  buttonToHide.classList.add("visually-hidden");
+}
+
+templ Alert(alert consts.SuccessAlert) {
+	<div
+ 		if alert.AlertType == 0 {
+			class={ "alert alert-danger", alert.AlertType }
+		} else {
+			class={ "alert alert-success", alert.AlertType }
+		}
+ 		role="alert"
+	>{ alert.AlertMessage }</div>
+	@buttonHide(alert.ButtonIdToHide)
+}

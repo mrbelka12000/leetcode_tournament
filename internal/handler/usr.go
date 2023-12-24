@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/view/components"
 )
 
 // Registration ..
@@ -52,7 +54,8 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 		ButtonIdToHide: "registerButton",
 	}
 
-	RenderTemplate(w, "alert", alert)
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
 }
 
 // Login ..
@@ -95,7 +98,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		ButtonIdToHide: "loginButton",
 	}
 
-	RenderTemplate(w, "alert", alert)
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
 }
 
 // ProfileUpdate ..
@@ -125,12 +129,11 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	RenderTemplate(w, "update", nil)
+	// view.RenderTemplate(w, r, "update", nil)
 }
 
 // Usrs ..
 func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
-
 	var pars models.UsrListPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
@@ -149,15 +152,11 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "users-table", models.PaginatedListRepSt{
-		Page:       page,
-		PageSize:   pars.Limit,
-		TotalCount: tCount,
-		Results: h.uc.FillGeneral(
-			r.Context(),
-			usrs,
-		),
-	})
+	component := components.Users(h.uc.FillGeneral(
+		r.Context(),
+		usrs,
+	), page, pars.Limit, tCount)
+	component.Render(context.Background(), w)
 }
 
 func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
