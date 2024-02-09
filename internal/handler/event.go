@@ -8,7 +8,9 @@ import (
 	"github.com/AlekSi/pointer"
 	"github.com/gorilla/mux"
 
+	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/view/components"
 	"github.com/mrbelka12000/leetcode_tournament/internal/view/pages"
 )
 
@@ -36,12 +38,16 @@ func (h *Handler) EventCreate(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// alert := consts.SuccessAlert{
-	// 	AlertType:    consts.Success,
-	// 	AlertMessage: "Event successfully created",
-	// }
+	w.Header().Add("Hx-trigger", "eventsUpdate")
 
-	// view.RenderTemplate(w, r, "alert", alert)
+	alert := consts.SuccessAlert{
+		AlertType:      consts.Success,
+		AlertMessage:   "Successfully created",
+		ButtonIdToHide: "createEventButton",
+	}
+
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
 }
 
 // EventUpdate ..

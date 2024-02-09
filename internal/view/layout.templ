@@ -22,5 +22,10 @@ templ Layout() {
 		<body>
 			{ children... }
 		</body>
+		@htmxLogging()
 	</html>
+}
+
+script htmxLogging() {
+  htmx.logAll()
 }

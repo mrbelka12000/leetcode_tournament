@@ -67,7 +67,15 @@ func Layout() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</body>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = htmxLogging().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -76,4 +84,13 @@ func Layout() templ.Component {
 		}
 		return templ_7745c5c3_Err
 	})
+}
+
+func htmxLogging() templ.ComponentScript {
+	return templ.ComponentScript{
+		Name:       `__templ_htmxLogging_2fed`,
+		Function:   `function __templ_htmxLogging_2fed(){htmx.logAll()}`,
+		Call:       templ.SafeScript(`__templ_htmxLogging_2fed`),
+		CallInline: templ.SafeScriptInline(`__templ_htmxLogging_2fed`),
+	}
 }

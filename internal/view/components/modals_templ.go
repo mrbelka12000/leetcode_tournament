@@ -86,7 +86,7 @@ func Modals(modal consts.Modals) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button></div><div class=\"modal-body\" hx-ext=\"response-targets\"><form class=\"form\" hx-post=\"/usr/update\" hx-target=\"#updateAlert\" hx-target-4*=\"find #failedUpdate\" hx-target-5*=\"find #failedUpdate\" id=\"userFormUpdate\"><div id=\"updateAlert\"></div><div id=\"failedUpdate\" class=\"alert alert-danger p-0\" role=\"alert\"></div><div class=\"form-floating mb-3\"><input required type=\"text\" class=\"form-control\" name=\"name\" id=\"updateName\"> <label for=\"updateName\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h5><button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"modal\" aria-label=\"Close\"></button></div><div class=\"modal-body\" hx-ext=\"response-targets\"><form class=\"form\" hx-post=\"/usr/update\" hx-target-4*=\"find #failedUpdate\" hx-target-5*=\"find #failedUpdate\" id=\"userFormUpdate\"><div id=\"updateAlert\"></div><div id=\"failedUpdate\" class=\"alert alert-danger p-0\" role=\"alert\"></div><div class=\"form-floating mb-3\"><input required type=\"text\" class=\"form-control\" name=\"name\" id=\"updateName\"> <label for=\"updateName\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

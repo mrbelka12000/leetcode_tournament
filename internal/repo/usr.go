@@ -72,11 +72,11 @@ func (u *usr) Update(ctx context.Context, obj models.UsrCU, id int64) error {
 		querySet += ` , type_id = $` + strconv.Itoa(len(updateValues))
 	}
 
-	_, err := Exec(ctx, u.db, queryUpdate+querySet+queryWhere, updateValues...)
+	res, err := Exec(ctx, u.db, queryUpdate+querySet+queryWhere, updateValues...)
 	if err != nil {
 		return fmt.Errorf("exec context: %w", err)
 	}
-
+	fmt.Println(res)
 	return nil
 }
 

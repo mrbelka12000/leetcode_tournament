@@ -493,8 +493,8 @@ func events(data []models.Event, currentPage int64, pageSize int64, count int64)
 
 func formSubmitScript() templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_formSubmitScript_e315`,
-		Function: `function __templ_formSubmitScript_e315(){const form = document.getElementById("createEventForm");
+		Name: `__templ_formSubmitScript_9d36`,
+		Function: `function __templ_formSubmitScript_9d36(){const form = document.getElementById("createEventForm");
   if (!form) {
     console.warn("form is missing");
   }
@@ -533,7 +533,7 @@ func formSubmitScript() templ.ComponentScript {
   function createEvent(data) {
     const encoded = new URLSearchParams(data);
 
-    const res = fetch("/event", {
+    const res = fetch("/events", {
       method: "POST",
       headers: {
         "content-type": "application/x-www-form-urlencoded",
@@ -552,7 +552,7 @@ func formSubmitScript() templ.ComponentScript {
       .getElementById("createEventAlert")
       .classList.add("visually-hidden");
   }}`,
-		Call:       templ.SafeScript(`__templ_formSubmitScript_e315`),
-		CallInline: templ.SafeScriptInline(`__templ_formSubmitScript_e315`),
+		Call:       templ.SafeScript(`__templ_formSubmitScript_9d36`),
+		CallInline: templ.SafeScriptInline(`__templ_formSubmitScript_9d36`),
 	}
 }

@@ -187,7 +187,7 @@ script formSubmitScript() {
   function createEvent(data) {
     const encoded = new URLSearchParams(data);
 
-    const res = fetch("/event", {
+    const res = fetch("/events", {
       method: "POST",
       headers: {
         "content-type": "application/x-www-form-urlencoded",

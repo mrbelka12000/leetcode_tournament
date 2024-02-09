@@ -4,7 +4,7 @@ import "github.com/mrbelka12000/leetcode_tournament/internal/models"
 import "fmt"
 
 templ Users(data models.General, currentPage int64, pageSize int64, count int64) {
-	<div id="usersTable">
+	<div id="usersTable" hx-swap="outerHTML" hx-get="/users?page=1&page_size=20" hx-trigger="usersUpdate from:html">
 		<h2>User Statistics</h2>
 		<table class="table table-responsive table-hover">
 			<thead>

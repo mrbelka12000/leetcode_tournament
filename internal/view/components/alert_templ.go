@@ -14,14 +14,15 @@ import "github.com/mrbelka12000/leetcode_tournament/internal/consts"
 
 func buttonHide(buttonId string) templ.ComponentScript {
 	return templ.ComponentScript{
-		Name: `__templ_buttonHide_e60e`,
-		Function: `function __templ_buttonHide_e60e(buttonId){const buttonToHide = document.getElementById(buttonId);
+		Name: `__templ_buttonHide_b51f`,
+		Function: `function __templ_buttonHide_b51f(buttonId){const buttonToHide = document.getElementById(buttonId);
   if (!buttonToHide) {
     console.warn(` + "`" + `${buttonId} is missing` + "`" + `);
+    return
   }
   buttonToHide.classList.add("visually-hidden");}`,
-		Call:       templ.SafeScript(`__templ_buttonHide_e60e`, buttonId),
-		CallInline: templ.SafeScriptInline(`__templ_buttonHide_e60e`, buttonId),
+		Call:       templ.SafeScript(`__templ_buttonHide_b51f`, buttonId),
+		CallInline: templ.SafeScriptInline(`__templ_buttonHide_b51f`, buttonId),
 	}
 }
 

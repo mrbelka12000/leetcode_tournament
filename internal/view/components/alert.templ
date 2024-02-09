@@ -6,6 +6,7 @@ script buttonHide(buttonId string) {
   const buttonToHide = document.getElementById(buttonId);
   if (!buttonToHide) {
     console.warn(`${buttonId} is missing`);
+    return
   }
   buttonToHide.classList.add("visually-hidden");
 }

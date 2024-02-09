@@ -23,7 +23,7 @@ func Header(name string) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"header container container-fluid d-flex align-items-center\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header hx-get=\"/components/header\" hx-trigger=\"headerUpdate from:body,usersUpdate from:body\" hx-swap=\"outerHTML\" class=\"header container container-fluid d-flex align-items-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

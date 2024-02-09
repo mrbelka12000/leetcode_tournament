@@ -26,7 +26,7 @@ func Users(data models.General, currentPage int64, pageSize int64, count int64) 
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"usersTable\"><h2>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"usersTable\" hx-swap=\"outerHTML\" hx-get=\"/users?page=1&amp;page_size=20\" hx-trigger=\"usersUpdate from:html\"><h2>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -1,7 +1,12 @@
 package components
 
 templ Header(name string) {
-	<header class="header container container-fluid d-flex align-items-center">
+	<header
+ 		hx-get="/components/header"
+ 		hx-trigger="headerUpdate from:body, usersUpdate from:body"
+ 		hx-swap="outerHTML"
+ 		class="header container container-fluid d-flex align-items-center"
+	>
 		if len(name) > 0 {
 			<span>Hi, { name }!</span>
 			<button

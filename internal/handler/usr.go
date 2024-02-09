@@ -92,6 +92,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
+	w.Header().Add("Hx-trigger", "headerUpdate")
+
 	alert := consts.SuccessAlert{
 		AlertType:      consts.Success,
 		AlertMessage:   "Successfully logged in",
@@ -99,6 +101,15 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	component := components.Alert(alert)
+	component.Render(context.Background(), w)
+}
+
+func (h *Handler) Header(w http.ResponseWriter, r *http.Request) {
+	data := h.uc.FillGeneral(
+		r.Context(),
+		nil,
+	)
+	component := components.Header(data.Usr.Name)
 	component.Render(context.Background(), w)
 }
 
@@ -129,7 +140,14 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	// view.RenderTemplate(w, r, "update", nil)
+	alert := consts.SuccessAlert{
+		AlertType:      consts.Success,
+		AlertMessage:   "Successfully updated",
+		ButtonIdToHide: "updateUserButton",
+	}
+
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
 }
 
 // Usrs ..
@@ -160,7 +178,6 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
-
 	usr, err := h.uc.UsrProfile(r.Context())
 	if err != nil {
 		h.log.Err(err).Send()
