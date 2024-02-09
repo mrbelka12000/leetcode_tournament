@@ -96,8 +96,8 @@ const (
 type SuccessAlertType uint
 
 const (
-	Success SuccessAlertType = iota + 1
-	Fail
+	Fail SuccessAlertType = iota
+	Success
 )
 
 type SuccessAlert struct {
@@ -105,3 +105,13 @@ type SuccessAlert struct {
 	AlertMessage   string
 	ButtonIdToHide string
 }
+
+type ModalType uint
+
+const (
+	LoginModal ModalType = iota + 1
+	UpdateUserModal
+	RegistrationModal
+)
+
+type Modals ModalType

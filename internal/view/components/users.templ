@@ -1,0 +1,36 @@
+package components
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/models"
+import "fmt"
+
+templ Users(data models.General, currentPage int64, pageSize int64, count int64) {
+	<div id="usersTable" hx-swap="outerHTML" hx-get="/users?page=1&page_size=20" hx-trigger="usersUpdate from:html">
+		<h2>User Statistics</h2>
+		<table class="table table-responsive table-hover">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Nickname</th>
+					<th>Group</th>
+					<th>Easy</th>
+					<th>Medium</th>
+					<th>Hard</th>
+					<th>Total</th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, user := range data.Data.([]models.Usr) {
+					<tr>
+						<td>{  user.Name } </td>
+						<td>{  user.Username } </td>
+						<td>{ fmt.Sprint(user.Group) }</td>
+						<td>{ fmt.Sprint(user.Score.Current.Easy) }</td>
+						<td>{  fmt.Sprint(user.Score.Current.Medium) }</td>
+						<td>{  fmt.Sprint(user.Score.Current.Hard)  }</td>
+						<td>{  fmt.Sprint(user.Score.Current.Total) }</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

@@ -1,0 +1,209 @@
+package pages
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/models"
+import "github.com/mrbelka12000/leetcode_tournament/internal/view"
+import "github.com/mrbelka12000/leetcode_tournament/internal/view/components"
+import "fmt"
+
+templ EventsPage(data models.General, currentPage int64, pageSize int64, count int64) {
+	@view.Layout() {
+		@components.Base(data, events(data.Data.([]models.Event), currentPage, pageSize, count))
+	}
+}
+
+templ events(data []models.Event, currentPage int64, pageSize int64, count int64) {
+	<div class="d-flex column-gap-3">
+		<h2>Events</h2>
+		<button
+ 			type="button"
+ 			class="btn btn-light"
+ 			data-bs-toggle="modal"
+ 			data-bs-target="#createEventModal"
+		>
+			Create Event
+		</button>
+	</div>
+	<table class="table table-responsive table-hover">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>UsrID</th>
+				<th>StartTime</th>
+				<th>EndTime</th>
+				<th>Goal</th>
+				<th>Condition</th>
+				<th>StatusID</th>
+			</tr>
+		</thead>
+		<tbody>
+			for _, event := range data {
+				<tr class="eventsTableRow">
+					<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">{ fmt.Sprint(event.ID) }</a></td>
+					<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">{ fmt.Sprint(event.UsrID)  }</a></td>
+					<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">{ fmt.Sprint(event.StartTime)  }</a></td>
+					<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">{ fmt.Sprint(event.EndTime)  }</a></td>
+					<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">{ fmt.Sprint(event.Goal)  }</a></td>
+					<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">{ fmt.Sprint(event.Condition)  }</a></td>
+					if event.StatusID == 1 {
+						<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">Created</a></td>
+					} else if event.StatusID == 2 {
+						<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">Started</a></td>
+					} else if event.StatusID == 3 {
+						<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">Cancelled</a></td>
+					} else if event.StatusID == 100 {
+						<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">Finished</a></td>
+					} else {
+						<td><a href={ templ.SafeURL(fmt.Sprintf("/events/%v", event.ID)) } hx-boost="true">-</a></td>
+					}
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div class="modal fade" tabindex="-1" id="createEventModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Create Event</h5>
+					<button
+ 						type="button"
+ 						class="btn-close"
+ 						data-bs-dismiss="modal"
+ 						aria-label="Close"
+					></button>
+				</div>
+				<div class="modal-body">
+					<form class="form" id="createEventForm">
+						<div id="createEventAlert"></div>
+						<div
+ 							id="failedCreateEvent"
+ 							class="alert alert-danger p-0"
+ 							role="alert"
+						></div>
+						<div class="mb-3">
+							<label for="start_time" class="mx-3">Start time</label>
+							<input
+ 								required
+ 								type="datetime-local"
+ 								name="start_time"
+ 								id="start_time"
+							/>
+						</div>
+						<div class="mb-3">
+							<label for="end_time" class="mx-3">End time</label>
+							<input
+ 								required
+ 								type="datetime-local"
+ 								name="end_time"
+ 								id="end_time"
+							/>
+						</div>
+						<div class="form-floating mb-3">
+							<input
+ 								required
+ 								type="number"
+ 								class="form-control"
+ 								name="goal"
+ 								id="goal"
+ 								min="1"
+ 								value="1"
+							/>
+							<label for="goal">Goal</label>
+						</div>
+						<div class="form-floating mb-3">
+							<select
+ 								name="condition"
+ 								required
+ 								class="form-select"
+ 								id="condition"
+							>
+								<option value="on_max">
+									Maximum number of solved problems in a given time
+								</option>
+								<option value="on_first">First to reach the goal</option>
+								<option value="on_time_exceed">
+									Finish the goal in a given time
+								</option>
+							</select>
+							<label for="condition">Condition</label>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+						Close
+					</button>
+					<button
+ 						class="btn btn-outline-primary"
+ 						form="createEventForm"
+ 						type="submit"
+ 						id="createEventButton"
+					>
+						Create
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	@formSubmitScript()
+}
+
+script formSubmitScript() {
+  const form = document.getElementById("createEventForm");
+  if (!form) {
+    console.warn("form is missing");
+  }
+
+  clearAlerts();
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const data = Object.fromEntries(new FormData(form));
+
+    transformedData = {
+      ...data,
+      start_time: new Date(data.start_time).toISOString().split(".")[0] + "Z",
+      end_time: new Date(data.end_time).toISOString().split(".")[0] + "Z",
+    };
+
+    createEvent(transformedData).then((res) => {
+      if (res.ok) {
+        return res.text().then((res) => {
+          const successAlert = document.getElementById("createEventAlert");
+          successAlert.innerHTML = res;
+          clearAlerts();
+          successAlert.classList.remove(["visually-hidden"]);
+        });
+      }
+      return res.text().then((text) => {
+        const failedAlert = document.getElementById("failedCreateEvent");
+        failedAlert.innerHTML = text;
+        clearAlerts();
+        failedAlert.classList.remove(["visually-hidden"]);
+      });
+    });
+  });
+
+  function createEvent(data) {
+    const encoded = new URLSearchParams(data);
+
+    const res = fetch("/events", {
+      method: "POST",
+      headers: {
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: encoded,
+    });
+
+    return res;
+  }
+
+  function clearAlerts() {
+    document
+      .getElementById("failedCreateEvent")
+      .classList.add("visually-hidden");
+    document
+      .getElementById("createEventAlert")
+      .classList.add("visually-hidden");
+  }
+}

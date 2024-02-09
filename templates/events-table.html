@@ -22,7 +22,7 @@
     </tr>
   </thead>
   <tbody>
-    {{range .Results}}
+    {{range .Results.Data}}
     <tr
       hx-target="#layout"
       hx-get="/event/{{.ID}}"

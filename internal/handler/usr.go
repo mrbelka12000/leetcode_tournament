@@ -1,10 +1,12 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/mrbelka12000/leetcode_tournament/internal/consts"
 	"github.com/mrbelka12000/leetcode_tournament/internal/models"
+	"github.com/mrbelka12000/leetcode_tournament/internal/view/components"
 )
 
 // Registration ..
@@ -47,12 +49,13 @@ func (h *Handler) Registration(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
 	alert := consts.SuccessAlert{
-		AlertType:      consts.SuccessAlertType(1),
+		AlertType:      consts.Success,
 		AlertMessage:   "Successfully registered",
 		ButtonIdToHide: "registerButton",
 	}
 
-	RenderTemplate(w, "alert", alert)
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
 }
 
 // Login ..
@@ -89,13 +92,25 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	http.SetCookie(w, &cookie)
 
+	w.Header().Add("Hx-trigger", "headerUpdate")
+
 	alert := consts.SuccessAlert{
-		AlertType:      consts.SuccessAlertType(1),
+		AlertType:      consts.Success,
 		AlertMessage:   "Successfully logged in",
 		ButtonIdToHide: "loginButton",
 	}
 
-	RenderTemplate(w, "alert", alert)
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
+}
+
+func (h *Handler) Header(w http.ResponseWriter, r *http.Request) {
+	data := h.uc.FillGeneral(
+		r.Context(),
+		nil,
+	)
+	component := components.Header(data.Usr.Name)
+	component.Render(context.Background(), w)
 }
 
 // ProfileUpdate ..
@@ -125,12 +140,18 @@ func (h *Handler) ProfileUpdate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Hx-trigger", "usersUpdate")
 
-	RenderTemplate(w, "update", nil)
+	alert := consts.SuccessAlert{
+		AlertType:      consts.Success,
+		AlertMessage:   "Successfully updated",
+		ButtonIdToHide: "updateUserButton",
+	}
+
+	component := components.Alert(alert)
+	component.Render(context.Background(), w)
 }
 
 // Usrs ..
 func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
-
 	var pars models.UsrListPars
 	err := h.decoder.Decode(&pars, r.URL.Query())
 	if err != nil {
@@ -149,16 +170,14 @@ func (h *Handler) Usrs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	RenderTemplate(w, "users-table", models.PaginatedListRepSt{
-		Page:       page,
-		PageSize:   pars.Limit,
-		TotalCount: tCount,
-		Results:    usrs,
-	})
+	component := components.Users(h.uc.FillGeneral(
+		r.Context(),
+		usrs,
+	), page, pars.Limit, tCount)
+	component.Render(context.Background(), w)
 }
 
 func (h *Handler) GetUsr(w http.ResponseWriter, r *http.Request) {
-
 	usr, err := h.uc.UsrProfile(r.Context())
 	if err != nil {
 		h.log.Err(err).Send()

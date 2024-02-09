@@ -1,0 +1,11 @@
+package pages
+
+import "github.com/mrbelka12000/leetcode_tournament/internal/models"
+import "github.com/mrbelka12000/leetcode_tournament/internal/view"
+import "github.com/mrbelka12000/leetcode_tournament/internal/view/components"
+
+templ Index(data models.General, currentPage int64, pageSize int64, count int64) {
+	@view.Layout() {
+		@components.Base(data, components.Users(data, currentPage , pageSize , count))
+	}
+}

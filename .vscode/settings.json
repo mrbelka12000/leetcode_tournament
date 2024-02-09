@@ -1,0 +1,7 @@
+{
+  "editor.defaultFormatter": "a-h.templ",
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
+  "editor.formatOnSave": true
+}

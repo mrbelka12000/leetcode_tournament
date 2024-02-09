@@ -12,13 +12,11 @@ import (
 
 // UsrTournamentCreate ..
 func (uc *UseCase) UsrTournamentCreate(ctx context.Context, obj models.UsrTournamentCU) (int64, error) {
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return 0, fmt.Errorf("get session by token: %w", err)
+		return 0, err
 	}
+
 	obj.UsrID = &ses.UsrID
 
 	return uc.cr.UsrTournament.Build(ctx, obj)
@@ -26,13 +24,11 @@ func (uc *UseCase) UsrTournamentCreate(ctx context.Context, obj models.UsrTourna
 
 // UsrTournamentUpdate ..
 func (uc *UseCase) UsrTournamentUpdate(ctx context.Context, obj models.UsrTournamentCU, id int64) error {
-	token := ctx.Value(consts.CKey).(string)
-	ses, err := uc.cr.Session.Get(ctx, models.SessionGetPars{
-		Token: &token,
-	})
+	ses, err := uc.getSessionFromContext(ctx, true)
 	if err != nil {
-		return fmt.Errorf("get session by token: %w", err)
+		return err
 	}
+
 	if ses.TypeID != consts.UsrTypeAdmin {
 		return errs.ErrPermissionDenied
 	}

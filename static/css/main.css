@@ -22,3 +22,14 @@ body {
   justify-content: center;
   row-gap: 12px;
 }
+
+.eventsTableRow td {
+  padding: 0;
+}
+
+.eventsTableRow td a {
+  display: block;
+  text-decoration: none;
+  padding: 0.5rem;
+  color: black;
+}
